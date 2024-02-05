@@ -35,7 +35,8 @@ export default {
   background-color: #c79c9c;
   color: white;
   position: sticky;
-  top: 0
+  top: 0;
+  z-index: 1;
 }
 
 .header-container h1 {
