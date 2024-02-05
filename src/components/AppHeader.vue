@@ -5,8 +5,11 @@
       <router-link class="menu" to="/">Accueil</router-link>
       <router-link class="menu" to="/groupes">Groupes</router-link>
       <router-link class="menu" to="/notifications">Notifications</router-link>
+      <router-link class="menu" v-if="isAuthenticated" to="/account">Mon compte</router-link>
       <button class="menu" v-if="!isAuthenticated" @click="login">Connexion / Inscription</button>
-      <button class="menu" v-else @click="logout">Compte</button>
+      <button class="menu" v-else @click="logout">Déconnexion</button>
+
+
     </nav>
   </div>
 </template>
