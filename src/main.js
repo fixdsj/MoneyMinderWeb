@@ -1,4 +1,13 @@
-import { createApp } from 'vue'
-import App from './App.vue'
+import { createApp } from 'vue';
+import App from './App.vue';
 
-createApp(App).mount('#app')
+
+const app = createApp(App);
+
+// Define a global property
+app.config.globalProperties.$websitetitle = 'Money Minder';
+app.config.globalProperties.$color1 = '#f3f3f3';
+
+
+
+app.mount('#app');
