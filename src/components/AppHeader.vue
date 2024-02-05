@@ -5,20 +5,22 @@
       <router-link class="menu" to="/">Accueil</router-link>
       <router-link class="menu" to="/groupes">Groupes</router-link>
       <router-link class="menu" to="/notifications">Notifications</router-link>
-      <router-link class="menu" to="/account">Compte</router-link>
+      <button class="menu" v-if="!isAuthenticated" @click="login">Connexion / Inscription</button>
+      <button class="menu" v-else @click="logout">Compte</button>
     </nav>
   </div>
 </template>
 
 <script>
-import app from "../App.vue";
+import {mapState ,mapActions} from 'vuex'
 
 export default {
   name: 'AppHeader',
   computed: {
-    app() {
-      return app
-    }
+    ...mapState(['isAuthenticated'])
+    },
+  methods: {
+    ...mapActions(['login', 'logout']),
   },
 };
 </script>
@@ -47,6 +49,8 @@ export default {
   padding: 0.75em 2em;
   color: inherit;
   border: none;
+  text-decoration: none;
+
 }
 .menu:hover {
   border: solid 1px white;
