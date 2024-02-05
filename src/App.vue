@@ -1,14 +1,12 @@
 
 <template>
   <AppHeader />
-  <p style="text-align: center">Contenu de l'application</p>
-  <br>
+  <router-view />
   <AppFooter />
 
 </template>
 
 <script>
-
 import AppHeader from "@/components/AppHeader.vue";
 import AppFooter from "@/components/AppFooter.vue";
 
@@ -23,6 +21,7 @@ export default {
 
 <style>
 #app {
+  --main-background-color: #3498db;
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

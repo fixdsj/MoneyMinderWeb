@@ -5,7 +5,7 @@
       <router-link class="menu" to="/">Accueil</router-link>
       <router-link class="menu" to="/groupes">Groupes</router-link>
       <router-link class="menu" to="/notifications">Notifications</router-link>
-      <router-link class="menu" to="/compte">Compte</router-link>
+      <router-link class="menu" to="/account">Compte</router-link>
     </nav>
   </div>
 </template>
