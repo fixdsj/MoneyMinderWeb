@@ -1,16 +1,22 @@
 
 <template>
   <AppHeader />
+  <p style="text-align: center">Contenu de l'application</p>
+  <br>
+  <AppFooter />
+
 </template>
 
 <script>
 
 import AppHeader from "@/components/AppHeader.vue";
+import AppFooter from "@/components/AppFooter.vue";
 
 export default {
   name: 'App',
   components: {
-    AppHeader
+    AppHeader,
+    AppFooter
   }
 }
 </script>

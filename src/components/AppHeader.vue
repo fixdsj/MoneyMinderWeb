@@ -32,6 +32,8 @@ export default {
   padding: 20px 10%;
   background-color: #c79c9c;
   color: white;
+  position: sticky;
+  top: 0
 }
 
 .header-container h1 {
