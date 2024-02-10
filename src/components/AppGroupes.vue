@@ -54,11 +54,7 @@
 
           <div v-if="selectedTab === 'messages'">
             <h3>Messages</h3>
-            <ul>
-              <li v-for="message in messages" :key="message.id">
-                {{ message.message }}
-              </li>
-            </ul>
+            <AppChat />
           </div>
 
           <div v-if="selectedTab === 'depenses'">
@@ -84,8 +80,10 @@
   </div>
 </template>
   <script>
+  import AppChat from "@/components/AppChat.vue";
   export default {
     name: 'VueGroupes',
+    components: {AppChat},
     data() {
       return {
         groupes: [
@@ -93,12 +91,6 @@
           { id: 2, nom: 'Groupe B', description: 'Description du Groupe B' },
           { id: 3, nom: 'Groupe C', description: 'Description du Groupe C' },
           { id: 4, nom: 'Groupe D', description: 'Description du Groupe D' },
-        ],
-        messages:[
-          { id: 1, message: 'Message 1', destinataire: 'Groupe A'},
-          { id: 2, message: 'Message 2', destinataire: 'Groupe B' },
-          { id: 3, message: 'Message 3', destinataire: 'Groupe C' },
-          { id: 4, message: 'Message 4', destinataire: 'Groupe D'}
         ],
         depenses:[
           { id: 1, montant: 100, destinataire: 'Maurice'},
@@ -138,7 +130,7 @@
   display: flex;
 }
 .contentcontainer {
-  background-color: #5DADE2;
+  background-color: #d6e1ea;
   flex-grow: 1;
 }
 
@@ -147,16 +139,14 @@
   background-color: #f0f0f0;
   height: 70vh;
   overflow-y: auto;
-  border-right: solid 2px #721c24;
 }
 
 .topbar {
   display: flex;
-  align-items: center;
+  background-color: #f0f0f0;
   justify-content: space-between;
   text-decoration: none;
   overflow-y: auto;
-  border-bottom: solid 2px  #721c24;
 }
 
 .sidebar ul ul{
@@ -188,8 +178,8 @@
   cursor: pointer;
   text-decoration: none;
   color: inherit;
-  padding: 15px;
-  margin-right: 20px;
+  padding: 10px; /* Adjust as needed */
+  margin-right: 15px;
   display: block;
   text-align: center;
 }
@@ -202,7 +192,12 @@ h1 {
   text-align: center;
   margin: 20px;
 }
-.groupeactif, .selectedtab {
+.groupeactif{
   background-color: #ddd;
+  border-right: solid 2px #721c24;
+}
+.selectedtab {
+  background-color: #ddd;
+  border-bottom: solid 2px  #721c24;
 }
 </style>
