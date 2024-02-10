@@ -9,7 +9,6 @@
       <button class="menu" v-if="!isAuthenticated" @click="login">Connexion / Inscription</button>
       <button class="menu" v-else @click="logout">Déconnexion</button>
 
-
     </nav>
   </div>
 </template>
