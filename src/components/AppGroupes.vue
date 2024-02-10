@@ -1,31 +1,4 @@
-<!--  <template>
-    <h1>Groupes</h1>
-    <div class="containergroups">
-        <div class="sidebar">
-          <ul>
-            <li v-for="groupe in groupes" :key="groupe.id" @click="selectGroupe(groupe)"
-                :class="{'groupeactif': groupeActif && groupe.id === groupeActif.id}">
-              {{ groupe.nom }}
-            </li>
-          </ul>
-          <router-link to="/groupes/add">Ajouter un groupe</router-link>
-        </div>
-      <div class="topbar">
-        <ul>
-          <li>Messages</li>
-          <li>Dépenses</li>
-          <li>Historique</li>
-        </ul>
-      </div>
 
-
-        <div class="details">
-          <h2>{{ groupeActif?.nom }}</h2>
-          <p>{{ groupeActif?.description }}</p>
-        </div>
-
-    </div>
-  </template>-->
 <template>
   <div>
     <h1>Groupes</h1>
@@ -44,7 +17,7 @@
       <div class="contentcontainer">
         <nav class="topbar">
             <p class="tabmenu" @click="selectTab('messages')" :class="{ 'selectedtab': selectedTab === 'messages' }">Messages</p>
-            <p class="tabmenu" @click="selectTab('depenses')"  :class="{ 'selectedtab': selectedTab === 'depenses' }">Dépenses</p>
+            <p class="tabmenu" @click="selectTab('depenses')"  :class="{ 'selectedtab': selectedTab === 'depenses' }">Dépenses/Remboursements</p>
             <p class="tabmenu" @click="selectTab('historique')" :class="{ 'selectedtab': selectedTab === 'historique' }">Historique</p>
         </nav>
 
@@ -59,11 +32,7 @@
 
           <div v-if="selectedTab === 'depenses'">
             <h3>Dépenses</h3>
-            <ul>
-              <li v-for="depense in depenses" :key="depense.id">
-                {{ depense.montant }}
-              </li>
-            </ul>
+            <AppTransactions />
           </div>
 
           <div v-if="selectedTab === 'historique'">
@@ -81,9 +50,10 @@
 </template>
   <script>
   import AppChat from "@/components/AppChat.vue";
+  import AppTransactions from "@/components/Apptransactions.vue";
   export default {
     name: 'VueGroupes',
-    components: {AppChat},
+    components: {AppTransactions, AppChat},
     data() {
       return {
         groupes: [
