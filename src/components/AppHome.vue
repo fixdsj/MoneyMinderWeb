@@ -3,7 +3,7 @@
     <section class="main-section">
       <h1>MoneyMinder</h1>
       <p>Partagez facilement vos dépenses et suivez les comptes en toute simplicité.</p>
-      <router-link to="#signup" class="cta-button">S'inscrire</router-link>
+      <router-link to="register" class="cta-button">S'inscrire</router-link>
     </section>
 
     <section class="main-section">

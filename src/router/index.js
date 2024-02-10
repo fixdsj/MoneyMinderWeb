@@ -1,14 +1,21 @@
 import { createRouter,createWebHistory } from 'vue-router';
 import Groupes from "../components/AppGroupes.vue";
 import Home from "../components/AppHome.vue";
+import Notifications from "../components/NotificationWidget.vue";
 import Account from "../components/AppAccount.vue";
-
+import AppLogin from "@/components/AppLogin.vue";
+import AppRegister from "@/components/AppRegister.vue";
 
 const routes =
     [
     { path: '/', component: Home },
     { path: '/groupes', component: Groupes },
-    { path: '/account', component: Account }
+    { path: '/notifications', component: Notifications},
+    { path: '/account', component: Account },
+    { path: '/login', component: AppLogin },
+    {path: '/register', component: AppRegister},
+     /*{path: '/:notFound(.*)', redirect: '/'}*/
+
 ];
 
 const router = createRouter({
