@@ -13,6 +13,7 @@
       <button @click="login" type="submit">Se connecter</button>
     </form>
     <p>Pas encore de compte? <router-link to="/register">Inscrivez-vous</router-link></p>
+    <p>Ajouter le bouton connexion avec google</p>
   </div>
 </template>
 

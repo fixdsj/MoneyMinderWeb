@@ -5,6 +5,7 @@ import Notifications from "../components/NotificationWidget.vue";
 import Account from "../components/AppAccount.vue";
 import AppLogin from "@/components/AppLogin.vue";
 import AppRegister from "@/components/AppRegister.vue";
+import AppError404 from "@/components/AppError404.vue";
 
 const routes =
     [
@@ -14,7 +15,7 @@ const routes =
     { path: '/account', component: Account },
     { path: '/login', component: AppLogin },
     {path: '/register', component: AppRegister},
-     /*{path: '/:notFound(.*)', redirect: '/'}*/
+     {path: '/:notFound(.*)', component: AppError404}
 
 ];
 
