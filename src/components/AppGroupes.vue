@@ -11,6 +11,7 @@
               :class="{'groupeactif': groupeActif && groupe.id === groupeActif.id}">
             {{ groupe.nom }}
           </li>
+          <li><router-link to="/account">Ajouter un groupe</router-link></li>
         </ul>
       </div>
 
@@ -32,16 +33,12 @@
 
           <div v-if="selectedTab === 'depenses'">
             <h3>Dépenses</h3>
-            <AppTransactions />
+            <AppDepensesEtRemboursements/>
           </div>
 
           <div v-if="selectedTab === 'historique'">
             <h3>Historique</h3>
-            <ul>
-              <li v-for="action in historique" :key="action.id">
-                {{ action.action }}
-              </li>
-            </ul>
+            <AppLastTransactions />
           </div>
         </div>
       </div>
@@ -50,10 +47,12 @@
 </template>
   <script>
   import AppChat from "@/components/AppChat.vue";
-  import AppTransactions from "@/components/Apptransactions.vue";
+  import AppDepensesEtRemboursements from "@/components/AppDepensesEtRemboursements.vue";
+  import AppLastTransactions from "@/components/AppLastTransactions.vue";
+
   export default {
     name: 'VueGroupes',
-    components: {AppTransactions, AppChat},
+    components: {AppLastTransactions, AppChat, AppDepensesEtRemboursements},
     data() {
       return {
         groupes: [
@@ -75,7 +74,7 @@
           { id: 4, action: 'Action 4', type:'remboursement' , date: '04/01/2021'}
         ],
         groupeActif: null,
-        selectedTab: 'messages',
+        selectedTab: 'depenses',
       };
     },
     mounted() {
@@ -117,6 +116,8 @@
   justify-content: space-between;
   text-decoration: none;
   overflow-y: auto;
+  padding-right: 15px;
+  padding-left: 15px;
 }
 
 .sidebar ul ul{
@@ -148,8 +149,7 @@
   cursor: pointer;
   text-decoration: none;
   color: inherit;
-  padding: 10px; /* Adjust as needed */
-  margin-right: 15px;
+  padding: 10px 20px 10px 20px;
   display: block;
   text-align: center;
 }

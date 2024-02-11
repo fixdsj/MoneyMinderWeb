@@ -15,7 +15,7 @@
 
 <script>
 export default {
-  name: 'AppTransactions',
+  name: 'AppLastTransactions',
   data() {
     return {
       transactions: [
