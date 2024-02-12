@@ -13,10 +13,17 @@
           <input type="text" id="description" v-model="depense.description" />
         </div>
         <div class="form-group">
-          <label for="destinataire">Destinataire:</label>
-          <select id="destinataire" v-model="depense.destinataire">
-            <option v-for="membre in groupeactuel" :key="membre.id" :value="membre.nom">{{ membre.nom }}</option>
-          </select>
+          <label for="membreconcernes">Membres concernés:</label>
+          <input type="text" id="membreconcernes" v-model="groupeactuel.nom" />
+        </div>
+        <div class="form-group">
+          <fieldset>
+            <legend>Choisir les membres concernés:</legend>
+            <div v-for="membre in groupeactuel" :key="membre.id">
+              <input type="checkbox" :id="membre.nom" :value="membre.nom" v-model="depense.groupeusers[membre.nom]" />
+              <label :for="membre.nom">{{ membre.nom }}</label>
+            </div>
+          </fieldset>
         </div>
         <button type="submit">Créer la dépense</button>
       </form>
@@ -27,11 +34,11 @@
       <form @submit.prevent="createRemboursement">
         <div class="form-group">
           <label for="montant">Montant:</label>
-          <input type="number" id="montant" v-model="depense.montant" v-bind:min="0" />
+          <input type="number" id="montant" v-model="remboursement.montant" v-bind:min="0" />
         </div>
         <div class="form-group">
           <label for="description">Description:</label>
-          <input type="text" id="description" v-model="depense.description" />
+          <input type="text" id="description" v-model="remboursement.description" />
         </div>
         <button type="submit">Effectuer le remboursement</button>
       </form>
@@ -53,7 +60,11 @@ export default {
       depense: {
         montant: 0,
         description: '',
-        destinataire: '',
+        groupeusers: {},
+      },
+      remboursement: {
+        montant: 0,
+        description: '',
       },
     };
   },
@@ -87,6 +98,8 @@ export default {
 }
 .depensesetremboursementcontainer h1{
   text-align: center;
+  border-bottom: solid 2px #ccc;
+  margin-bottom: 10px;
 }
 .depensesetremboursementcontainer button[type="submit"] {
   width: 100%;
@@ -122,6 +135,12 @@ export default {
 .depensesetremboursementcontainer label {
   display: block;
   margin: 5px;
+}
+legend{
+  text-align: center;
+}
+fieldset div{
+  display: inline-block;
 }
 
 </style>

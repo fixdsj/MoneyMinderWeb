@@ -5,11 +5,14 @@
         <ul>
           <li v-for="groupe in groupes" :key="groupe.id" class="groupes-list" >
             {{ groupe.nom }}
+            <img class="deletebutton" src="../assets/delete_button.png">
           </li>
         </ul>
-        <!-- TODO ajouter d'autres champs-->
-        <button >Nouveau groupe</button>
-
+        <button class="nouveaugroupe" type="submit" @click="toggleInput" :class="{ 'openinput': inputOpen }">Nouveau groupe</button>
+      <form @submit.prevent="createGroupe" v-if="inputOpen">
+      <input type="text" style="margin-top: 10px"  placeholder="Saisir le nom du groupe et appuyer sur Entrée pour envoyer" />
+        <button type="submit">Créer</button>
+      </form>
     </div>
     
     <div class="mes-informations">
@@ -23,7 +26,6 @@
           <label for="nom">Nom:</label>
           <input type="text" id="nom" v-model="utilisateur.nom" />
         </div>
-
         <div class="form-group">
           <label for="email">Email:</label>
           <input type="email" id="email" v-model="utilisateur.email" />
@@ -51,72 +53,46 @@ export default {
         { id: 3, nom: 'Groupe C', description: 'Description du Groupe C' },
         { id: 4, nom: 'Groupe D', description: 'Description du Groupe D' },
       ],
+      inputOpen: false,
     };
   },
   methods: {
     updateCompte() {
       console.log('Informations mises à jour:', this.utilisateur);
-
+    },
+    toggleInput() {
+      this.inputOpen= !this.inputOpen;
+      console.log("le menu est ouvert"+this.inputOpen);
+    },
+    createGroupe() {
+      console.log('Créer un groupe');
+      this.inputOpen= !this.inputOpen;
     },
   },
 };
 </script>
+
 <style scoped>
-.app-account {
+.app-account{
   display: flex;
-  background-color: var(--main-background-color);
+  flex-wrap: wrap;
+justify-content: space-evenly;
 }
-.mes-informations, .mes-groupes{
+.mes-groupes, .mes-informations{
+  background-image: linear-gradient(120deg, #d6e1ea 0%, #ffffff 100%);
   max-width: 400px;
-  margin: 2rem auto;
-  padding: 2rem;
-  border: 1px solid #eaeaea;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-  background-color: #fff;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 50%;
 }
-
-h2 {
-  color: #333;
-  margin-bottom: 1.5rem;
+.app-account h1{
   text-align: center;
 }
-.groupes-list {
-  padding: 0.5rem;
-  border-bottom: 1px solid #eaeaea;
-  transition: background-color 0.3s;
-  text-align: center;
-  text-decoration: none;
-  list-style-type: none;
-}
-
-.form-group {
-  margin-bottom: 1rem;
-  display: flex;
-  flex-direction: column;
-}
-
-.form-group label {
-  margin-bottom: 0.5rem;
-  font-size: 1rem;
-  color: #666;
-}
-
-.form-group input {
-  padding: 0.5rem;
-  font-size: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  transition: border-color 0.3s;
-}
-
-.form-group input:focus {
-  outline: none;
-  border-color: #007bff;
-}
-
-button[type="submit"], .mes-groupes button{
+.app-account button[type="submit"], .nouveaugroupe button {
   width: 100%;
+  margin-top: 15px;
   padding: 0.75rem;
   font-size: 1rem;
   color: #fff;
@@ -127,7 +103,45 @@ button[type="submit"], .mes-groupes button{
   transition: background-color 0.3s;
 }
 
-button[type="submit"]:hover {
+.app-account button[type="submit"]:hover,.nouveaugroupe button:hover {
   background-color: #0056b3;
 }
+
+.app-account input{
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.app-account select {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.app-account label {
+  display: block;
+  margin: 5px;
+}
+.mes-groupes li{
+  padding: 15px;
+  cursor: pointer;
+  text-align: center;
+  list-style-type: none;
+}
+.deletebutton {
+  width: 20px;
+  height: 20px;
+  padding-top: 5px;
+  background: none;
+}
+.openinput {
+  display: block;
+}
+
+
+
 </style>

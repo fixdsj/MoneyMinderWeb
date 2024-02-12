@@ -4,11 +4,11 @@
     <nav>
       <label for="toggle" @click="toggleMenu" >☰</label>
       <div class="main_pages" :class="{ 'openmenu': menuOpen }">
-        <router-link class="menu" to="/" @click="closeMenu">Accueil</router-link>
-        <router-link class="menu" to="/groupes" @click="closeMenu">Groupes</router-link>
-        <router-link class="menu" to="/notifications" @click="closeMenu">Notifications</router-link>
+        <router-link class="menu" to="/" >Accueil</router-link>
+        <router-link class="menu" to="/groupes" >Groupes</router-link>
+        <router-link class="menu" to="/notifications" >Notifications</router-link>
         <router-link class="menu" v-if="isAuthenticated" to="/account" @click="closeMenu">Mon compte</router-link>
-        <button class="menu" v-if="!isAuthenticated" @click="login">Connexion / Inscription</button>
+        <router-link class="menu" v-if="!isAuthenticated"  to="/login">Connexion / Inscription</router-link>
         <button class="menu" v-else @click="logout">Déconnexion</button>
       </div>
     </nav>
