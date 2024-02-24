@@ -1,103 +1,109 @@
 <template>
-  <div>
-    <section class="main-section">
-      <h1>MoneyMinder</h1>
-      <p>Partagez facilement vos dépenses et suivez les comptes en toute simplicité.</p>
-      <router-link to="register" class="cta-button">S'inscrire</router-link>
-    </section>
+  <div class="app-home">
+<!--  <AppCarousel />-->
+    <div class="atterissagediv">
+      <h1>Simplifiez vos dépenses</h1>
+      <p>Gérez facilement les dépenses partagées avec vos amis et votre famille.</p>
+      <router-link to="/register" >Inscrivez-vous</router-link>
+    </div>
+    <div class="testimonial-section">
+      <div class="testimonial-carousel">
+        <div v-for="(testimonial, index) in testimonials" :key="index" class="testimonial">
+          <p>{{ testimonial.text }}</p>
+          <p class="author">{{ testimonial.author }}</p>
+        </div>
+      </div>
+    </div>
 
-    <section class="main-section">
-      <h2>Comment ça marche?</h2>
-      <p>MoneyMinder vous permet de créer des comptes partagés, d'ajouter des dépenses et de suivre les remboursements entre amis, famille ou collègues.</p>
-    </section>
 
-    <section class="main-section">
-      <h2>Fonctionnalités principales</h2>
-      <ul>
-        <li>Création de comptes partagés</li>
-        <li>Ajout facile des dépenses</li>
-        <li>Suivi des remboursements</li>
-        <li>Notifications pour les mises à jour</li>
-      </ul>
-    </section>
-
-    <section class="main-section">
-      <h2>Téléchargez l'application</h2>
-      <p>MoneyMinder est disponible sur iOS et Android. Téléchargez l'application dès maintenant pour commencer à gérer vos finances de manière collaborative.</p>
-      <router-link to="#download" class="cta-button">Télécharger</router-link>
-    </section>
   </div>
 </template>
 
 <script>
 import app from "../App.vue";
+/*import AppCarousel from "@/components/AppCarousel.vue";*/
 
 export default {
   name: 'AppHome',
+  /*components: {AppCarousel},*/
+
   computed: {
     app() {
       return app
     }
   },
+  data() {
+    return {
+      testimonials: [
+        { text: "J'utilise Money Minder avec ma famille depuis des années. Cela me fait un gain de temps (et d'argent) considérables.", author: "Antoine Dupont" },
+        { text: "Money Minder m'aide à gérer mes dépenses avec mes amis. C'est simple et efficace.", author: "Jean Martin" },
+        { text: "Je recommande Money Minder à tous ceux qui veulent gérer leurs dépenses en groupe.", author: "Pierre Durand" },
+      ],
+    };
+  },
 };
 </script>
 
 <style scoped>
-.main-section {
-  max-width: 800px;
-  margin: 20px auto;
-  padding: 20px;
-  background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  text-align: center;
+.atterissagediv{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+  background-color: inherit;
+  color: #6E6E6E;
 }
-
-h1 {
-  color: #333;
-  font-size: 2em;
+.atterissagediv h1{
+  font-size: 2.5rem;
+  margin-bottom: 20px;
 }
-
-p {
-  color: #555;
-  font-size: 1.2em;
+.atterissagediv p{
+  font-size: 1.5rem;
+  margin-bottom: 20px;
 }
-
-.cta-button {
-  display: inline-block;
-  padding: 12px 24px;
-  background-color: #3498db;
+.atterissagediv a{
+  width: 200px;
+  padding: 0.75rem;
+  font-size: 1rem;
   color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.3s;
   text-decoration: none;
-  border-radius: 5px;
-  transition: background-color 0.3s ease;
-  font-size: 1.1em;
 }
 
-.cta-button:hover {
-  background-color: #2980b9;
+
+.testimonial-section {
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
-section {
-  margin: 20px 0;
+.testimonial-carousel {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  justify-content: center;
 }
 
-ul {
-  list-style-type: none;
-  padding: 0;
+.testimonial {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  margin-right: 20px;
+  max-width: 300px;
 }
 
-li {
-  margin-bottom: 8px;
-  color: #333;
-  font-size: 1.1em;
+.author {
+  font-style: italic;
+  margin-top: 10px;
 }
 
-h2 {
-  color: #3498db;
-  border-bottom: 2px solid #3498db;
-  padding-bottom: 8px;
-  margin-bottom: 16px;
-  font-size: 1.5em;
-}
 </style>

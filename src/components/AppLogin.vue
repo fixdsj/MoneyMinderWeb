@@ -13,12 +13,11 @@
       <button @click="login" type="submit">Se connecter</button>
     </form>
     <p>Pas encore de compte? <router-link to="/register">Inscrivez-vous</router-link></p>
-    <p>Ajouter le bouton connexion avec google</p>
+    <router-link to="/connectwithgoogle">Se connecter avec Google</router-link>
   </div>
 </template>
 
 <script>
-import {mapState ,mapActions} from 'vuex'
 export default {
   name: 'AppLogin',
   data() {
@@ -27,11 +26,11 @@ export default {
       password: ''
     };
   },
-  computed: {
-    ...mapState(['isAuthenticated'])
-  },
   methods: {
-    ...mapActions(['login', 'logout']),
+    login() {
+      console.log('Email:', this.email);
+      console.log('Mot de passe:',
+      this.password);}
   },
 };
 </script>
@@ -44,31 +43,61 @@ export default {
   border: 1px solid #ccc;
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: #fff;  /* Ajout d'une couleur de fond */
+}
+
+h1 {
+  text-align: center;
+  color: #333;
 }
 
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 20px;  /* Augmentation de la marge pour plus d'espace */
 }
 
 label {
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
+  color: #333;
 }
 
 input {
   width: 100%;
-  padding: 8px;
+  padding: 10px;
   box-sizing: border-box;
-  border: 1px solid #ccc;
+  border: 1px solid #ddd;
   border-radius: 4px;
+  transition: border-color 0.3s;  /* Transition pour une expérience utilisateur plus fluide */
+}
+
+input:focus {
+  border-color: #4caf50;  /* Changement de couleur du bord lorsqu'il est en focus */
 }
 
 button {
   background-color: #4caf50;
   color: #fff;
-  padding: 10px 15px;
+  padding: 12px 15px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  width: 100%;  /* Pleine largeur du parent */
+  font-size: 16px;  /* Taille du texte légèrement augmentée */
 }
+
+button:hover {
+  background-color: #45a049;  /* Changement de couleur au survol pour une indication visuelle */
+}
+
+p {
+  text-align: center;
+  margin-top: 15px;
+}
+
+router-link {
+  color: #4caf50;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 </style>

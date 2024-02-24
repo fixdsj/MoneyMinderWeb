@@ -13,6 +13,10 @@
           <input type="text" id="description" v-model="depense.description" />
         </div>
         <div class="form-group">
+          <label for="membreconcernes">Date de la dépense:</label>
+          <input type="date" id="date" v-model="groupeactuel.date" />
+        </div>
+        <div class="form-group">
           <label for="membreconcernes">Membres concernés:</label>
           <input type="text" id="membreconcernes" v-model="groupeactuel.nom" />
         </div>
@@ -51,6 +55,12 @@ export default {
   name: 'AppDepensesEtRemboursements',
   data() {
     return {
+      notifications:[
+        { id: 1, message: 'Vous devez 54€ au groupe actuel', date: '01/01/2021' },
+        { id: 2, message: 'Vous devez 54€ au groupe actuel', date: '01/01/2021' },
+        { id: 3, message: 'Vous devez 54€ au groupe actuel', date: '01/01/2021' },
+        { id: 4, message: 'Vous devez 54€ au groupe actuel', date: '01/01/2021' },
+      ],
       groupeactuel: [
         { id: 1, nom: "Dupond", prenom: 'Jean' },
         { id: 2, nom: "Durand", prenom: 'Pierre' },
@@ -60,6 +70,7 @@ export default {
       depense: {
         montant: 0,
         description: '',
+        date: '',
         groupeusers: {},
       },
       remboursement: {
@@ -95,6 +106,12 @@ export default {
   border: 1px solid #ccc;
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.app-depenses:focus-within{
+  background-color: red;
+}
+.app-remboursement:focus-within {
+  background-color: green;
 }
 .depensesetremboursementcontainer h1{
   text-align: center;

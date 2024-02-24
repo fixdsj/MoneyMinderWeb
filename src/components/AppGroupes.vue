@@ -1,7 +1,6 @@
-
 <template>
   <div>
-    <h1>Groupes</h1>
+<!--    <h1>Groupes</h1>-->
     <div class="maincontainer">
       <div class="sidebar">
 
@@ -26,7 +25,7 @@
           <h2>{{ groupeActif?.nom }}</h2>
           <p>{{ groupeActif?.description }}</p>
 
-          <div v-if="selectedTab === 'messages'">
+          <div v-if="selectedTab === 'messages'" >
             <h3>Messages</h3>
             <AppChat />
           </div>
@@ -105,7 +104,6 @@
 
 .sidebar{
   display: flex;
-  background-color: #f0f0f0;
   height: 70vh;
   overflow-y: auto;
 }
@@ -135,7 +133,7 @@
 
 
 .sidebar ul li:hover{
-  background-color: #ddd;
+  background-color: var(--second-button-color);
 }
 .sidebar a{
   padding: 10px;
@@ -153,21 +151,25 @@
   display: block;
   text-align: center;
 }
+.tabmenu:hover{
+  background-color: var(--second-button-color);
+}
 
 .details {
   flex-grow: 1;
   padding: 20px;
 }
+
 h1 {
   text-align: center;
   margin: 20px;
 }
 .groupeactif{
-  background-color: #ddd;
+  background-color: var(--second-button-color);
   border-right: solid 2px #721c24;
 }
 .selectedtab {
-  background-color: #ddd;
+  background-color: var(--second-button-color);
   border-bottom: solid 2px  #721c24;
 }
 </style>

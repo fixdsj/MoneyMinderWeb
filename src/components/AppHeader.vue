@@ -16,7 +16,6 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'AppHeader',
@@ -25,17 +24,12 @@ export default {
       menuOpen: false
     };
   },
-  computed: {
-    ...mapState(['isAuthenticated'])
-  },
   mounted() {
     this.menuOpen = false;
   },
   methods: {
-    ...mapActions(['login', 'logout']),
     toggleMenu() {
       this.menuOpen = !this.menuOpen;
-      console.log("le menu est ouvert"+this.menuOpen);
     },
   }
 };
@@ -48,7 +42,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding: 20px 10%;
-  background-color: #c79c9c;
+  background-color: var(--main-header-color);
   color: white;
   position: sticky;
   top: 0;
@@ -58,6 +52,9 @@ export default {
 .header-container h1 {
   margin: 0;
   font-size: 24px;
+  color: var(--third-text-color);
+  background-color: var(--second-button-color);
+  padding: 0.5em 1em;
 }
 
 .menu {
@@ -71,8 +68,9 @@ export default {
 
 }
 .menu:hover {
-  border: solid 1px white;
-  border-radius: 1em;
+  border: solid 1px var(--second-text-color);
+ /* border-radius: 1em;*/
+  color: var(--second-text-color);
 }
 label
 {

@@ -19,6 +19,15 @@
       <h2>Mes informations</h2>
       <form @submit.prevent="updateCompte">
         <div class="form-group">
+          <div class="profile-picture-container">
+            <img v-if="profilePictureURL" :src="profilePictureURL" alt="Profile Picture" />
+            <div v-else class="default-profile-icon" @click="openFileInput">
+              <img src="../assets/profile_icon.png" alt="Uploader une photo" >
+            </div>
+          </div>
+          <input type="file" id="profile-picture" @change="handleProfilePictureChange" ref="fileInput" style="display: none" />
+        </div>
+        <div class="form-group">
           <label for="prenom">Prénom:</label>
           <input type="text" id="prenom" v-model="utilisateur.prenom" />
         </div>
@@ -54,6 +63,7 @@ export default {
         { id: 4, nom: 'Groupe D', description: 'Description du Groupe D' },
       ],
       inputOpen: false,
+      profilePictureURL: null,
     };
   },
   methods: {
@@ -68,6 +78,18 @@ export default {
       console.log('Créer un groupe');
       this.inputOpen= !this.inputOpen;
     },
+    handleProfilePictureChange(event) {
+      const file = event.target.files[0];
+      if (file) {
+        // Handle the file, for example, you can store it in a data property
+        this.profilePicture = file;
+        this.profilePictureURL = URL.createObjectURL(file);
+        console.log('Profile picture selected:', this.profilePictureURL);
+      }
+    },
+    openFileInput() {
+      this.$refs.fileInput.click();
+    },
   },
 };
 </script>
@@ -76,7 +98,9 @@ export default {
 .app-account{
   display: flex;
   flex-wrap: wrap;
-justify-content: space-evenly;
+  justify-content: space-evenly;
+  min-height: 100%;
+
 }
 .mes-groupes, .mes-informations{
   background-image: linear-gradient(120deg, #d6e1ea 0%, #ffffff 100%);
@@ -86,8 +110,10 @@ justify-content: space-evenly;
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   width: 50%;
+  margin-top: 10px;
+  margin-bottom: 20px;
 }
-.app-account h1{
+.app-account h2, .mes-informations h2 {
   text-align: center;
 }
 .app-account button[type="submit"], .nouveaugroupe button {
@@ -141,7 +167,14 @@ justify-content: space-evenly;
 .openinput {
   display: block;
 }
-
-
+.profile-picture-container {
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+}
+.profile-picture-container img {
+  width: 75px;
+  height: 75px;
+}
 
 </style>

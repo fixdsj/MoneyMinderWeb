@@ -21,13 +21,16 @@ export default {
 
 <style>
 #app {
-  --main-background-color: #3498db;
+  --main-background-color: radial-gradient(circle, #bbc8dd, #abbcd0, #9cb0c4, #8ca5b7, #7d99aa);
+  --first-text-color: white;
+  --second-text-color: #BAFF39;
+  --second-button-color: #BAFF39;
+  --third-text-color: black;
+  --main-header-color: #6E6E6E;
   font-family: Avenir, Helvetica, Arial, sans-serif;
+  background-image: var(--main-background-color);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /*text-align: center;*/
-  color: #2c3e50;
- /* margin-top: 5px;*/
 }
 * {
   margin: 0;

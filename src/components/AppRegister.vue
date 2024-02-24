@@ -3,6 +3,10 @@
     <h1>Inscription</h1>
     <form @submit.prevent="register">
       <div class="form-group">
+        <label for="pseudo">Pseudo :</label>
+        <input type="text" id="pseudo" v-model="pseudo" required />
+      </div>
+      <div class="form-group">
         <label for="email">Email :</label>
         <input type="email" id="email" v-model="email" required />
       </div>
@@ -22,25 +26,65 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { useMutation } from '@vue/apollo-composable';
+import gql from 'graphql-tag';
+
+const REGISTER_USER = gql`
+  mutation RegisterUser($input: AppUserInsertDtoInput!) {
+    registerUser(input: $input) {
+      id
+      userName
+      email
+      role
+    }
+  }
+`
+;
 
 export default {
   name: 'AppRegister',
   data() {
     return {
+      pseudo: '',
       email: '',
       password: '',
       confirmPassword: ''
     };
   },
-  computed: {
-    ...mapState(['isAuthenticated'])
-  },
+
   methods: {
-    ...mapActions(['register']),
+    async register() {
+      if (this.password !== this.confirmPassword) {
+        alert('Les mots de passe ne correspondent pas');
+      } else {
+        try {
+          const { data } = await this.registerUser({
+            input: {
+              userName: this.pseudo,
+              email: this.email,
+              password: this.password,
+              role: 'User'
+            }
+          });
+
+          console.log('Utilisateur inscrit:', data.registerUser);
+        } catch (error) {
+          console.error('Erreur lors de l\'inscription:', error.message);
+        }
+      }
+    }
   },
+
+  setup() {
+    const { mutate: registerUser } = useMutation(REGISTER_USER);
+
+    return {
+      registerUser
+    };
+  }
 };
 </script>
+
 
 <style scoped>
 .register-container {
@@ -50,6 +94,7 @@ export default {
   border: 1px solid #ccc;
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: #7d99aa;
 }
 
 .form-group {
