@@ -2,31 +2,46 @@
   <div class="app-account">
     <div class="mes-groupes">
       <h2>Mes groupes</h2>
-        <ul>
-          <li v-for="groupe in groupes" :key="groupe.id" class="groupes-list" >
-            {{ groupe.nom }}
-          </li>
-        </ul>
-        <!-- TODO ajouter d'autres champs-->
-        <button >Nouveau groupe</button>
-
+      <ul>
+        <li v-for="groupe in groupes" :key="groupe.id" class="groupes-list">
+          {{ groupe.nom }}
+          <img class="deletebutton" src="../assets/delete_button.png">
+        </li>
+      </ul>
+      <button class="nouveaugroupe" type="submit" @click="toggleInput" :class="{ 'openinput': inputOpen }">Nouveau
+        groupe
+      </button>
+      <form @submit.prevent="createGroupe" v-if="inputOpen">
+        <input type="text" style="margin-top: 10px"
+               placeholder="Saisir le nom du groupe et appuyer sur Entrée pour envoyer"/>
+        <button type="submit">Créer</button>
+      </form>
     </div>
-    
+
     <div class="mes-informations">
       <h2>Mes informations</h2>
       <form @submit.prevent="updateCompte">
         <div class="form-group">
+          <div class="profile-picture-container">
+            <img v-if="profilePictureURL" :src="profilePictureURL" alt="Profile Picture"/>
+            <div v-else class="default-profile-icon" @click="openFileInput">
+              <img src="../assets/profile_icon.png" alt="Uploader une photo">
+            </div>
+          </div>
+          <input type="file" id="profile-picture" @change="handleProfilePictureChange" ref="fileInput"
+                 style="display: none"/>
+        </div>
+        <div class="form-group">
           <label for="prenom">Prénom:</label>
-          <input type="text" id="prenom" v-model="utilisateur.prenom" />
+          <input type="text" id="prenom" v-model="utilisateur.prenom"/>
         </div>
         <div class="form-group">
           <label for="nom">Nom:</label>
-          <input type="text" id="nom" v-model="utilisateur.nom" />
+          <input type="text" id="nom" v-model="utilisateur.nom"/>
         </div>
-
         <div class="form-group">
           <label for="email">Email:</label>
-          <input type="email" id="email" v-model="utilisateur.email" />
+          <input type="email" id="email" v-model="utilisateur.email"/>
         </div>
         <!-- TODO ajouter d'autres champs-->
         <button type="submit">Mettre à jour</button>
@@ -46,77 +61,71 @@ export default {
         email: 'robert.durand@gmail.com',
       },
       groupes: [
-        { id: 1, nom: 'Groupe A', description: 'Description du Groupe A' },
-        { id: 2, nom: 'Groupe B', description: 'Description du Groupe B' },
-        { id: 3, nom: 'Groupe C', description: 'Description du Groupe C' },
-        { id: 4, nom: 'Groupe D', description: 'Description du Groupe D' },
+        {id: 1, nom: 'Groupe A', description: 'Description du Groupe A'},
+        {id: 2, nom: 'Groupe B', description: 'Description du Groupe B'},
+        {id: 3, nom: 'Groupe C', description: 'Description du Groupe C'},
+        {id: 4, nom: 'Groupe D', description: 'Description du Groupe D'},
       ],
+      inputOpen: false,
+      profilePictureURL: null,
     };
   },
   methods: {
     updateCompte() {
       console.log('Informations mises à jour:', this.utilisateur);
-
+    },
+    toggleInput() {
+      this.inputOpen = !this.inputOpen;
+      console.log("le menu est ouvert" + this.inputOpen);
+    },
+    createGroupe() {
+      console.log('Créer un groupe');
+      this.inputOpen = !this.inputOpen;
+    },
+    handleProfilePictureChange(event) {
+      const file = event.target.files[0];
+      if (file) {
+        // Handle the file, for example, you can store it in a data property
+        this.profilePicture = file;
+        this.profilePictureURL = URL.createObjectURL(file);
+        console.log('Profile picture selected:', this.profilePictureURL);
+      }
+    },
+    openFileInput() {
+      this.$refs.fileInput.click();
     },
   },
 };
 </script>
+
 <style scoped>
 .app-account {
   display: flex;
-  background-color: var(--main-background-color);
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  min-height: 100%;
+
 }
-.mes-informations, .mes-groupes{
+
+.mes-groupes, .mes-informations {
+  background-image: linear-gradient(120deg, #d6e1ea 0%, #ffffff 100%);
   max-width: 400px;
-  margin: 2rem auto;
-  padding: 2rem;
-  border: 1px solid #eaeaea;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-  background-color: #fff;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 50%;
+  margin-top: 10px;
+  margin-bottom: 20px;
 }
 
-h2 {
-  color: #333;
-  margin-bottom: 1.5rem;
+.app-account h2, .mes-informations h2 {
   text-align: center;
 }
-.groupes-list {
-  padding: 0.5rem;
-  border-bottom: 1px solid #eaeaea;
-  transition: background-color 0.3s;
-  text-align: center;
-  text-decoration: none;
-  list-style-type: none;
-}
 
-.form-group {
-  margin-bottom: 1rem;
-  display: flex;
-  flex-direction: column;
-}
-
-.form-group label {
-  margin-bottom: 0.5rem;
-  font-size: 1rem;
-  color: #666;
-}
-
-.form-group input {
-  padding: 0.5rem;
-  font-size: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  transition: border-color 0.3s;
-}
-
-.form-group input:focus {
-  outline: none;
-  border-color: #007bff;
-}
-
-button[type="submit"], .mes-groupes button{
+.app-account button[type="submit"], .nouveaugroupe button {
   width: 100%;
+  margin-top: 15px;
   padding: 0.75rem;
   font-size: 1rem;
   color: #fff;
@@ -127,7 +136,58 @@ button[type="submit"], .mes-groupes button{
   transition: background-color 0.3s;
 }
 
-button[type="submit"]:hover {
+.app-account button[type="submit"]:hover, .nouveaugroupe button:hover {
   background-color: #0056b3;
 }
+
+.app-account input {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.app-account select {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.app-account label {
+  display: block;
+  margin: 5px;
+}
+
+.mes-groupes li {
+  padding: 15px;
+  cursor: pointer;
+  text-align: center;
+  list-style-type: none;
+}
+
+.deletebutton {
+  width: 20px;
+  height: 20px;
+  padding-top: 5px;
+  background: none;
+}
+
+.openinput {
+  display: block;
+}
+
+.profile-picture-container {
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.profile-picture-container img {
+  width: 75px;
+  height: 75px;
+}
+
 </style>

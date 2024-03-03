@@ -1,5 +1,3 @@
-
-
 <template>
   <div class="footer-container">
     <p>© 2024 Money Minder</p>
@@ -25,8 +23,8 @@ export default {
   justify-content: center;
   align-items: center;
   padding: 20px 10%;
-  background-color: #c79c9c;
-  color: white;
+  background-color: var(--main-header-color);
+  color: var(--first-text-color);
 }
 
 </style>
