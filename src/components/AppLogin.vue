@@ -17,7 +17,8 @@
     </div>-->
 
   <div class="col-md-10 mx-auto col-lg-5">
-    <form class="p-4 p-md-5 border rounded-3 bg-body-tertiary">
+    <form class="p-4 p-md-5 border rounded-3 bg-body-tertiary" @submit.prevent="login">
+      <h3 class="text-center mb-4">Inscription</h3>
       <div class="form-floating mb-3">
         <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
         <label for="floatingInput">Adresse mail</label>
@@ -25,6 +26,11 @@
       <div class="form-floating mb-3">
         <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
         <label for="floatingPassword">Mot de passe</label>
+      </div>
+      <div class="d-grid mb-2">
+        <a class="btn btn-google btn-login text-uppercase fw-bold" type="submit">
+          <i class="bi bi-google me-2"></i> Sign in with Google
+        </a>
       </div>
       <button class="w-100 btn btn-lg btn-primary" type="submit">Se connecter</button>
       <hr class="my-4">
@@ -53,68 +59,13 @@ export default {
 </script>
 
 <style scoped>
-/*.login-container {
-  max-width: 400px;
-  margin: 0 auto;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  background-color: #fff;  !* Ajout d'une couleur de fond *!
+.btn-google {
+  color: white !important;
+  background-color: #ea4335;
 }
 
-h1 {
-  text-align: center;
-  color: #333;
+.btn-google:hover {
+  background-color: #d73e2b;
 }
-
-.form-group {
-  margin-bottom: 20px;  !* Augmentation de la marge pour plus d'espace *!
-}
-
-label {
-  display: block;
-  margin-bottom: 8px;
-  color: #333;
-}
-
-input {
-  width: 100%;
-  padding: 10px;
-  box-sizing: border-box;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  transition: border-color 0.3s;  !* Transition pour une expérience utilisateur plus fluide *!
-}
-
-input:focus {
-  border-color: #4caf50;  !* Changement de couleur du bord lorsqu'il est en focus *!
-}
-
-button {
-  background-color: #4caf50;
-  color: #fff;
-  padding: 12px 15px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  width: 100%;  !* Pleine largeur du parent *!
-  font-size: 16px;  !* Taille du texte légèrement augmentée *!
-}
-
-button:hover {
-  background-color: #45a049;  !* Changement de couleur au survol pour une indication visuelle *!
-}
-
-p {
-  text-align: center;
-  margin-top: 15px;
-}
-
-router-link {
-  color: #4caf50;
-  text-decoration: underline;
-  cursor: pointer;
-}*/
 
 </style>

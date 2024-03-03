@@ -18,7 +18,15 @@
       <button class="w-100 btn btn-lg btn-primary" type="submit">S'inscrire</button>
       <hr class="my-4">
       <small class="text-body-secondary">En cliquant sur S'inscrire, vous acceptez les conditions d'utilisation.</small>
+      <h4 class="text-center my-4 text-uppercase">Ou</h4>
+      <div class="d-grid mb-2">
+        <a class="btn btn-google btn-login text-uppercase fw-bold" type="submit">
+          <i class="bi bi-google me-2"></i> S'inscrire avec Google
+        </a>
+        <i class="fab fa-google me-2"></i>
+      </div>
     </form>
+
   </div>
 </template>
 
@@ -84,4 +92,12 @@ export default {
 
 
 <style scoped>
+.btn-google {
+  color: white !important;
+  background-color: #ea4335;
+}
+
+.btn-google:hover {
+  background-color: #d73e2b;
+}
 </style>

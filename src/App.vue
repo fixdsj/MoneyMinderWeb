@@ -20,7 +20,8 @@ export default {
 
 <style>
 #app {
-  --main-background-color: radial-gradient(circle, #bbc8dd, #abbcd0, #9cb0c4, #8ca5b7, #7d99aa);
+  --main-background-color: linear-gradient(to right, #d3cce3, #e9e4f0);
+
   --first-text-color: white;
   --second-text-color: #BAFF39;
   --second-button-color: #BAFF39;
