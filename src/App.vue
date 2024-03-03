@@ -1,8 +1,7 @@
-
 <template>
-  <AppHeader />
-  <router-view />
-  <AppFooter />
+  <AppHeader/>
+  <router-view/>
+  <AppFooter/>
 
 </template>
 
@@ -32,6 +31,7 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
 * {
   margin: 0;
   padding: 0;

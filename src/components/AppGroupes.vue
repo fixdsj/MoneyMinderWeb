@@ -1,6 +1,6 @@
 <template>
   <div>
-<!--    <h1>Groupes</h1>-->
+    <!--    <h1>Groupes</h1>-->
     <div class="maincontainer">
       <div class="sidebar">
 
@@ -10,24 +10,28 @@
               :class="{'groupeactif': groupeActif && groupe.id === groupeActif.id}">
             {{ groupe.nom }}
           </li>
-          <li><router-link to="/account">Ajouter un groupe</router-link></li>
+          <li>
+            <router-link to="/account">Ajouter un groupe</router-link>
+          </li>
         </ul>
       </div>
 
       <div class="contentcontainer">
         <nav class="topbar">
-            <p class="tabmenu" @click="selectTab('messages')" :class="{ 'selectedtab': selectedTab === 'messages' }">Messages</p>
-            <p class="tabmenu" @click="selectTab('depenses')"  :class="{ 'selectedtab': selectedTab === 'depenses' }">Dépenses/Remboursements</p>
-            <p class="tabmenu" @click="selectTab('historique')" :class="{ 'selectedtab': selectedTab === 'historique' }">Historique</p>
+          <p class="tabmenu" @click="selectTab('messages')" :class="{ 'selectedtab': selectedTab === 'messages' }">
+            Messages</p>
+          <p class="tabmenu" @click="selectTab('depenses')" :class="{ 'selectedtab': selectedTab === 'depenses' }">
+            Dépenses/Remboursements</p>
+          <p class="tabmenu" @click="selectTab('historique')" :class="{ 'selectedtab': selectedTab === 'historique' }">
+            Historique</p>
         </nav>
 
         <div class="details">
           <h2>{{ groupeActif?.nom }}</h2>
           <p>{{ groupeActif?.description }}</p>
 
-          <div v-if="selectedTab === 'messages'" >
-            <h3>Messages</h3>
-            <AppChat />
+          <div v-if="selectedTab === 'messages'">
+            <AppChat/>
           </div>
 
           <div v-if="selectedTab === 'depenses'">
@@ -37,72 +41,73 @@
 
           <div v-if="selectedTab === 'historique'">
             <h3>Historique</h3>
-            <AppLastTransactions />
+            <AppLastTransactions/>
           </div>
         </div>
       </div>
     </div>
   </div>
 </template>
-  <script>
-  import AppChat from "@/components/AppChat.vue";
-  import AppDepensesEtRemboursements from "@/components/AppDepensesEtRemboursements.vue";
-  import AppLastTransactions from "@/components/AppLastTransactions.vue";
+<script>
+import AppChat from "@/components/AppChat.vue";
+import AppDepensesEtRemboursements from "@/components/AppDepensesEtRemboursements.vue";
+import AppLastTransactions from "@/components/AppLastTransactions.vue";
 
-  export default {
-    name: 'VueGroupes',
-    components: {AppLastTransactions, AppChat, AppDepensesEtRemboursements},
-    data() {
-      return {
-        groupes: [
-          { id: 1, nom: 'Groupe A', description: 'Description du Groupe A' },
-          { id: 2, nom: 'Groupe B', description: 'Description du Groupe B' },
-          { id: 3, nom: 'Groupe C', description: 'Description du Groupe C' },
-          { id: 4, nom: 'Groupe D', description: 'Description du Groupe D' },
-        ],
-        depenses:[
-          { id: 1, montant: 100, destinataire: 'Maurice'},
-          { id: 2, montant: 200, destinataire: 'Groupe B' },
-          { id: 3, montant: 300, destinataire: 'Groupe C' },
-          { id: 4, montant: 400, destinataire: 'Groupe D'}
-        ],
-        historique:[
-          { id: 1, action: 'Remboursement soirée', type:'remboursement' ,date: '01/01/2021'},
-          { id: 2, action: 'Action 2', type:'remboursement' ,date: '02/01/2021' },
-          { id: 3, action: 'Action 3', type:'remboursement' , date: '03/01/2021' },
-          { id: 4, action: 'Action 4', type:'remboursement' , date: '04/01/2021'}
-        ],
-        groupeActif: null,
-        selectedTab: 'depenses',
-      };
+export default {
+  name: 'VueGroupes',
+  components: {AppLastTransactions, AppChat, AppDepensesEtRemboursements},
+  data() {
+    return {
+      groupes: [
+        {id: 1, nom: 'Groupe A', description: 'Description du Groupe A'},
+        {id: 2, nom: 'Groupe B', description: 'Description du Groupe B'},
+        {id: 3, nom: 'Groupe C', description: 'Description du Groupe C'},
+        {id: 4, nom: 'Groupe D', description: 'Description du Groupe D'},
+      ],
+      depenses: [
+        {id: 1, montant: 100, destinataire: 'Maurice'},
+        {id: 2, montant: 200, destinataire: 'Groupe B'},
+        {id: 3, montant: 300, destinataire: 'Groupe C'},
+        {id: 4, montant: 400, destinataire: 'Groupe D'}
+      ],
+      historique: [
+        {id: 1, action: 'Remboursement soirée', type: 'remboursement', date: '01/01/2021'},
+        {id: 2, action: 'Action 2', type: 'remboursement', date: '02/01/2021'},
+        {id: 3, action: 'Action 3', type: 'remboursement', date: '03/01/2021'},
+        {id: 4, action: 'Action 4', type: 'remboursement', date: '04/01/2021'}
+      ],
+      groupeActif: null,
+      selectedTab: 'depenses',
+    };
+  },
+  mounted() {
+    // Sélection du premier groupe par défaut
+    if (this.groupes.length > 0) {
+      this.groupeActif = this.groupes[0];
+    }
+  },
+  methods: {
+    selectGroupe(groupe) {
+      this.groupeActif = groupe;
     },
-    mounted() {
-      // Sélection du premier groupe par défaut
-      if (this.groupes.length > 0) {
-        this.groupeActif = this.groupes[0];
-      }
+    selectTab(tab) {
+      this.selectedTab = tab;
     },
-    methods: {
-      selectGroupe(groupe) {
-        this.groupeActif = groupe;
-      },
-      selectTab(tab) {
-        this.selectedTab = tab;
-      },
-    },
-  };
-  </script>
+  },
+};
+</script>
 
 <style scoped>
 .maincontainer {
   display: flex;
 }
+
 .contentcontainer {
   background-color: #d6e1ea;
   flex-grow: 1;
 }
 
-.sidebar{
+.sidebar {
   display: flex;
   height: 70vh;
   overflow-y: auto;
@@ -118,13 +123,13 @@
   padding-left: 15px;
 }
 
-.sidebar ul ul{
+.sidebar ul ul {
   list-style: none;
   padding: 0;
   text-decoration: none;
 }
 
-.sidebar  ul li{
+.sidebar ul li {
   padding: 15px;
   cursor: pointer;
   text-align: center;
@@ -132,10 +137,11 @@
 }
 
 
-.sidebar ul li:hover{
+.sidebar ul li:hover {
   background-color: var(--second-button-color);
 }
-.sidebar a{
+
+.sidebar a {
   padding: 10px;
   cursor: pointer;
   display: block;
@@ -143,7 +149,8 @@
   text-decoration: none;
   color: inherit;
 }
-.tabmenu{
+
+.tabmenu {
   cursor: pointer;
   text-decoration: none;
   color: inherit;
@@ -151,7 +158,8 @@
   display: block;
   text-align: center;
 }
-.tabmenu:hover{
+
+.tabmenu:hover {
   background-color: var(--second-button-color);
 }
 
@@ -164,12 +172,14 @@ h1 {
   text-align: center;
   margin: 20px;
 }
-.groupeactif{
+
+.groupeactif {
   background-color: var(--second-button-color);
   border-right: solid 2px #721c24;
 }
+
 .selectedtab {
   background-color: var(--second-button-color);
-  border-bottom: solid 2px  #721c24;
+  border-bottom: solid 2px #721c24;
 }
 </style>

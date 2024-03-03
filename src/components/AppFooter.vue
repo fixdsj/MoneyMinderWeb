@@ -1,5 +1,3 @@
-
-
 <template>
   <div class="footer-container">
     <p>© 2024 Money Minder</p>

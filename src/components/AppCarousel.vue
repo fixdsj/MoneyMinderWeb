@@ -1,5 +1,5 @@
-<template >
-  <carousel >
+<template>
+  <carousel>
     <slide>
       <img src="../assets/example_carrousel.jpg" alt="Slide 1">
     </slide>
@@ -13,8 +13,9 @@
 
 </template>
 
-<script >
-import { Carousel, Slide } from 'vue-carousel';
+<script>
+import {Carousel, Slide} from 'vue-carousel';
+
 export default {
   data() {
     return {

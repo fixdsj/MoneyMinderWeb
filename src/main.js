@@ -1,15 +1,16 @@
-import { createApp, provide, h } from 'vue';
+import {createApp, provide, h} from 'vue';
 import {DefaultApolloClient} from '@vue/apollo-composable';
 import {ApolloClient, InMemoryCache, HttpLink} from "@apollo/client/core";
 import App from './App.vue';
 import router from './router/index.js';
 
-const cache = new InMemoryCache();
-/*const apolloclient = new ApolloClient({
-    cache,
-  uri: 'http://localhost:3000/graphql',
+//Import Bootstrap
+import "bootstrap/dist/css/bootstrap.min.css"
+import "bootstrap"
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
-});*/
+const cache = new InMemoryCache();
+
 
 const apolloclient = new ApolloClient({
     cache,
