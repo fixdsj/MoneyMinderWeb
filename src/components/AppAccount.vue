@@ -5,7 +5,7 @@
       <ul>
         <li v-for="groupe in groupes" :key="groupe.id" class="groupes-list">
           {{ groupe.nom }}
-          <img class="deletebutton" src="../assets/delete_button.png">
+          <i class="bi bi-trash deletebutton"></i>
         </li>
       </ul>
       <button class="nouveaugroupe" type="submit" @click="toggleInput" :class="{ 'openinput': inputOpen }">Nouveau

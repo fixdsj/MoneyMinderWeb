@@ -1,21 +1,24 @@
 <template>
   <div class="col-md-10 mx-auto col-lg-5">
-
     <form class="p-4 p-md-5 border rounded-3 bg-body-tertiary">
       <h3 class="text-center mb-4">Inscription</h3>
       <div class="form-floating mb-3">
-        <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-        <label for="floatingInput">Adresse mail</label>
+        <input type="text" class="form-control" id="pseudo" v-model="pseudo" placeholder="Pseudo">
+        <label for="pseudo">Pseudo</label>
       </div>
       <div class="form-floating mb-3">
-        <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
-        <label for="floatingPassword">Mot de passe</label>
+        <input type="email" class="form-control" id="email" v-model="email" placeholder="name@example.com">
+        <label for="email">Adresse mail</label>
       </div>
       <div class="form-floating mb-3">
-        <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
-        <label for="floatingPassword">Confirmer le mot de passe</label>
+        <input type="password" class="form-control" id="password" v-model="password" placeholder="Password">
+        <label for="password">Mot de passe</label>
       </div>
-      <button class="w-100 btn btn-lg btn-primary" type="submit">S'inscrire</button>
+      <div class="form-floating mb-3">
+        <input type="password" class="form-control" id="confirmPassword" placeholder="Password">
+        <label for="confirmPassword">Confirmer le mot de passe</label>
+      </div>
+      <button class="w-100 btn btn-lg btn-primary" type="submit" @click="register">S'inscrire</button>
       <hr class="my-4">
       <small class="text-body-secondary">En cliquant sur S'inscrire, vous acceptez les conditions d'utilisation.</small>
       <h4 class="text-center my-4 text-uppercase">Ou</h4>
@@ -31,63 +34,67 @@
 </template>
 
 <script>
-import {useMutation} from '@vue/apollo-composable';
-import gql from 'graphql-tag';
-
-const REGISTER_USER = gql`
-  mutation RegisterUser($input: AppUserInsertDtoInput!) {
-    registerUser(input: $input) {
-      id
-      userName
-      email
-      role
-    }
-  }
-`
-;
 
 export default {
-  name: 'AppRegister',
+  name: 'VueRegister',
   data() {
     return {
       pseudo: '',
       email: '',
       password: '',
-      confirmPassword: ''
     };
   },
 
   methods: {
     async register() {
-      if (this.password !== this.confirmPassword) {
-        alert('Les mots de passe ne correspondent pas');
-      } else {
-        try {
-          const {data} = await this.registerUser({
-            input: {
-              userName: this.pseudo,
+      try {
+        console.log('Données saisies :', this.pseudo, this.email, this.password);
+        const url = 'http://localhost:3000/graphql';
+        const requeteGraphQL = `
+    mutation ((appUserInsertDto:($pseudo: String!, $email: String!, $password: String!) {
+    createUser(userName: $pseudo, email: $email, password: $password, role: "User") {
+      pseudo
+    })
+  }
+`;
+
+        const options = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            query: requeteGraphQL,
+            variables: {
+              pseudo: this.pseudo,
               email: this.email,
               password: this.password,
-              role: 'User'
-            }
-          });
+              role: "User"
+            },
+          }),
+        };
 
-          console.log('Utilisateur inscrit:', data.registerUser);
-        } catch (error) {
-          console.error('Erreur lors de l\'inscription:', error.message);
+        const reponse = await fetch(url, options);
+        const result = await reponse.json();
+
+        if (result.errors) {
+          console.error('Erreur lors de la requête :', result.errors);
+        } else {
+          console.log('Données retournées :', result.data);
         }
+
+        const {data} = await reponse.json();
+
+        console.log('Données retournées :', data);
+      } catch (error) {
+        console.error('Erreur lors de la requête :', error);
       }
-    }
-  },
+    },
 
-  setup() {
-    const {mutate: registerUser} = useMutation(REGISTER_USER);
 
-    return {
-      registerUser
-    };
   }
 };
+
 </script>
 
 

@@ -6,7 +6,7 @@
       <p class="lead mb-4">Simplifiez vos dépenses et gérer facilement les dépenses partagées avec vos amis et votre
         famille.</p>
       <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-        <button type="button" class="btn btn-primary btn-lg px-4 gap-3">Inscrivez-vous</button>
+        <a href="/register" type="button" class="btn btn-primary btn-lg px-4 gap-3">S'inscrire</a>
         <button type="button" class="btn btn-outline-secondary btn-lg px-4">En savoir plus</button>
       </div>
     </div>
