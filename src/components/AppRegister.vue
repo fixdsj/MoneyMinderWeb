@@ -89,9 +89,7 @@ export default {
         })
 
       });
-      confirm('Utilisateur créé avec succès')
       const responseData = await response.json();
-      console.log('Réponse JSON :', responseData);
       if (responseData.errors) {
         this.errors = ['Erreur : ' + responseData.errors[0].message];
 

@@ -1,27 +1,31 @@
 <template>
 
-
   <div class="col-md-10 mx-auto col-lg-5">
     <form class="p-4 p-md-5 border rounded-3 bg-body-tertiary" @submit="login">
       <h3 class="text-center mb-4">Connexion</h3>
+      <p class="text-danger" v-if="errors.length">
+        <b>Please correct the following error(s):</b>
+        <ul class="mb-0 list-unstyled">
+          <li v-for="(error, index) in errors" :key="index">{{ error }}</li>
+        </ul>
+      </p>
       <div class="form-floating mb-3">
-        <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-        <label for="floatingInput">Adresse mail</label>
+        <input type="text" class="form-control" id="username" placeholder="Votre pseudo" v-model="username">
+        <label for="username">Adresse mail</label>
       </div>
       <div class="form-floating mb-3">
-        <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+        <input type="password" class="form-control" id="password" placeholder="Password" v-model="password">
         <label for="floatingPassword">Mot de passe</label>
       </div>
       <small class="text-body-secondary">En cliquant sur Se connecter, vous acceptez les conditions
         d'utilisation.</small>
       <button class="w-100 btn btn-lg btn-primary" type="submit">Se connecter</button>
 
-
       <hr class="my-4">
       <h4 class="text-center my-4 text-uppercase">Ou</h4>
       <div class="d-grid mb-2">
         <a class="btn btn-google btn-login text-uppercase fw-bold" type="submit">
-          <i class="bi bi-google me-2"></i> S'inscrire avec Google
+          <i class="bi bi-google me-2"></i> Se connecter avec Google
         </a>
         <i class="fab fa-google me-2"></i>
       </div>
@@ -34,15 +38,49 @@ export default {
   name: 'AppLogin',
   data() {
     return {
-      email: '',
-      password: ''
+      username: '',
+      password: '',
+      errors: [],
     };
   },
   methods: {
-    login() {
-      console.log('Email:', this.email);
-      console.log('Mot de passe:',
-          this.password);
+
+    async login() {
+      event.preventDefault();
+
+      console.log('Données saisies :', this.email, this.password);
+      const response = await fetch('http://localhost:3000/graphql', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: `mutation CreateUser {
+    createUser(
+        appUserInsertDto: {
+            userName: "${this.pseudo}"
+            email: "${this.email}"
+            password: "${this.password}"
+        }
+    ) {
+        balance
+        id
+        userName
+        email
+    }
+}
+`
+        })
+
+      });
+      const responseData = await response.json();
+      if (responseData.errors) {
+        this.errors = ['Erreur : ' + responseData.errors[0].message];
+
+      }
+      if (responseData.data.createUser !== null) {
+        alert('Utilisateur connecté avec succès');
+      }
     }
   },
 };
