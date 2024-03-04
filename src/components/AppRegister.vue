@@ -21,7 +21,8 @@
         <label for="password">Mot de passe</label>
       </div>
       <div class="form-floating mb-3">
-        <input type="password" class="form-control" id="confirmPassword" placeholder="Password">
+        <input type="password" class="form-control" id="confirmPassword" v-model="confirmPassword"
+               placeholder="Password">
         <label for="confirmPassword">Confirmer le mot de passe</label>
       </div>
       <small class="text-body-secondary">En cliquant sur S'inscrire, vous acceptez les conditions d'utilisation.</small>
@@ -48,6 +49,7 @@ export default {
       pseudo: '',
       email: '',
       password: '',
+      confirmPassword: '',
       errors: [],
     };
   },
@@ -56,6 +58,10 @@ export default {
 
     async register() {
       event.preventDefault();
+      if (this.password !== this.confirmPassword) {
+        this.errors = ['Les mots de passe ne correspondent pas'];
+        return;
+      }
 
       console.log('Données saisies :', this.pseudo, this.email, this.password);
       const response = await fetch('http://localhost:3000/graphql', {
@@ -83,7 +89,7 @@ export default {
         })
 
       });
-      console.log('ca passe ici');
+      confirm('Utilisateur créé avec succès')
       const responseData = await response.json();
       console.log('Réponse JSON :', responseData);
       if (responseData.errors) {
