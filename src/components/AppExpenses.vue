@@ -34,7 +34,7 @@ export default {
       <div class="form-group">
         <label for="intitule">Intitulé:</label>
         <input type="text" id="description" class="form-control" v-model="depense.description"/>
-        <small id="emailHelp" class="form-text text-muted">Pour quel achat avez-vous dépensé?</small>
+        <small id="expenseHelp" class="form-text text-muted">Pour quel achat avez-vous dépensé?</small>
       </div>
       <div class="form-group">
         <label for="montant">Montant:</label>

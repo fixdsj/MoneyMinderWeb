@@ -1,7 +1,13 @@
 <template>
   <div class="col-md-10 mx-auto col-lg-5">
-    <form class="p-4 p-md-5 border rounded-3 bg-body-tertiary">
+    <form class="p-4 p-md-5 border rounded-3 bg-body-tertiary" @submit="register">
       <h3 class="text-center mb-4">Inscription</h3>
+      <p class="text-danger" v-if="errors.length">
+        <b>Please correct the following error(s):</b>
+        <ul class="mb-0 list-unstyled">
+          <li v-for="(error, index) in errors" :key="index">{{ error }}</li>
+        </ul>
+      </p>
       <div class="form-floating mb-3">
         <input type="text" class="form-control" id="pseudo" v-model="pseudo" placeholder="Pseudo">
         <label for="pseudo">Pseudo</label>
@@ -18,9 +24,9 @@
         <input type="password" class="form-control" id="confirmPassword" placeholder="Password">
         <label for="confirmPassword">Confirmer le mot de passe</label>
       </div>
-      <button class="w-100 btn btn-lg btn-primary" type="submit" @click="register">S'inscrire</button>
-      <hr class="my-4">
       <small class="text-body-secondary">En cliquant sur S'inscrire, vous acceptez les conditions d'utilisation.</small>
+      <button class="w-100 btn btn-lg btn-primary" type="submit">S'inscrire</button>
+      <hr class="my-4">
       <h4 class="text-center my-4 text-uppercase">Ou</h4>
       <div class="d-grid mb-2">
         <a class="btn btn-google btn-login text-uppercase fw-bold" type="submit">
@@ -42,57 +48,53 @@ export default {
       pseudo: '',
       email: '',
       password: '',
+      errors: [],
     };
   },
 
   methods: {
+
     async register() {
-      try {
-        console.log('Données saisies :', this.pseudo, this.email, this.password);
-        const url = 'http://localhost:3000/graphql';
-        const requeteGraphQL = `
-    mutation ((appUserInsertDto:($pseudo: String!, $email: String!, $password: String!) {
-    createUser(userName: $pseudo, email: $email, password: $password, role: "User") {
-      pseudo
-    })
-  }
-`;
+      event.preventDefault();
 
-        const options = {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            query: requeteGraphQL,
-            variables: {
-              pseudo: this.pseudo,
-              email: this.email,
-              password: this.password,
-              role: "User"
-            },
-          }),
-        };
-
-        const reponse = await fetch(url, options);
-        const result = await reponse.json();
-
-        if (result.errors) {
-          console.error('Erreur lors de la requête :', result.errors);
-        } else {
-          console.log('Données retournées :', result.data);
+      console.log('Données saisies :', this.pseudo, this.email, this.password);
+      const response = await fetch('http://localhost:3000/graphql', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: `mutation CreateUser {
+    createUser(
+        appUserInsertDto: {
+            userName: "${this.pseudo}"
+            email: "${this.email}"
+            password: "${this.password}"
+            role: "User"
         }
+    ) {
+        balance
+        id
+        userName
+        email
+    }
+}
+`
+        })
 
-        const {data} = await reponse.json();
+      });
+      console.log('ca passe ici');
+      const responseData = await response.json();
+      console.log('Réponse JSON :', responseData);
+      if (responseData.errors) {
+        this.errors = ['Erreur : ' + responseData.errors[0].message];
 
-        console.log('Données retournées :', data);
-      } catch (error) {
-        console.error('Erreur lors de la requête :', error);
       }
-    },
-
-
-  }
+      if (responseData.data.createUser !== null) {
+        alert('Utilisateur créé avec succès');
+      }
+    }
+  },
 };
 
 </script>
