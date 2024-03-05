@@ -56,7 +56,8 @@
             <AppLastTransactions/>
           </div>
           <div v-if="selectedTab === 'details'">
-            <h3>Détails</h3>
+            <h3>Détails du groupe</h3>
+            <AppGroupeDetails/>
           </div>
         </div>
       </div>
@@ -67,10 +68,11 @@
 import AppRefunds from "@/components/AppRefunds.vue";
 import AppExpenses from "@/components/AppExpenses.vue";
 import AppLastTransactions from "@/components/AppLastTransactions.vue";
+import AppGroupeDetails from "@/components/AppGroupeDetails.vue";
 
 export default {
   name: 'VueGroupes',
-  components: {AppLastTransactions, AppRefunds, AppExpenses},
+  components: {AppLastTransactions, AppRefunds, AppExpenses, AppGroupeDetails},
   data() {
     return {
       groupes: [

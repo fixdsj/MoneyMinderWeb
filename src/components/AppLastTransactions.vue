@@ -7,7 +7,7 @@
                 data-bs-target="#panelsStayOpen-collapse{{transaction.id}}" aria-expanded="true"
                 aria-controls="panelsStayOpen-collapse{{transaction.id}}">
           {{ transaction.author }} - {{ transaction.montant }}€ - {{ transaction.date }} -
-          {{ formatType(transaction.type) }}
+          {{ formatType(transaction.type) }}&nbsp; <span class="badge bg-secondary">{{ transaction.categorie }}</span>
         </button>
       </h2>
       <div id="panelsStayOpen-collapse{{transaction.id}}" class="accordion-collapse collapse show"
@@ -19,6 +19,10 @@
             <button class="btn"><i class="bi bi-file-earmark-arrow-down"></i></button>
           </div>
           Membres concernés: {{ transaction.membresconcernes.join(', ') }}
+
+          <div class="text-end">
+            Catégorie: {{ transaction.categorie }}
+          </div>
         </div>
       </div>
     </div>
@@ -39,7 +43,8 @@ export default {
           date: '12/03/2002',
           type: 'remboursement',
           description: 'Remboursement soirée',
-          membresconcernes: ['Pierre', 'Paul', 'Jacques']
+          membresconcernes: ['Pierre', 'Paul', 'Jacques'],
+          categorie: 'sorties'
         },
         {
           author: 'Pierre',
@@ -47,7 +52,8 @@ export default {
           date: '05/12/2021',
           type: 'depense',
           description: 'Achat de matériel',
-          membresconcernes: ['Pierre', 'Paul', 'Jacques']
+          membresconcernes: ['Pierre', 'Paul', 'Jacques'],
+          categorie: 'divers'
         },
         {
           author: 'Pierre',
@@ -55,7 +61,8 @@ export default {
           date: '18/04/2021',
           type: 'remboursement',
           description: 'Remboursement soirée',
-          membresconcernes: ['Pierre', 'Paul', 'Jacques']
+          membresconcernes: ['Pierre', 'Paul', 'Jacques'],
+          categorie: 'sorties'
         },
         {
           author: 'Pierre',
@@ -63,7 +70,8 @@ export default {
           date: '13/09/2011',
           type: 'depense',
           description: 'Achat de matériel',
-          membresconcernes: ['Pierre', 'Paul', 'Jacques']
+          membresconcernes: ['Pierre', 'Paul', 'Jacques'],
+          categorie: 'divers'
         },
       ],
     };
