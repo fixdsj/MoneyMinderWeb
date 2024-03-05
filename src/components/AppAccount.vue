@@ -22,16 +22,6 @@
       <h2>Mes informations</h2>
       <form @submit.prevent="updateCompte">
         <div class="form-group">
-          <div class="profile-picture-container">
-            <img v-if="profilePictureURL" :src="profilePictureURL" alt="Profile Picture"/>
-            <div v-else class="default-profile-icon" @click="openFileInput">
-              <img src="../assets/profile_icon.png" alt="Uploader une photo">
-            </div>
-          </div>
-          <input type="file" id="profile-picture" @change="handleProfilePictureChange" ref="fileInput"
-                 style="display: none"/>
-        </div>
-        <div class="form-group">
           <label for="prenom">Prénom:</label>
           <input type="text" id="prenom" v-model="utilisateur.prenom"/>
         </div>
@@ -53,6 +43,10 @@
 <script>
 export default {
   name: 'AppAccount',
+  mounted() {
+    console.log('Composant AppAccount monté');
+
+  },
   data() {
     return {
       utilisateur: {
@@ -66,8 +60,7 @@ export default {
         {id: 3, nom: 'Groupe C', description: 'Description du Groupe C'},
         {id: 4, nom: 'Groupe D', description: 'Description du Groupe D'},
       ],
-      inputOpen: false,
-      profilePictureURL: null,
+
     };
   },
   methods: {
@@ -82,18 +75,7 @@ export default {
       console.log('Créer un groupe');
       this.inputOpen = !this.inputOpen;
     },
-    handleProfilePictureChange(event) {
-      const file = event.target.files[0];
-      if (file) {
-        // Handle the file, for example, you can store it in a data property
-        this.profilePicture = file;
-        this.profilePictureURL = URL.createObjectURL(file);
-        console.log('Profile picture selected:', this.profilePictureURL);
-      }
-    },
-    openFileInput() {
-      this.$refs.fileInput.click();
-    },
+
   },
 };
 </script>

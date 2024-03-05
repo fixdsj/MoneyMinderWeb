@@ -15,6 +15,7 @@ export default {
         date: '',
         groupeusers: {},
       },
+      justificatif: null,
     };
   },
   methods: {
@@ -41,10 +42,6 @@ export default {
         <input type="number" class="form-control" id="montant" v-model="depense.montant" v-bind:min="0"/>
       </div>
 
-      <div class="form-group">
-        <label for="membreconcernes">Date de la dépense:</label>
-        <input type="date" class="form-control" id="date" v-model="groupeactuel.date"/>
-      </div>
       <div class="form-group">
         <label for="proof">Justificatif:</label>
         <input type="file" class="form-control" id="proof"/>

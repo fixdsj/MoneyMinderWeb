@@ -13,12 +13,12 @@
 
       <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
         <li><a href="/" class="nav-link px-2">Accueil</a></li>
-        <li><a href="/groupes" class="nav-link px-2">Mes groupes</a></li>
-        <li><a href="/messages" class="nav-link px-2">Messagerie</a></li>
-        <li><a href="/account" class="nav-link px-2">Mon Compte</a></li>
+        <li v-if="isLogged"><a href="/groupes" class="nav-link px-2">Mes groupes</a></li>
+        <li v-if="isLogged"><a href="/messages" class="nav-link px-2">Messagerie</a></li>
+        <li v-if="isLogged"><a href="/account" class="nav-link px-2">Mon Compte</a></li>
       </ul>
 
-      <div class="col-md-3 text-end">
+      <div v-if="!isLogged" class="col-md-3 text-end">
         <a class="btn btn-outline-primary me-2" href="/login" role="button">Se connecter</a>
         <a class="btn btn-primary" href="/register" role="button">S'inscrire</a>
       </div>
@@ -28,12 +28,15 @@
 </template>
 
 <script>
+import {currentUsername, isLogged} from "@/main";
 
 export default {
   name: 'AppHeader',
   data() {
     return {
-      menuOpen: false
+      menuOpen: false,
+      isLogged: isLogged,
+      currentUsername: currentUsername,
     };
   },
   mounted() {

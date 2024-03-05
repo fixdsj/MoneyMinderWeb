@@ -51,6 +51,7 @@ export default {
       password: '',
       confirmPassword: '',
       errors: [],
+      success: false,
     };
   },
 
@@ -95,7 +96,12 @@ export default {
 
       }
       if (responseData.data.createUser !== null) {
-        alert('Utilisateur créé avec succès');
+        this.success = true;
+
+        // Rediriger vers la page de connexion après 2 secondes
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        this.$router.push('/login');
       }
     }
   },

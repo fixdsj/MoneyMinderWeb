@@ -9,7 +9,7 @@
       </p>
       <div class="form-floating mb-3">
         <input type="text" class="form-control" id="username" placeholder="Votre pseudo" v-model="username">
-        <label for="username">Adresse mail</label>
+        <label for="username">Pseudonyme</label>
       </div>
       <div class="form-floating mb-3">
         <input type="password" class="form-control" id="password" placeholder="Password" v-model="password">
@@ -38,6 +38,8 @@
 </template>
 
 <script>
+import {isLogged} from "@/main";
+
 export default {
   name: 'AppLogin',
   data() {
@@ -83,7 +85,8 @@ export default {
 
       }
       if (responseData.data.signIn.succeeded) {
-        alert('Utilisateur connecté avec succès');
+        console.log('Connexion réussie');
+        isLogged.value = true;
       }
     }
   },
