@@ -1,46 +1,92 @@
 <template>
-  <div class="app-account">
-    <div class="mes-groupes">
-      <h2>Mes groupes</h2>
-      <ul>
-        <li v-for="groupe in groupes" :key="groupe.id" class="groupes-list">
-          {{ groupe.nom }}
-          <i class="bi bi-trash deletebutton"></i>
-        </li>
-      </ul>
-      <button class="nouveaugroupe" type="submit" @click="toggleInput" :class="{ 'openinput': inputOpen }">Nouveau
-        groupe
-      </button>
-      <form @submit.prevent="createGroupe" v-if="inputOpen">
-        <input type="text" style="margin-top: 10px"
-               placeholder="Saisir le nom du groupe et appuyer sur Entrée pour envoyer"/>
-        <button type="submit">Créer</button>
-      </form>
-    </div>
+  <div class="container mt-5">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <h2 class="card-title">Mes groupes</h2>
+            <ul class="list-group">
+              <li v-for="groupe in groupes" :key="groupe.id"
+                  class="list-group-item d-flex justify-content-between align-items-center">
+                {{ groupe.nom }}
+                <i class="bi bi-trash "></i>
+              </li>
+            </ul>
+            <div class="d-flex justify-content-center mt-3">
+              <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#newGroupForm"
+                      aria-expanded="false" aria-controls="newGroupForm">
+                Nouveau groupe
+              </button>
+            </div>
+            <div class="collapse mt-3" id="newGroupForm">
+              <form @submit.prevent="createGroupe">
+                <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                  <div class="toast-header">
+                    <strong class="me-auto">Bootstrap</strong>
+                    <small>11 mins ago</small>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                  </div>
+                  <div class="toast-body">
+                    Hello, world! This is a toast message.
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label for="nom" class="form-label">Nom</label>
+                  <input type="text" class="form-control" id="nom" v-model="nomGroupe"/>
+                </div>
+                <div class="mb-3">
+                  <label for="description" class="form-label">Description</label>
+                  <input type="text" class="form-control" id="description" v-model="descriptionGroupe"/>
+                </div>
+                <button type="submit" class="btn btn-primary">Créer</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
 
-    <div class="mes-informations">
-      <h2>Mes informations</h2>
-      <form @submit.prevent="updateCompte">
-        <div class="form-group">
-          <label for="prenom">Prénom:</label>
-          <input type="text" id="prenom" v-model="utilisateur.prenom"/>
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <h2 class="card-title">Mes informations</h2>
+            <form @submit.prevent="updateCompte" class="form">
+              <div class="mb-3">
+                <label for="prenom" class="form-label">Prénom:</label>
+                <input type="text" id="prenom" v-model="utilisateur.prenom" class="form-control"/>
+              </div>
+              <div class="mb-3">
+                <label for="nom" class="form-label">Nom:</label>
+                <input type="text" id="nom" v-model="utilisateur.nom" class="form-control"/>
+              </div>
+              <div class="mb-3">
+                <label for="email" class="form-label">Email:</label>
+                <input type="email" id="email" v-model="utilisateur.email" class="form-control"/>
+              </div>
+              <button class="btn btn-primary" type="submit">Mettre à jour</button>
+            </form>
+          </div>
         </div>
-        <div class="form-group">
-          <label for="nom">Nom:</label>
-          <input type="text" id="nom" v-model="utilisateur.nom"/>
-        </div>
-        <div class="form-group">
-          <label for="email">Email:</label>
-          <input type="email" id="email" v-model="utilisateur.email"/>
-        </div>
-        <!-- TODO ajouter d'autres champs-->
-        <button type="submit">Mettre à jour</button>
-      </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-header">
+        <strong class="me-auto">Money Minder</strong>
+        <small>à l'instant</small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="toast-body" style="color: #3CB371">
+        Groupe "{{ nomGroupe }}" créé avec succès !
+      </div>
     </div>
   </div>
 </template>
 
+
 <script>
+
 export default {
   name: 'AppAccount',
   mounted() {
@@ -60,6 +106,9 @@ export default {
         {id: 3, nom: 'Groupe C', description: 'Description du Groupe C'},
         {id: 4, nom: 'Groupe D', description: 'Description du Groupe D'},
       ],
+      nomGroupe: '',
+      descriptionGroupe: '',
+      responsename: '',
 
     };
   },
@@ -67,13 +116,32 @@ export default {
     updateCompte() {
       console.log('Informations mises à jour:', this.utilisateur);
     },
-    toggleInput() {
-      this.inputOpen = !this.inputOpen;
-      console.log("le menu est ouvert" + this.inputOpen);
-    },
-    createGroupe() {
-      console.log('Créer un groupe');
-      this.inputOpen = !this.inputOpen;
+
+    async createGroupe() {
+      var toastLiveExample = document.getElementById('liveToast')
+      const axios = require('axios');
+      const response = await axios.post('http://localhost:3000/graphql', {
+        query: `mutation{
+    createGroup(groupInsertInput:  {
+        name:"${this.nomGroupe}",
+        description:"${this.descriptionGroupe}"
+
+    }){
+      name,
+    }
+}`
+      }, {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json',
+          "Accept": "application/json",
+        },
+      });
+      const responseData = response.data;
+      if (responseData.data) {
+        console.log('Groupe créé:', responseData.data.createGroup);
+        toastLiveExample.classList.add('show')
+      }
     },
 
   },
@@ -81,91 +149,13 @@ export default {
 </script>
 
 <style scoped>
-.app-account {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-  min-height: 100%;
 
-}
-
-.mes-groupes, .mes-informations {
-  background-image: linear-gradient(120deg, #d6e1ea 0%, #ffffff 100%);
-  max-width: 400px;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  width: 50%;
-  margin-top: 10px;
-  margin-bottom: 20px;
-}
-
-.app-account h2, .mes-informations h2 {
-  text-align: center;
-}
-
-.app-account button[type="submit"], .nouveaugroupe button {
-  width: 100%;
-  margin-top: 15px;
-  padding: 0.75rem;
-  font-size: 1rem;
-  color: #fff;
-  background-color: #007bff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.app-account button[type="submit"]:hover, .nouveaugroupe button:hover {
-  background-color: #0056b3;
-}
-
-.app-account input {
-  width: 100%;
-  padding: 8px;
-  box-sizing: border-box;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.app-account select {
-  width: 100%;
-  padding: 8px;
-  box-sizing: border-box;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
 
 .app-account label {
   display: block;
   margin: 5px;
 }
 
-.mes-groupes li {
-  padding: 15px;
-  cursor: pointer;
-  text-align: center;
-  list-style-type: none;
-}
-
-.deletebutton {
-  width: 20px;
-  height: 20px;
-  padding-top: 5px;
-  background: none;
-}
-
-.openinput {
-  display: block;
-}
-
-.profile-picture-container {
-  display: flex;
-  justify-content: center;
-  cursor: pointer;
-}
 
 .profile-picture-container img {
   width: 75px;
