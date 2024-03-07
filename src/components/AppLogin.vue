@@ -91,6 +91,7 @@ export default {
       if (responseData.data.signIn.succeeded) {
         console.log('Connexion réussie');
         isLogged.value = true;
+        this.$router.push('/account');
       }
     },
   }
