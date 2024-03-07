@@ -9,7 +9,8 @@
               <li v-for="groupe in groupes" :key="groupe.id"
                   class="list-group-item d-flex justify-content-between align-items-center">
                 {{ groupe.nom }}
-                <i class="bi bi-trash "></i>
+                <button style="border: none; background-color: transparent;" @click="deleteGroupe"><i
+                    class="bi bi-trash "></i></button>
               </li>
             </ul>
             <div class="d-flex justify-content-center mt-3">
@@ -20,23 +21,14 @@
             </div>
             <div class="collapse mt-3" id="newGroupForm">
               <form @submit.prevent="createGroupe">
-                <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-                  <div class="toast-header">
-                    <strong class="me-auto">Bootstrap</strong>
-                    <small>11 mins ago</small>
-                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                  </div>
-                  <div class="toast-body">
-                    Hello, world! This is a toast message.
-                  </div>
-                </div>
                 <div class="mb-3">
                   <label for="nom" class="form-label">Nom</label>
-                  <input type="text" class="form-control" id="nom" v-model="nomGroupe"/>
+                  <input type="text" class="form-control" id="nom" v-model="nomGroupe" placeholder="Nom"/>
                 </div>
                 <div class="mb-3">
                   <label for="description" class="form-label">Description</label>
-                  <input type="text" class="form-control" id="description" v-model="descriptionGroupe"/>
+                  <input type="text" class="form-control" id="description" v-model="descriptionGroupe"
+                         placeholder="Description"/>
                 </div>
                 <button type="submit" class="btn btn-primary">Créer</button>
               </form>
@@ -51,8 +43,8 @@
             <h2 class="card-title">Mes informations</h2>
             <form @submit.prevent="updateCompte" class="form">
               <div class="mb-3">
-                <label for="prenom" class="form-label">Prénom:</label>
-                <input type="text" id="prenom" v-model="utilisateur.prenom" class="form-control"/>
+                <label for="pseudo" class="form-label">Nom d'utilisateur:</label>
+                <input type="text" id="prenom" v-model="utilisateur.username" class="form-control"/>
               </div>
               <div class="mb-3">
                 <label for="nom" class="form-label">Nom:</label>
@@ -78,7 +70,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
       </div>
       <div class="toast-body" style="color: #3CB371">
-        Groupe "{{ nomGroupe }}" créé avec succès !
+        {{ alertMessage }}
       </div>
     </div>
   </div>
@@ -90,15 +82,14 @@
 export default {
   name: 'AppAccount',
   mounted() {
-    console.log('Composant AppAccount monté');
+    this.fetchCurrentUserDetails();
 
   },
   data() {
     return {
       utilisateur: {
-        prenom: 'Robert',
-        nom: 'Durand',
-        email: 'robert.durand@gmail.com',
+        username: '',
+        email: '',
       },
       groupes: [
         {id: 1, nom: 'Groupe A', description: 'Description du Groupe A'},
@@ -108,7 +99,7 @@ export default {
       ],
       nomGroupe: '',
       descriptionGroupe: '',
-      responsename: '',
+      alertMessage: '',
 
     };
   },
@@ -140,26 +131,44 @@ export default {
       const responseData = response.data;
       if (responseData.data) {
         console.log('Groupe créé:', responseData.data.createGroup);
+        this.alertMessage = `Groupe "${this.nomGroupe}" créé avec succès !`;
         toastLiveExample.classList.add('show')
       }
     },
 
+    async fetchCurrentUserDetails() {
+      const axios = require('axios');
+      const response = await axios.post('http://localhost:3000/graphql', {
+        query: `{currentUser{userName, email}}`
+      }, {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json',
+          "Accept": "application/json",
+        },
+      });
+      const responseData = response.data;
+      console.log('Réponse:', responseData);
+      if (responseData.data) {
+        this.utilisateur.username = responseData.data.currentUser[0].userName;
+        this.utilisateur.email = responseData.data.currentUser[0].email;
+      }
+      if (responseData.errors) {
+        console.log("erreur" + responseData.errors.message);
+      }
+      console.log('Utilisateur actuel:', this.utilisateur.prenom);
+    },
+
+    async deleteGroupe() {
+      console.log('Groupe supprimé');
+    }
+
   },
+
 };
 </script>
 
 <style scoped>
 
-
-.app-account label {
-  display: block;
-  margin: 5px;
-}
-
-
-.profile-picture-container img {
-  width: 75px;
-  height: 75px;
-}
 
 </style>

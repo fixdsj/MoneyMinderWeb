@@ -74,7 +74,6 @@ export default {
 <style>
 #app {
   --main-background-color: linear-gradient(to right, #d3cce3, #e9e4f0);
-
   --first-text-color: white;
   --second-text-color: #3CB371;
   --second-button-color: #3CB371;
@@ -84,6 +83,7 @@ export default {
   background-image: var(--main-background-color);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
 }
 
 * {
