@@ -1,7 +1,7 @@
 <template>
 
   <div class="col-md-10 mx-auto col-lg-5">
-    <form class="p-4 p-md-5 border rounded-3 bg-body-tertiary" @submit="login">
+    <form class="p-4 p-md-5 border rounded-3 bg-body-tertiary" @submit="signIn">
       <h3 class="text-center mb-4">Connexion</h3>
       <p class="text-danger" v-if="errors.length">
         <b>Please correct the following error(s):</b>
@@ -39,6 +39,7 @@
 
 <script>
 import {isLogged} from "@/main";
+import axios from "axios";
 
 export default {
   name: 'AppLogin',
@@ -46,40 +47,43 @@ export default {
     return {
       username: '',
       password: '',
-      rememberPassword: false,
+      rememberPassword: true,
       errors: [],
     };
   },
   methods: {
-
-    async login() {
+    async signIn(event) {
       event.preventDefault();
 
       console.log('Données saisies :', this.username, this.password);
-      const response = await fetch('http://localhost:3000/graphql', {
-        method: 'POST',
+
+
+      const response = await axios.post('http://localhost:3000/graphql', {
+        query: `
+        mutation {
+          signIn(appUserLoginDto: {
+            username: "${this.username}"
+            password: "${this.password}"
+            rememberMe: ${this.rememberPassword}
+          }) {
+            succeeded
+            isLockedOut
+            isNotAllowed
+            requiresTwoFactor
+            }
+        }
+      `,
+      }, {
+        withCredentials: true,
         headers: {
           'Content-Type': 'application/json',
+          "Accept": "application/json",
         },
-        body: JSON.stringify({
-          query: `mutation{
-   signIn(appUserLoginDto: {
-    username:"${this.username}",
-    password:"${this.password}",
-    rememberMe:${this.rememberPassword}
-
-
-   })
-   {
-    succeeded,
-    isNotAllowed,
-   }
-}
-`
-        })
-
       });
-      const responseData = await response.json();
+
+      console.log('Réponse du serveur :', response);
+      const responseData = response.data;
+
       if (!responseData.data.signIn.succeeded) {
         this.errors = ['Vérifiez vos informations de connexion'];
 
@@ -88,8 +92,9 @@ export default {
         console.log('Connexion réussie');
         isLogged.value = true;
       }
-    }
-  },
+    },
+  }
+
 };
 </script>
 

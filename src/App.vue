@@ -30,24 +30,25 @@ export default {
 
     // Récupérer l'utilisateur actuel
     const fetchCurrentUser = async () => {
-      const response = await fetch('http://localhost:3000/graphql', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+      const axios = require('axios');
+        const response = await axios.post('http://localhost:3000/graphql', {
           query: `{currentUser{userName}}`
-        })
-      });
-      const responseData = await response.json();
-      console.log('Réponse:', responseData);
-      currentUsername.value = responseData.data.currentUser.userName;
-
-      if (responseData.errors) {
-        console.log("erreur" + responseData.errors.message);
-      }
-      console.log('Utilisateur actuel:', currentUsername.value);
-
+        }, {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json',
+            "Accept": "application/json",
+          },
+        });
+        const responseData = response.data;
+        console.log('Réponse:', responseData);
+        if (responseData.data) {
+          currentUsername.value = responseData.data.currentUser[0].userName;
+        }
+        if (responseData.errors) {
+          console.log("erreur" + responseData.errors.message);
+        }
+        console.log('Utilisateur actuel:', currentUsername.value);
     };
 
     return {
@@ -63,8 +64,8 @@ export default {
   --main-background-color: linear-gradient(to right, #d3cce3, #e9e4f0);
 
   --first-text-color: white;
-  --second-text-color: #BAFF39;
-  --second-button-color: #BAFF39;
+  --second-text-color: #3CB371;
+  --second-button-color: #3CB371;
   --third-text-color: black;
   --main-header-color: #6E6E6E;
   font-family: Avenir, Helvetica, Arial, sans-serif;

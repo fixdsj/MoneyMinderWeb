@@ -15,7 +15,7 @@
         <li><a href="/" class="nav-link px-2">Accueil</a></li>
         <li v-if="isLogged"><a href="/groupes" class="nav-link px-2">Mes groupes</a></li>
         <li v-if="isLogged"><a href="/messages" class="nav-link px-2">Messagerie</a></li>
-        <li v-if="isLogged"><a href="/account" class="nav-link px-2">Mon Compte</a></li>
+        <li v-if="isLogged"><a href="/account" class="nav-link px-2">Mon Compte({{ currentUsername }})</a></li>
       </ul>
 
       <div v-if="!isLogged" class="col-md-3 text-end">

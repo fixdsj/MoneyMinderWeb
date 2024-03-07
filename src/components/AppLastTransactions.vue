@@ -7,7 +7,8 @@
                 data-bs-target="#panelsStayOpen-collapse{{transaction.id}}" aria-expanded="true"
                 aria-controls="panelsStayOpen-collapse{{transaction.id}}">
           {{ transaction.author }} - {{ transaction.montant }}€ - {{ transaction.date }} -
-          {{ formatType(transaction.type) }}&nbsp; <span class="badge bg-secondary">{{ transaction.categorie }}</span>
+          {{ formatType(transaction.type) }}&nbsp; <span style="text-transform: uppercase"
+                                                         class="badge bg-secondary">{{ transaction.categorie }}</span>
         </button>
       </h2>
       <div id="panelsStayOpen-collapse{{transaction.id}}" class="accordion-collapse collapse show"
@@ -44,7 +45,7 @@ export default {
           type: 'remboursement',
           description: 'Remboursement soirée',
           membresconcernes: ['Pierre', 'Paul', 'Jacques'],
-          categorie: 'sorties'
+          categorie: 'Sorties'
         },
         {
           author: 'Pierre',
@@ -53,7 +54,7 @@ export default {
           type: 'depense',
           description: 'Achat de matériel',
           membresconcernes: ['Pierre', 'Paul', 'Jacques'],
-          categorie: 'divers'
+          categorie: 'Divers'
         },
         {
           author: 'Pierre',
@@ -62,7 +63,7 @@ export default {
           type: 'remboursement',
           description: 'Remboursement soirée',
           membresconcernes: ['Pierre', 'Paul', 'Jacques'],
-          categorie: 'sorties'
+          categorie: 'Sorties'
         },
         {
           author: 'Pierre',
@@ -71,7 +72,7 @@ export default {
           type: 'depense',
           description: 'Achat de matériel',
           membresconcernes: ['Pierre', 'Paul', 'Jacques'],
-          categorie: 'divers'
+          categorie: 'Divers'
         },
       ],
     };
