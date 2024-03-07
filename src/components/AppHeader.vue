@@ -22,6 +22,10 @@
         <a class="btn btn-outline-primary me-2" href="/login" role="button">Se connecter</a>
         <a class="btn btn-primary" href="/register" role="button">S'inscrire</a>
       </div>
+
+      <div v-if="isLogged" class="col-md-3 text-end">
+        <button class="btn btn-outline-primary me-2" @click="logout">Déconnexion</button>
+      </div>
     </header>
   </div>
 
@@ -34,18 +38,14 @@ export default {
   name: 'AppHeader',
   data() {
     return {
-      menuOpen: false,
       isLogged: isLogged,
       currentUsername: currentUsername,
     };
   },
-  mounted() {
-    this.menuOpen = false;
-  },
   methods: {
-    toggleMenu() {
-      this.menuOpen = !this.menuOpen;
-    },
+    logout() {
+      console.log('Déconnexion');
+    }
   }
 };
 </script>

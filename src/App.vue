@@ -17,6 +17,12 @@ export default {
     AppHeader,
     AppFooter
   },
+  methods: {
+    logout() {
+      console.log('Déconnexion');
+    }
+  },
+
   setup() {
     // Créer une référence réactive à isLogged
     const isLoggedRef = ref(isLogged);
@@ -44,9 +50,11 @@ export default {
         console.log('Réponse:', responseData);
         if (responseData.data) {
           currentUsername.value = responseData.data.currentUser[0].userName;
+          isLoggedRef.value = true;
         }
         if (responseData.errors) {
           console.log("erreur" + responseData.errors.message);
+          isLoggedRef.value = false;
         }
         console.log('Utilisateur actuel:', currentUsername.value);
     };
@@ -55,6 +63,10 @@ export default {
       isLoggedRef,
       fetchCurrentUser
     };
+  },
+  mounted() {
+    this.fetchCurrentUser();
+
   }
 }
 </script>
