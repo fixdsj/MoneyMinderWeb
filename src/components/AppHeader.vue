@@ -43,8 +43,28 @@ export default {
     };
   },
   methods: {
-    logout() {
+    async logout() {
       console.log('Déconnexion');
+      const axios = require('axios');
+      const response = await axios.post('http://localhost:3000/graphql', {
+        query: `mutation{signOut}`
+      }, {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json',
+          "Accept": "application/json",
+        },
+      });
+      const responseData = response.data;
+      console.log('Réponse:', responseData);
+      if (responseData.data) {
+        this.isLogged = false;
+        this.currentUsername = 'Guest';
+      }
+      if (responseData.errors) {
+        console.log("erreur" + responseData.errors.message);
+      }
+
     }
   }
 };
