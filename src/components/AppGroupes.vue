@@ -1,15 +1,15 @@
 <template>
   <div>
-    <h3 class="text-center mb-4">Mon solde total = 3<i class="bi bi-currency-euro"></i></h3>
+    <h5 class="text-center mb-4">Mon solde total = 3<i class="bi bi-currency-euro"></i></h5>
     <div class="maincontainer">
       <div class="sidebar">
-
         <ul class="list-group">
           <li class="list-group-item">Mes groupes</li>
-          <li class="list-group-item" v-for="groupe in groupes" :key="groupe.id" @click="selectGroupe(groupe)"
-              :class="{'groupeactif': groupeActif && groupe.id === groupeActif.id}">
-            <a onclick="" role="button" class="btn">{{ groupe.nom }}: (Solde ={{ groupe.soldes }}€)</a>
+          <li v-for="groupe in groupes" :key="groupe.id" @click="selectGroupe(groupe.name)"
+              class="list-group-item" :class="{'groupeactif': groupe.name === groupeActif}">
+            <a role="button" class="btn">{{ groupe.name }}: (Solde:{{ groupe.soldes }}€)</a>
           </li>
+
           <li class="list-group-item">
             <a href="/account" role="button" class="btn">Créer un groupe</a>
           </li>
@@ -19,27 +19,27 @@
       <div class="contentcontainer">
         <ul class="nav nav-tabs">
           <li class="nav-item">
-            <p class="nav-link" @click="selectTab('depenses')" :class="{ 'selectedtab': selectedTab === 'depenses' }">
+            <p class="nav-link btn" @click="selectTab('depenses')"
+               :class="{ 'selectedtab': selectedTab === 'depenses' }">
               Dépenses</p>
           </li>
           <li class="nav-item">
-            <p class="nav-link" @click="selectTab('refunds')" :class="{ 'selectedtab': selectedTab === 'refunds' }">
+            <p class="nav-link btn" @click="selectTab('refunds')" :class="{ 'selectedtab': selectedTab === 'refunds' }">
               Remboursements</p>
           </li>
           <li class="nav-item">
-            <p class="nav-link" @click="selectTab('historique')"
+            <p class="nav-link btn" @click="selectTab('historique')"
                :class="{ 'selectedtab': selectedTab === 'historique' }">
               Historique</p>
           </li>
           <li class="nav-item">
-            <p class="nav-link" @click="selectTab('details')" :class="{ 'selectedtab': selectedTab === 'details' }">
+            <p class="nav-link btn" @click="selectTab('details')" :class="{ 'selectedtab': selectedTab === 'details' }">
               Détails</p>
           </li>
         </ul>
 
         <div class="details">
-          <h2>{{ groupeActif?.nom }}</h2>
-          <p>{{ groupeActif?.description }}</p>
+          <h4 class="text-center mb-4">{{ groupeActif }}</h4>
           <hr class="my-4">
 
           <div v-if="selectedTab === 'depenses'">
@@ -75,13 +75,7 @@ export default {
   components: {AppLastTransactions, AppRefunds, AppExpenses, AppGroupeDetails},
   data() {
     return {
-      groupes: [
-        {id: 1, nom: 'Groupe A', description: 'Description du Groupe A', soldes: 0},
-        {id: 2, nom: 'Groupe B', description: 'Description du Groupe B', soldes: 29},
-        {id: 3, nom: 'Groupe C', description: 'Description du Groupe C', soldes: 0},
-        {id: 4, nom: 'Groupe D', description: 'Description du Groupe D', soldes: 656},
-        {id: 5, nom: 'Groupe E', description: 'Description du Groupe E', soldes: -56}
-      ],
+      groupes: [],
       depenses: [
         {id: 1, montant: 100, destinataire: 'Maurice'},
         {id: 2, montant: 200, destinataire: 'Groupe B'},
@@ -100,10 +94,7 @@ export default {
     };
   },
   mounted() {
-    // Sélection du premier groupe par défaut
-    if (this.groupes.length > 0) {
-      this.groupeActif = this.groupes[0];
-    }
+    this.fetchCurrentUserGroups();
   },
   methods: {
     selectGroupe(groupe) {
@@ -111,6 +102,28 @@ export default {
     },
     selectTab(tab) {
       this.selectedTab = tab;
+    },
+    async fetchCurrentUserGroups() {
+      const axios = require('axios');
+      const response = await axios.post('http://localhost:3000/graphql', {
+        query: `{currentUser{userGroups{user{balance},group{name}}}}`
+      }, {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json',
+          "Accept": "application/json",
+        },
+      });
+      const responseData = response.data;
+      if (responseData.data) {
+        this.groupes = responseData.data.currentUser[0].userGroups.map((groupe) => {
+          return {
+            name: groupe.group.name,
+            soldes: groupe.user.balance,
+          };
+        });
+        this.groupeActif = this.groupes[0].name;
+      }
     },
   },
 };

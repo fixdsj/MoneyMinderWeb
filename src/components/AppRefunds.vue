@@ -1,19 +1,13 @@
 <template>
 
   <div class="col-md-10 mx-auto col-lg-5 app-remboursement">
-    <h3 class="text-center mb-4">Effectuer un remboursement</h3>
-    <p>Vous devez 54€ au groupe actuel </p>
-    <form @submit.prevent="createRemboursement">
-      <div class="form-group">
-        <label for="montant">Montant:</label>
-        <input type="number" id="montant" class="form-control" v-model="remboursement.montant" v-bind:min="0"/>
-      </div>
-      <div class="form-group">
-        <label for="description">Description:</label>
-        <input type="text" id="description" v-model="remboursement.description"/>
-      </div>
-      <button type="submit" class="w-100 btn btn-lg btn-primary">Effectuer le remboursement</button>
-    </form>
+    <h3 class="text-center mb-4">Payez une dépense</h3>
+    <p class="text-md-center">Montant à rembourser pour le groupe : 3<i class="bi bi-currency-euro"></i></p>
+    <button type="submit" @click="createRemboursement" class="btn btn-primary d-block mx-auto">Rembourser</button>
+    <p class="text-md-center">Montant total à rembourser : 27<i class="bi bi-currency-euro"></i></p>
+    <button type="submit" @click="createRemboursement" class="btn btn-primary d-block mx-auto">Rembourser le total
+    </button>
+
   </div>
 </template>
 
@@ -47,11 +41,4 @@ export default {
 <style scoped>
 
 
-.app-remboursement {
-  max-width: 400px;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
 </style>
