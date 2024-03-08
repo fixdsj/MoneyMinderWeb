@@ -73,14 +73,14 @@ export default {
 
 <style>
 #app {
-  --main-background-color: linear-gradient(to right, #d3cce3, #e9e4f0);
+  --main-background-color: #F0BE86;
   --first-text-color: white;
   --second-text-color: #3CB371;
   --second-button-color: #3CB371;
   --third-text-color: black;
   --main-header-color: #6E6E6E;
   font-family: Avenir, Helvetica, Arial, sans-serif;
-  background-image: var(--main-background-color);
+  background: var(--main-background-color);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;

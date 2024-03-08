@@ -115,7 +115,8 @@ export default {
         },
       });
       const responseData = response.data;
-      if (responseData.data) {
+      console.log('Réponse:', responseData);
+      if (responseData.data.currentUser[0].userGroups.length > 0) {
         this.groupes = responseData.data.currentUser[0].userGroups.map((groupe) => {
           return {
             name: groupe.group.name,

@@ -60,6 +60,7 @@ export default {
       if (responseData.data) {
         this.isLogged = false;
         this.currentUsername = 'Guest';
+        this.$router.push('/');
       }
       if (responseData.errors) {
         console.log("erreur" + responseData.errors.message);
