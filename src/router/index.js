@@ -6,6 +6,7 @@ import AppLogin from "@/components/AppLogin.vue";
 import AppRegister from "@/components/AppRegister.vue";
 import AppError404 from "@/components/AppError404.vue";
 import AppChat from "@/components/AppChat.vue";
+import AppChatRoom from "@/components/AppChatRoom.vue";
 
 const routes =
     [
@@ -13,6 +14,7 @@ const routes =
         {path: '/groupes', component: Groupes},
         {path: '/account', component: Account},
         {path: '/messages', component: AppChat},
+        {path: '/messages2', component: AppChatRoom},
         {path: '/login', component: AppLogin},
         {path: '/register', component: AppRegister},
         {path: '/:notFound(.*)', component: AppError404}

@@ -36,26 +36,32 @@ export default {
 
     // Récupérer l'utilisateur actuel
     const fetchCurrentUser = async () => {
-      const axios = require('axios');
-      const response = await axios.post('http://localhost:3000/graphql', {
-        query: `{currentUser{userName}}`
-      }, {
-        withCredentials: true,
-        headers: {
-          'Content-Type': 'application/json',
-          "Accept": "application/json",
-        },
-      });
-      const responseData = response.data;
-      console.log('Réponse:', responseData);
-      if (responseData.data) {
-        currentUsername.value = responseData.data.currentUser[0].userName;
-        isLoggedRef.value = true;
+      try {
+        const axios = require('axios');
+        const response = await axios.post('http://localhost:3000/graphql', {
+          query: `{currentUser{userName}}`
+        }, {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json',
+            "Accept": "application/json",
+          },
+        });
+        const responseData = response.data;
+        console.log('Réponse:', responseData);
+        if (responseData.data) {
+          currentUsername.value = responseData.data.currentUser[0].userName;
+          isLoggedRef.value = true;
+        }
+        if (responseData.errors) {
+          console.log("erreur" + responseData.errors.message);
+          isLoggedRef.value = false;
+        }
+
+      } catch (error) {
+        console.error('Erreur:', error);
       }
-      if (responseData.errors) {
-        console.log("erreur" + responseData.errors.message);
-        isLoggedRef.value = false;
-      }
+
       console.log('Utilisateur actuel:', currentUsername.value);
     };
 

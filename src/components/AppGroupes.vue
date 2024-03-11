@@ -5,6 +5,9 @@
       <div class="sidebar">
         <ul class="list-group">
           <li class="list-group-item">Mes groupes</li>
+          <li v-if="groupes.length === 0" class="list-group-item">
+            <a role="button" class="btn fst-italic">Aucun groupe</a>
+          </li>
           <li v-for="groupe in groupes" :key="groupe.id" @click="selectGroupe(groupe.name)"
               class="list-group-item" :class="{'groupeactif': groupe.name === groupeActif}">
             <a role="button" class="btn">{{ groupe.name }}: (Solde:{{ groupe.soldes }}€)</a>
