@@ -90,6 +90,24 @@
       <div class="col-md-6">
         <div class="card">
           <div class="card-body">
+            <h5 class="card-title text-md-center">Invitations</h5>
+            <ul class="list-group">
+              <li v-for="invitation in invitations" :key="invitation.id"
+                  class="list-group-item d-flex justify-content-between align-items-center">
+                {{ invitation.group.name }}
+                <button class="btn btn-primary">Accepter</button>
+                <button class="btn btn-danger">Refuser</button>
+              </li>
+              <li v-if="invitations.length === 0" class="list-group">
+                <a role="button" class="btn fst-italic">Aucune invitation</a>
+              </li>
+              <!--              <li class="list-group-item d-flex justify-content-between align-items-center">
+                              Groupe 1
+                              <button class="btn btn-primary">Accepter</button>
+                              <button class="btn btn-danger">Refuser</button>
+                            </li>-->
+
+            </ul>
             <h4 class="card-title text-md-center">Mes informations</h4>
             <form @submit.prevent="updateCompte" class="form">
               <div class="mb-3">
@@ -160,10 +178,12 @@ export default {
   },
   data() {
     return {
+      //Utilisateur
       utilisateur: {
         username: '',
         email: '',
       },
+      invitations: [],
       groupsOwned: [],
       groupsJoined: [],
 
@@ -285,7 +305,7 @@ export default {
     async fetchCurrentUserDetails() {
       const axios = require('axios');
       const responseUser = await axios.post('http://localhost:3000/graphql', {
-        query: `{currentUser{userName, email}}`
+        query: `{currentUser{userName, email, invitations{group{name,id}}}}`
       }, {
         withCredentials: true,
         headers: {
@@ -297,6 +317,8 @@ export default {
       if (responseDataUser.data) {
         this.utilisateur.username = responseDataUser.data.currentUser[0].userName;
         this.utilisateur.email = responseDataUser.data.currentUser[0].email;
+        this.invitations = responseDataUser.data.currentUser[0].invitations;
+        console.log('Invitations:', this.invitations);
       }
       if (responseDataUser.errors) {
         console.log("erreur" + responseDataUser.errors.message);
