@@ -246,7 +246,7 @@ export default {
       if (this.selectedUser.userName === '') {
         this.suggestedUsers = [];
       }
-      if (this.selectedUser.userName) {
+      if (this.selectedUser.userName.length > 1) {
         console.log('Recherche de l\'utilisateur:', this.selectedUser.userName);
         const axios = require('axios');
         const response = await axios.post('http://localhost:3000/graphql', {

@@ -1,15 +1,26 @@
 <template>
-  <div class="px-4 py-5 my-5 text-center">
-    <i class="bi bi-cash-coin" style="font-size: 3rem;"></i>
-    <h1 class="display-5 fw-bold text-body-emphasis">Simplifiez vos dépenses</h1>
-    <div class="col-lg-6 mx-auto">
-      <p class="lead mb-4">Simplifiez vos dépenses et gérer facilement les dépenses partagées avec vos amis et votre
-        famille.</p>
-      <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-        <a href="/register" type="button" class="btn btn-primary btn-lg px-4 gap-3">S'inscrire</a>
-        <button type="button" class="btn btn-outline-secondary btn-lg px-4">En savoir plus</button>
+  <!--  <div class="px-4 py-5 my-5 text-center">
+      <i class="bi bi-cash-coin" style="font-size: 3rem;"></i>
+      <h1 class="display-5 fw-bold text-body-emphasis">Simplifiez vos dépenses</h1>
+      <div class="col-lg-6 mx-auto">
+        <p class="lead mb-4">Simplifiez vos dépenses et gérer facilement les dépenses partagées avec vos amis et votre
+          famille.</p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+          <a href="/register" type="button" class="btn btn-primary btn-lg px-4 gap-3">S'inscrire</a>
+          <button type="button" class="btn btn-outline-secondary btn-lg px-4">En savoir plus</button>
+        </div>
       </div>
+    </div>-->
+  <div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light">
+    <div class="col-md-5 p-lg-5 mx-auto my-5">
+      <h1 class="display-5 fw-normaltext-body-emphasis">Simplifiez vos dépenses</h1>
+      <p class="lead fw-normal">Simplifiez vos dépenses et gérer facilement les dépenses partagées avec vos amis et
+        votre
+        famille.</p>
+      <a href="/register" type="button" class="btn btn-secondary btn-lg px-4 gap-3">S'inscrire</a>
     </div>
+    <div class="product-device shadow-sm d-none d-md-block"></div>
+    <div class="product-device product-device-2 shadow-sm d-none d-md-block"></div>
   </div>
   <div class="testimonial-section">
     <div class="testimonial-carousel">
@@ -85,5 +96,46 @@ export default {
   font-style: italic;
   margin-top: 10px;
 }
+
+.product-device {
+  position: absolute;
+  right: 10%;
+  bottom: -30%;
+  width: 300px;
+  height: 540px;
+  background-color: #333;
+  border-radius: 21px;
+  transform: rotate(30deg);
+}
+
+.product-device::before {
+  position: absolute;
+  top: 10%;
+  right: 10px;
+  bottom: 10%;
+  left: 10px;
+  content: "";
+  background-color: rgba(255, 255, 255, .1);
+  border-radius: 5px;
+}
+
+.product-device-2 {
+  top: -25%;
+  right: auto;
+  bottom: 0;
+  left: 5%;
+  background-color: #e5e5e5;
+}
+
+.flex-equal > * {
+  flex: 1;
+}
+
+@media (min-width: 900px) {
+  .flex-md-equal > * {
+    flex: 1;
+  }
+}
+
 
 </style>

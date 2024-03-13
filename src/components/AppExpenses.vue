@@ -18,7 +18,10 @@
       </div>
 
       <div class="mb-3">
-        <label class="form-label">Utilisateurs concernés:</label>
+        <div class="d-flex justify-content-between ">
+          <label class="form-label">Utilisateurs concernés:</label>
+          <button type="button" class="btn btn-link" @click="selectAllUsers">Tout sélectionner</button>
+        </div>
         <input type="text" class="form-control" id="weightedinput" placeholder="Ajouter un utilisateur..."
                v-model="texttosuggest" @input="suggestUsers">
 
@@ -28,15 +31,21 @@
             {{ user.userName }}
             <button class="btn btn-primary">+</button>
           </li>
+          <li class="list-group-item d-flex justify-content-between align-items-center"
+              v-if="suggestedUsers.length === 0 && texttosuggest.length > 1">
+            Aucun utilisateur trouvé
+          </li>
         </ul>
 
         <ul class="list-group mt-2">
-          <li class="list-group-item d-flex justify-content-between align-items-center" v-for="user in selectedsUsers"
+          <li class="list-group-item d-flex justify-content-center align-items-center p-0"
+              v-for="user in selectedsUsers"
               :key="user.id">
-            {{ user.userName }}
-            <label for="montant" class="form-label">Poids:</label>
-            <input type="number" class="form-control" v-bind:min="0" step="0.1">
-            <button class="btn btn-danger" @click="removeUserFromSelected(user)"><i class="bi bi-trash"></i></button>
+            <span class="input-group-text rounded-0">{{ user.userName }}</span>
+            <input type="number" class="form-control input-group rounded-0" v-bind:min="0" step="0.1"
+                   placeholder="Poids" v-model="user.weight">
+            <button class="btn btn-danger rounded-0" @click="removeUserFromSelected(user)"><i class="bi bi-trash"></i>
+            </button>
           </li>
         </ul>
       </div>
@@ -68,6 +77,21 @@
       </div>
     </form>
   </div>
+
+
+  <!-- Notification -->
+  <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-header">
+        <strong class="me-auto">Money Minder</strong>
+        <small>à l'instant</small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="toast-body">
+        {{ alertMessage }}
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -85,20 +109,59 @@ export default {
         montant: 0,
         description: '',
         date: '',
-        groupeusers: {},
       },
       justificatif: null,
 
+      //Notification
+      alertMessage: '',
 
+
+      //Suggestions
       usersInGroup: [],
       texttosuggest: '',
       selectedsUsers: [],
       suggestedUsers: [],
+
+      groupId: null,
+
+
     };
   },
   methods: {
-    submitDepense() {
-      console.log('Créer une dépense avec justificatif:', this.justificatif);
+    async submitDepense() {
+      console.log('group id:', this.groupId);
+      this.weightquery = this.selectedsUsers.map((user) => {
+        return `{key:"${user.id}",value:${user.weight}}`;
+      }).join(',');
+      const axios = require('axios');
+      const response = await axios.post('http://localhost:3000/graphql', {
+        query: `mutation {
+  addUserExpenses(expenseInsertInput: {amount:${this.depense.montant}, description:"${this.depense.description}", groupId:"${this.groupId}",weightedUsers:
+  [${this.weightquery}]
+  }){
+    paidAt,
+    expense{amount,description,id},
+
+    amount
+  }
+}
+`
+      }, {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json',
+          "Accept": "application/json",
+        },
+      });
+      const responseData = response.data;
+      console.log('Réponse:', responseData);
+      if (responseData.errors) {
+        console.log('Erreur : ' + responseData.errors[0].message);
+      }
+      if (responseData.data) {
+        this.alertMessage = 'Dépense créée avec succès';
+      }
+
       this.currentStep++;
     },
     submitJustificatif() {
@@ -112,9 +175,13 @@ export default {
         this.selectedsUsers = this.selectedsUsers.filter((selectedUser) => selectedUser !== user);
         return;
       }
+      user.weight = 1;
       this.selectedsUsers.push(user);
       this.suggestedUsers = [];
       this.texttosuggest = '';
+    },
+    selectAllUsers() {
+      this.selectedsUsers = this.usersInGroup;
     },
     removeUserFromSelected(user) {
       this.selectedsUsers = this.selectedsUsers.filter((selectedUser) => selectedUser !== user);
@@ -127,6 +194,7 @@ export default {
           query: `query {
     groups(where: { name: { contains: "${this.activeGroup}" } }) {
       userGroups{user{userName, id}}
+      id
     }
   }`
         }, {
@@ -148,6 +216,10 @@ export default {
             };
           });
         }
+        if (responseData.data.groups[0].id) {
+          console.log('group id:', responseData.data.groups[0].id);
+          this.groupId = responseData.data.groups[0].id;
+        }
       } catch (error) {
         console.error('Erreur lors de la récupération des membres du groupe', error);
       }
@@ -159,7 +231,6 @@ export default {
         this.suggestedUsers = [];
       }
       if (this.texttosuggest.length > 1) {
-        console.log('Recherche de l\'utilisateur:', this.texttosuggest);
         const axios = require('axios');
         const response = await axios.post('http://localhost:3000/graphql', {
           query: `query {
@@ -178,9 +249,9 @@ export default {
         });
         const responseData = response.data;
         if (responseData.data) {
-          this.suggestedUsers = responseData.data.users;
+          this.suggestedUsers = responseData.data.users.filter(user => !this.selectedsUsers.some(selectedUser => selectedUser.id === user.id));
+
         }
-        console.log('Utilisateurs suggérés:', this.suggestedUsers);
       }
     },
 

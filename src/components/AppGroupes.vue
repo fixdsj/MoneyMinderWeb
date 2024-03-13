@@ -51,7 +51,7 @@
           </div>
           <div v-if="selectedTab === 'refunds'">
             <h3>Remboursements</h3>
-            <AppRefunds/>
+            <AppRefunds :activeGroup="activeGroup"/>
           </div>
 
           <div v-if="selectedTab === 'historique'">
@@ -93,7 +93,7 @@ export default {
       ],
 
       activeGroup: null,
-      selectedTab: 'depenses',
+      selectedTab: 'refunds',
     };
   },
   mounted() {
@@ -119,7 +119,6 @@ export default {
           },
         });
         const responseData = response.data;
-        console.log('Réponse:', responseData);
         if (responseData.data.currentUser[0].userGroups.length > 0) {
           this.groupes = responseData.data.currentUser[0].userGroups.map((groupe) => {
             return {

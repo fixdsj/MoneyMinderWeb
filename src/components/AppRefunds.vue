@@ -1,45 +1,124 @@
 <template>
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-md-5 app-remboursement">
-        <h3 class="text-center mb-4">Payez une dépense</h3>
+  <div class="container justify-content-center d-flex">
+    <div class="col-md-5 text-md-center">
 
-        <p class="text-center">Montant à rembourser pour le groupe : 3<i class="bi bi-currency-euro"></i></p>
-        <button type="button" @click="createRemboursement(3)" class="btn btn-primary w-100">
-          Rembourser 3€
-        </button>
-
-        <p class="text-center mt-4">Montant total à rembourser : 27<i class="bi bi-currency-euro"></i></p>
-        <button type="button" @click="createRemboursement(27)" class="btn btn-primary w-100">
-          Rembourser le total
-        </button>
-      </div>
+      <h3 class="text-center mb-4">Paiement rapide</h3>
+      <p class="text-center"> Vous devez rembourser 355€ à tous vos groupes </p>
+      <p class="text-center"> Soit 27€+ 286€+ 42€</p>
+      <button type="button" @click="paidDue" class="btn btn-primary justify-content-center">
+        Rembourser l'intégralité
+      </button>
+      <hr>
+      <p class="text-center mt-1"> Vous devez rembourser 27<i class="bi bi-currency-euro"></i> à votre groupe</p>
+      <p class="text-center mt-4">Montant total à rembourser : 27<i class="bi bi-currency-euro"></i></p>
+      <button type="button" @click="paidDue" class="btn btn-primary ">
+        Rembourser 10€ au groupe {{ activeGroup }}
+      </button>
     </div>
+    <div class="col-md-1">OU</div>
+    <div class="col-md-5 text-md-center">
+      <h3 class="text-center mb-4">Paiement détaillé</h3>
+      <ul class="list-group">
+        <li v-for="expense in userExpenses" :key="expense.id" class="list-group-item">
+          <p class="bi-text-right text-bg-light">Le {{ formatDate(expense.expense.createdAt) }}</p>
+          <p class="text-center fst-italic">{{ expense.expense.description }}</p>
+          <p class="text-center">Dépense de <span class="fw-bold">{{ expense.expense.amount }}€</span> créée par
+            {{ expense.expense.createdBy.userName }}</p>
+          <button type="button" @click="createRemboursement()" class="btn btn-primary font-monospace">
+            Rembourser {{ expense.amount }}€
+          </button>
+        </li>
+      </ul>
+    </div>
+
+
   </div>
 </template>
 
 
 <script>
+
 export default {
   name: 'AppRefunds',
+  props: {
+    activeGroup: String,
+  },
   data() {
     return {
-      depense: {
-        montant: 0,
-        description: '',
-        date: '',
-        groupeusers: {},
-      },
-      remboursement: {
-        montant: 0,
-        description: '',
-      },
+      groupExpenses: [],
+      userExpenses: [],
     };
   },
   methods: {
     createRemboursement() {
       console.log('Effectuer un remboursement');
     },
+
+    async paidDue() {
+      console.log('Payer une dette');
+    },
+    async fetchExpensesInGroup() {
+      try {
+        const axios = require('axios');
+        const response = await axios.post('http://localhost:3000/graphql', {
+          query: `{groupById(id:"${this.activeGroup}" ){expenses{amount,createdAt, createdBy{userName}}}}`
+        }, {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json',
+            "Accept": "application/json",
+          },
+        });
+        const responseData = response.data;
+        if (responseData) {
+          console.log('response data:', responseData);
+          /*this.groupExpenses = responseData.data.groupById.expenses;
+          console.log('group expenses:', this.groupExpenses);*/
+        }
+      } catch (error) {
+        console.error('Erreur lors de la récupération des dépenses du groupe', error);
+      }
+
+    },
+    async fetchExpensesCurrrentUser() {
+      try {
+        const axios = require('axios');
+        const response = await axios.post('http://localhost:3000/graphql', {
+          query: `{currentUser{userExpenses{amount, paidAt, expense{id,amount, description, createdAt , createdBy{userName}}}}}`
+        }, {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json',
+            "Accept": "application/json",
+          },
+        });
+        const responseData = response.data;
+        if (responseData.data) {
+          console.log('response data:', responseData);
+          this.userExpenses = responseData.data.currentUser[0].userExpenses;
+          console.log('user expenses:', this.userExpenses);
+        }
+        if (responseData.errors) {
+          console.log('Erreur dans la réponse : ' + responseData.errors[0].message);
+        }
+      } catch (error) {
+        console.error('Erreur lors de la récupération des dépenses du groupe', error);
+      }
+    },
+    formatDate(isoDate) {
+      const date = new Date(isoDate);
+      return date.toLocaleString('fr-FR', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+      });
+    },
+  },
+  mounted() {
+    /*this.fetchExpensesInGroup();*/
+    this.fetchExpensesCurrrentUser();
   },
 };
 
