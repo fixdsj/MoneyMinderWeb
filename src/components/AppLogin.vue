@@ -4,15 +4,15 @@
     <form class="p-4 p-md-5 border rounded-3 bg-body-tertiary" @submit="signIn">
       <h3 class="text-center mb-4">Connexion</h3>
       <p class="text-danger" v-if="errors.length">
-        <b>Please correct the following error(s):</b>
-        <b v-for="(error, index) in errors" :key="index">{{ error }}</b>
+        <b>Erreur(s) :</b>
+        <b v-for="error in errors" :key="error">{{ error }}</b>
       </p>
       <div class="form-floating mb-3">
-        <input type="text" class="form-control" id="username" placeholder="Votre pseudo" v-model="username">
+        <input type="text" class="form-control" id="username" placeholder="Votre pseudo" v-model="username" required>
         <label for="username">Nom d'utilisateur</label>
       </div>
       <div class="form-floating mb-3">
-        <input type="password" class="form-control" id="password" placeholder="Password" v-model="password">
+        <input type="password" class="form-control" id="password" placeholder="Password" v-model="password" required>
         <label for="floatingPassword">Mot de passe</label>
       </div>
       <div class="form-check mb-3">
@@ -58,42 +58,50 @@ export default {
       console.log('Données saisies :', this.username, this.password);
 
 
-      const response = await axios.post('http://localhost:3000/graphql', {
-        query: `
-        mutation {
-          signIn(appUserLoginDto: {
-            username: "${this.username}"
-            password: "${this.password}"
-            rememberMe: ${this.rememberPassword}
-          }) {
-            succeeded
-            isLockedOut
-            isNotAllowed
-            requiresTwoFactor
-            }
+      try {
+        const response = await axios.post('http://localhost:3000/graphql', {
+          query: `
+          mutation {
+            signIn(appUserLoginDto: {
+              username: "${this.username}"
+              password: "${this.password}"
+              rememberMe: ${this.rememberPassword}
+            }) {
+              succeeded
+              isLockedOut
+              isNotAllowed
+              requiresTwoFactor
+              }
+          }
+        `,
+        }, {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json',
+            "Accept": "application/json",
+          },
+        });
+
+        const responseData = response.data;
+        console.log('Réponse:', responseData);
+        if (responseData.data) {
+          if (responseData.data.signIn.succeeded) {
+            console.log('Connexion réussie');
+            isLogged.value = true;
+            this.$router.push('/account');
+          }
         }
-      `,
-      }, {
-        withCredentials: true,
-        headers: {
-          'Content-Type': 'application/json',
-          "Accept": "application/json",
-        },
-      });
+        if (responseData.errors) {
+          this.errors.push(responseData.errors[0].message);
+          console.log("erreur dans le tableau" + this.errors);
+        }
 
-      console.log('Réponse du serveur :', response);
-      const responseData = response.data;
+      } catch (error) {
+        console.error('Erreur de connexion :', error);
 
-      if (!responseData.data.signIn.succeeded) {
-        this.errors = ['Vérifiez vos informations de connexion'];
-
-      }
-      if (responseData.data.signIn.succeeded) {
-        console.log('Connexion réussie');
-        isLogged.value = true;
-        this.$router.push('/account');
       }
     },
+
   }
 
 };

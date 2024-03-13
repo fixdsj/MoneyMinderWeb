@@ -19,6 +19,8 @@
       <div class="form-floating mb-3">
         <input type="password" class="form-control" id="password" v-model="password" placeholder="Password">
         <label for="password">Mot de passe</label>
+        <small class="text-warning">Le mot de passe doit contenir au moins 8 caractères, un chiffre, une
+          majuscule et une minuscule.</small>
       </div>
       <div class="form-floating mb-3">
         <input type="password" class="form-control" id="confirmPassword" v-model="confirmPassword"
@@ -63,15 +65,14 @@ export default {
         this.errors = ['Les mots de passe ne correspondent pas'];
         return;
       }
-
-      console.log('Données saisies :', this.pseudo, this.email, this.password);
-      const response = await fetch('http://localhost:3000/graphql', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          query: `mutation CreateUser {
+      try {
+        const response = await fetch('http://localhost:3000/graphql', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            query: `mutation CreateUser {
     createUser(
         appUserInsertDto: {
             userName: "${this.pseudo}"
@@ -87,21 +88,25 @@ export default {
     }
 }
 `
-        })
+          })
 
-      });
-      const responseData = await response.json();
-      if (responseData.errors) {
-        this.errors = ['Erreur : ' + responseData.errors[0].message];
+        });
+        const responseData = await response.json();
+        if (responseData.errors) {
+          this.errors = ['Erreur : ' + responseData.errors[0].message];
 
-      }
-      if (responseData.data.createUser !== null) {
-        this.success = true;
+        }
+        if (responseData.data.createUser !== null) {
+          this.success = true;
 
-        // Rediriger vers la page de connexion après 2 secondes
-        await new Promise(resolve => setTimeout(resolve, 2000));
+          // Rediriger vers la page de connexion après 2 secondes
+          await new Promise(resolve => setTimeout(resolve, 2000));
 
-        this.$router.push('/login');
+          this.$router.push('/login');
+        }
+      } catch (e) {
+        console.error(e);
+        this.errors = ['Une erreur est survenue lors de l\'inscription'];
       }
     }
   },

@@ -9,7 +9,7 @@
             <a role="button" class="btn fst-italic">Aucun groupe</a>
           </li>
           <li v-for="groupe in groupes" :key="groupe.id" @click="selectGroupe(groupe.name)"
-              class="list-group-item" :class="{'groupeactif': groupe.name === groupeActif}">
+              class="list-group-item" :class="{'activeGroup': groupe.name === activeGroup}">
             <a role="button" class="btn">{{ groupe.name }}: (Solde:{{ groupe.soldes }}€)</a>
           </li>
 
@@ -42,12 +42,12 @@
         </ul>
 
         <div class="details">
-          <h4 class="text-center mb-4">{{ groupeActif }}</h4>
+          <h4 class="text-center mb-4">{{ activeGroup }}</h4>
           <hr class="my-4">
 
           <div v-if="selectedTab === 'depenses'">
             <h3>Dépenses</h3>
-            <AppExpenses/>
+            <AppExpenses :activeGroup="activeGroup"/>
           </div>
           <div v-if="selectedTab === 'refunds'">
             <h3>Remboursements</h3>
@@ -92,7 +92,7 @@ export default {
         {id: 4, action: 'Action 4', type: 'remboursement', date: '04/01/2021'}
       ],
 
-      groupeActif: null,
+      activeGroup: null,
       selectedTab: 'depenses',
     };
   },
@@ -101,33 +101,38 @@ export default {
   },
   methods: {
     selectGroupe(groupe) {
-      this.groupeActif = groupe;
+      this.activeGroup = groupe;
     },
     selectTab(tab) {
       this.selectedTab = tab;
     },
     async fetchCurrentUserGroups() {
-      const axios = require('axios');
-      const response = await axios.post('http://localhost:3000/graphql', {
-        query: `{currentUser{userGroups{user{balance},group{name}}}}`
-      }, {
-        withCredentials: true,
-        headers: {
-          'Content-Type': 'application/json',
-          "Accept": "application/json",
-        },
-      });
-      const responseData = response.data;
-      console.log('Réponse:', responseData);
-      if (responseData.data.currentUser[0].userGroups.length > 0) {
-        this.groupes = responseData.data.currentUser[0].userGroups.map((groupe) => {
-          return {
-            name: groupe.group.name,
-            soldes: groupe.user.balance,
-          };
+      try {
+        const axios = require('axios');
+        const response = await axios.post('http://localhost:3000/graphql', {
+          query: `{currentUser{userGroups{user{balance},group{name}}}}`
+        }, {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json',
+            "Accept": "application/json",
+          },
         });
-        this.groupeActif = this.groupes[0].name;
+        const responseData = response.data;
+        console.log('Réponse:', responseData);
+        if (responseData.data.currentUser[0].userGroups.length > 0) {
+          this.groupes = responseData.data.currentUser[0].userGroups.map((groupe) => {
+            return {
+              name: groupe.group.name,
+              soldes: groupe.user.balance,
+            };
+          });
+          this.activeGroup = this.groupes[0].name;
+        }
+      } catch (error) {
+        console.error('Erreur:', error);
       }
+
     },
   },
 };
@@ -176,7 +181,7 @@ h1 {
   margin: 20px;
 }
 
-.groupeactif {
+.activeGroup {
   background-color: var(--second-button-color);
   border-right: solid 2px #721c24;
 }

@@ -40,12 +40,16 @@
                 <div class="mb-3">
                   <label for="pseudo" class="form-label">Nom d'utilisateur</label>
                   <input required type="text" class="form-control" id="pseudo" placeholder="Nom d'utilisateur"
-                         v-model="selectedUser.userName" @input="suggestUsers()"/>
+                         v-model="selectedUser.userName" @input="suggestUsers"/>
                   <ul class="list-group">
                     <button v-for="user in suggestedUsers" :key="user.id" class="list-group-item list-group-item-action"
                             @click="selectUser(user)">
                       {{ user.userName }}
                     </button>
+                    <li v-if="suggestedUsers.length === 0 && selectedUser.userName !== ''" class="list-group-item">
+                      <a role="button" class="btn fst-italic">Aucun utilisateur trouvé</a>
+                    </li>
+
                   </ul>
                 </div>
                 <div class="mb-3">
@@ -95,18 +99,12 @@
               <li v-for="invitation in invitations" :key="invitation.id"
                   class="list-group-item d-flex justify-content-between align-items-center">
                 {{ invitation.group.name }}
-                <button class="btn btn-primary">Accepter</button>
+                <button class="btn btn-primary" @click="acceptInvitation(invitation.group.id)">Accepter</button>
                 <button class="btn btn-danger">Refuser</button>
               </li>
               <li v-if="invitations.length === 0" class="list-group">
                 <a role="button" class="btn fst-italic">Aucune invitation</a>
               </li>
-              <!--              <li class="list-group-item d-flex justify-content-between align-items-center">
-                              Groupe 1
-                              <button class="btn btn-primary">Accepter</button>
-                              <button class="btn btn-danger">Refuser</button>
-                            </li>-->
-
             </ul>
             <h4 class="card-title text-md-center">Mes informations</h4>
             <form @submit.prevent="updateCompte" class="form">
@@ -209,30 +207,32 @@ export default {
       console.log('Informations mises à jour:', this.utilisateur);
     },
 
-
     async inviteToGroup() {
-      console.log('Invitation envoyée à:', this.selectedUser.userName, 'ou son idUser est :', this.selectedUser.id, 'pour le groupe:', this.selectedGroup);
-      const axios = require('axios');
-      const response = await axios.post('http://localhost:3000/graphql', {
-        query: `mutation{inviteUser(invitationInsertDto:{groupId:"${this.selectedGroup}", userId:"${this.selectedUser.id}"}){invitedAt,group{name}}}`
-      }, {
-        withCredentials: true,
-        headers: {
-          'Content-Type': 'application/json',
-          "Accept": "application/json",
-        },
-      });
-      const responseData = response.data;
-      if (responseData.data.inviteUser) {
-        console.log('Invitation envoyée:', responseData.data.inviteUser);
-        this.alertMessage = `Invitation envoyée à ${this.selectedUser.userName} pour le groupe ${responseData.data.inviteUser.group.name}`;
-        var toastLive = document.getElementById('liveToast')
-        toastLive.classList.add('show')
-        console.log('data', responseData.data);
-        this.selectedUser = {
-          userName: '', id: ''
-        };
-        this.selectedGroup = [];
+      try {
+        const axios = require('axios');
+        const response = await axios.post('http://localhost:3000/graphql', {
+          query: `mutation{inviteUser(invitationInsertDto:{groupId:"${this.selectedGroup}", userId:"${this.selectedUser.id}"}){invitedAt,group{name}}}`
+        }, {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json',
+            "Accept": "application/json",
+          },
+        });
+        const responseData = response.data;
+        if (responseData.data.inviteUser) {
+          console.log('Invitation envoyée:', responseData.data.inviteUser);
+          this.alertMessage = `Invitation envoyée à ${this.selectedUser.userName} pour le groupe ${responseData.data.inviteUser.group.name}`;
+          var toastLive = document.getElementById('liveToast')
+          toastLive.classList.add('show')
+          console.log('data', responseData.data);
+          this.selectedUser = {
+            userName: '', id: ''
+          };
+          this.selectedGroup = [];
+        }
+      } catch (error) {
+        console.error('Erreur:', error);
       }
 
     },
@@ -318,7 +318,6 @@ export default {
         this.utilisateur.username = responseDataUser.data.currentUser[0].userName;
         this.utilisateur.email = responseDataUser.data.currentUser[0].email;
         this.invitations = responseDataUser.data.currentUser[0].invitations;
-        console.log('Invitations:', this.invitations);
       }
       if (responseDataUser.errors) {
         console.log("erreur" + responseDataUser.errors.message);
@@ -384,9 +383,30 @@ export default {
       if (responseData.errors) {
         console.log("erreur" + responseData.errors.message);
       }
+    },
+
+    async acceptInvitation(groupId) {
+      const axios = require('axios');
+      const response = await axios.post('http://localhost:3000/graphql', {
+        query: `mutation{joinGroup(userGroupInsertInput: {groupId:"${groupId}"}){joinedAt}}`
+      }, {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json',
+          "Accept": "application/json",
+        },
+      });
+      const responseData = response.data;
+      if (responseData.data.joinGroup) {
+        var toastLive = document.getElementById('liveToast')
+        this.alertMessage = `Invitation acceptée`;
+        toastLive.classList.add('show')
+        console.log('Invitation acceptée:', responseData.data.joinGroup);
+        await this.fetchCurrentUserDetails();
+      }
+      console.log('Réponse pour l invitation:', responseData);
     }
   },
-
 };
 </script>
 

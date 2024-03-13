@@ -17,12 +17,6 @@ export default {
     AppHeader,
     AppFooter
   },
-  methods: {
-    logout() {
-      console.log('Déconnexion');
-    }
-  },
-
   setup() {
     // Créer une référence réactive à isLogged
     const isLoggedRef = ref(isLogged);
@@ -48,7 +42,6 @@ export default {
           },
         });
         const responseData = response.data;
-        console.log('Réponse:', responseData);
         if (responseData.data) {
           currentUsername.value = responseData.data.currentUser[0].userName;
           isLoggedRef.value = true;
@@ -62,7 +55,6 @@ export default {
         console.error('Erreur:', error);
       }
 
-      console.log('Utilisateur actuel:', currentUsername.value);
     };
 
     return {
@@ -79,7 +71,7 @@ export default {
 
 <style>
 #app {
-  --main-background-color: #F0BE86;
+  --main-background-color: #fbfbfc;
   --first-text-color: white;
   --second-text-color: #3CB371;
   --second-button-color: #3CB371;

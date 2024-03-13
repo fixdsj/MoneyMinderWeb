@@ -140,7 +140,7 @@
                                 <span class="active"></span>
                               </div>
                               <div class="flex-grow-1 ms-3">
-                                <h3>Mehedi Hasan</h3>
+                                <h3>Louis Martin</h3>
                                 <p>front end developer</p>
                               </div>
                             </a>
@@ -212,7 +212,7 @@
                                      alt="user img">
                               </div>
                               <div class="flex-grow-1 ms-3">
-                                <h3>Mehedi Hasan</h3>
+                                <h3>Louis Martin</h3>
                                 <p>front end developer</p>
                               </div>
                             </a>
@@ -243,7 +243,7 @@
                           <div class="flex-shrink-0">
                           </div>
                           <div class="flex-grow-1 ms-3">
-                            <h3>Mehedi Hasan</h3>
+                            <h3>Louis Martin</h3>
                             <p>Dernière connexion: 10:00 am</p>
                           </div>
                         </div>
