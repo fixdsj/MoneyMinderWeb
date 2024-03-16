@@ -2,29 +2,29 @@
   <div class="col-md-10 mx-auto col-lg-5">
     <form class="p-4 p-md-5 border rounded-3 bg-body-tertiary" @submit="register">
       <h3 class="text-center mb-4">Inscription</h3>
-      <p class="text-danger" v-if="errors.length">
+      <p v-if="errors.length" class="text-danger">
         <b>Please correct the following error(s):</b>
         <ul class="mb-0 list-unstyled">
           <li v-for="(error, index) in errors" :key="index">{{ error }}</li>
         </ul>
       </p>
       <div class="form-floating mb-3">
-        <input type="text" class="form-control" id="pseudo" v-model="pseudo" placeholder="Pseudo">
+        <input id="pseudo" v-model="pseudo" class="form-control" placeholder="Pseudo" type="text">
         <label for="pseudo">Pseudo</label>
       </div>
       <div class="form-floating mb-3">
-        <input type="email" class="form-control" id="email" v-model="email" placeholder="name@example.com">
+        <input id="email" v-model="email" class="form-control" placeholder="name@example.com" type="email">
         <label for="email">Adresse mail</label>
       </div>
       <div class="form-floating mb-3">
-        <input type="password" class="form-control" id="password" v-model="password" placeholder="Password">
+        <input id="password" v-model="password" class="form-control" placeholder="Password" type="password">
         <label for="password">Mot de passe</label>
         <small class="text-warning">Le mot de passe doit contenir au moins 8 caractères, un chiffre, une
           majuscule et une minuscule.</small>
       </div>
       <div class="form-floating mb-3">
-        <input type="password" class="form-control" id="confirmPassword" v-model="confirmPassword"
-               placeholder="Password">
+        <input id="confirmPassword" v-model="confirmPassword" class="form-control" placeholder="Password"
+               type="password">
         <label for="confirmPassword">Confirmer le mot de passe</label>
       </div>
       <small class="text-body-secondary">En cliquant sur S'inscrire, vous acceptez les conditions d'utilisation.</small>
@@ -99,8 +99,8 @@ export default {
         if (responseData.data.createUser !== null) {
           this.success = true;
 
-          // Rediriger vers la page de connexion après 2 secondes
-          await new Promise(resolve => setTimeout(resolve, 2000));
+          /* // Rediriger vers la page de connexion après 2 secondes
+           await new Promise(resolve => setTimeout(resolve, 2000));*/
 
           this.$router.push('/login');
         }

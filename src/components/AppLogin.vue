@@ -3,20 +3,20 @@
   <div class="col-md-10 mx-auto col-lg-5">
     <form class="p-4 p-md-5 border rounded-3 bg-body-tertiary" @submit="signIn">
       <h3 class="text-center mb-4">Connexion</h3>
-      <p class="text-danger" v-if="errors.length">
+      <p v-if="errors.length" class="text-danger">
         <b>Erreur(s) :</b>
         <b v-for="error in errors" :key="error">{{ error }}</b>
       </p>
       <div class="form-floating mb-3">
-        <input type="text" class="form-control" id="username" placeholder="Votre pseudo" v-model="username" required>
+        <input id="username" v-model="username" class="form-control" placeholder="Votre pseudo" required type="text">
         <label for="username">Nom d'utilisateur</label>
       </div>
       <div class="form-floating mb-3">
-        <input type="password" class="form-control" id="password" placeholder="Password" v-model="password" required>
+        <input id="password" v-model="password" class="form-control" placeholder="Password" required type="password">
         <label for="floatingPassword">Mot de passe</label>
       </div>
       <div class="form-check mb-3">
-        <input class="form-check-input" type="checkbox" value="" id="rememberPassword" v-model="rememberPassword">
+        <input id="rememberPassword" v-model="rememberPassword" class="form-check-input" type="checkbox" value="">
         <label class="form-check-label" for="rememberPassword">
           Se souvenir de moi
         </label>

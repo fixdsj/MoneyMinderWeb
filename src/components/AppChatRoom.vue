@@ -17,19 +17,19 @@
                 <div class="modal-content">
                   <div class="chat-header">
                     <div class="input-group">
-                      <input type="text" class="form-control" placeholder="Rechercher" aria-label="search">
+                      <input aria-label="search" class="form-control" placeholder="Rechercher" type="text">
                       <button class="btn btn-outline-secondary" type="button"><i class="bi bi-plus-lg"></i></button>
                     </div>
 
-                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <ul id="myTab" class="nav nav-tabs" role="tablist">
                       <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="Open-tab" data-bs-toggle="tab" data-bs-target="#Open"
-                                type="button" role="tab" aria-controls="Open" aria-selected="true">Amis
+                        <button id="Open-tab" aria-controls="Open" aria-selected="true" class="nav-link active"
+                                data-bs-target="#Open" data-bs-toggle="tab" role="tab" type="button">Amis
                         </button>
                       </li>
                       <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="Closed-tab" data-bs-toggle="tab" data-bs-target="#Closed"
-                                type="button" role="tab" aria-controls="Closed" aria-selected="false">Groupes
+                        <button id="Closed-tab" aria-controls="Closed" aria-selected="false" class="nav-link"
+                                data-bs-target="#Closed" data-bs-toggle="tab" role="tab" type="button">Groupes
                         </button>
                       </li>
                     </ul>
@@ -38,35 +38,35 @@
                   <div class="modal-body">
                     <!-- chat-list -->
                     <div class="chat-lists">
-                      <div class="tab-content" id="myTabContent">
-                        <div class="tab-pane fade show active " id="Open" role="tabpanel" aria-labelledby="Open-tab">
+                      <div id="myTabContent" class="tab-content">
+                        <div id="Open" aria-labelledby="Open-tab" class="tab-pane fade show active " role="tabpanel">
                           <!-- chat-list -->
                           <div class="chat-list">
 
-                            <a href="#" class="d-flex align-items-center">
+                            <a class="d-flex align-items-center" href="#">
                               <div class="flex-shrink-0">
-                                <img class="img-fluid" src="https://mehedihtml.com/chatbox/assets/img/user.png"
-                                     alt="user img">
+                                <img alt="user img" class="img-fluid"
+                                     src="https://mehedihtml.com/chatbox/assets/img/user.png">
                               </div>
                               <div class="flex-grow-1 ms-3">
                                 <h3>Ryhan</h3>
                                 <p>front end developer</p>
                               </div>
                             </a>
-                            <a href="#" class="d-flex align-items-center">
+                            <a class="d-flex align-items-center" href="#">
                               <div class="flex-shrink-0">
-                                <img class="img-fluid" src="https://mehedihtml.com/chatbox/assets/img/user.png"
-                                     alt="user img">
+                                <img alt="user img" class="img-fluid"
+                                     src="https://mehedihtml.com/chatbox/assets/img/user.png">
                               </div>
                               <div class="flex-grow-1 ms-3">
                                 <h3>Malek Hasan</h3>
                                 <p>front end developer</p>
                               </div>
                             </a>
-                            <a href="#" class="d-flex align-items-center">
+                            <a class="d-flex align-items-center" href="#">
                               <div class="flex-shrink-0">
-                                <img class="img-fluid" src="https://mehedihtml.com/chatbox/assets/img/user.png"
-                                     alt="user img">
+                                <img alt="user img" class="img-fluid"
+                                     src="https://mehedihtml.com/chatbox/assets/img/user.png">
                               </div>
                               <div class="flex-grow-1 ms-3">
                                 <h3>Sadik Hasan</h3>
@@ -74,30 +74,30 @@
                               </div>
                             </a>
 
-                            <a href="#" class="d-flex align-items-center">
+                            <a class="d-flex align-items-center" href="#">
                               <div class="flex-shrink-0">
-                                <img class="img-fluid" src="https://mehedihtml.com/chatbox/assets/img/user.png"
-                                     alt="user img">
+                                <img alt="user img" class="img-fluid"
+                                     src="https://mehedihtml.com/chatbox/assets/img/user.png">
                               </div>
                               <div class="flex-grow-1 ms-3">
                                 <h3>Payel Akter</h3>
                                 <p>front end developer</p>
                               </div>
                             </a>
-                            <a href="#" class="d-flex align-items-center">
+                            <a class="d-flex align-items-center" href="#">
                               <div class="flex-shrink-0">
-                                <img class="img-fluid" src="https://mehedihtml.com/chatbox/assets/img/user.png"
-                                     alt="user img">
+                                <img alt="user img" class="img-fluid"
+                                     src="https://mehedihtml.com/chatbox/assets/img/user.png">
                               </div>
                               <div class="flex-grow-1 ms-3">
                                 <h3>Baby Akter</h3>
                                 <p>front end developer</p>
                               </div>
                             </a>
-                            <a href="#" class="d-flex align-items-center">
+                            <a class="d-flex align-items-center" href="#">
                               <div class="flex-shrink-0">
-                                <img class="img-fluid" src="https://mehedihtml.com/chatbox/assets/img/user.png"
-                                     alt="user img">
+                                <img alt="user img" class="img-fluid"
+                                     src="https://mehedihtml.com/chatbox/assets/img/user.png">
                               </div>
                               <div class="flex-grow-1 ms-3">
                                 <h3>Zuwel Rana</h3>
@@ -105,20 +105,20 @@
                               </div>
                             </a>
 
-                            <a href="#" class="d-flex align-items-center">
+                            <a class="d-flex align-items-center" href="#">
                               <div class="flex-shrink-0">
-                                <img class="img-fluid" src="https://mehedihtml.com/chatbox/assets/img/user.png"
-                                     alt="user img">
+                                <img alt="user img" class="img-fluid"
+                                     src="https://mehedihtml.com/chatbox/assets/img/user.png">
                               </div>
                               <div class="flex-grow-1 ms-3">
                                 <h3>Jalal Ahmed</h3>
                                 <p>front end developer</p>
                               </div>
                             </a>
-                            <a href="#" class="d-flex align-items-center">
+                            <a class="d-flex align-items-center" href="#">
                               <div class="flex-shrink-0">
-                                <img class="img-fluid" src="https://mehedihtml.com/chatbox/assets/img/user.png"
-                                     alt="user img">
+                                <img alt="user img" class="img-fluid"
+                                     src="https://mehedihtml.com/chatbox/assets/img/user.png">
                               </div>
                               <div class="flex-grow-1 ms-3">
                                 <h3>Hasan Ali</h3>
@@ -129,14 +129,14 @@
                           </div>
                           <!-- chat-list -->
                         </div>
-                        <div class="tab-pane fade" id="Closed" role="tabpanel" aria-labelledby="Closed-tab">
+                        <div id="Closed" aria-labelledby="Closed-tab" class="tab-pane fade" role="tabpanel">
 
                           <!-- chat-list -->
                           <div class="chat-list">
-                            <a href="#" class="d-flex align-items-center">
+                            <a class="d-flex align-items-center" href="#">
                               <div class="flex-shrink-0">
-                                <img class="img-fluid" src="https://mehedihtml.com/chatbox/assets/img/user.png"
-                                     alt="user img">
+                                <img alt="user img" class="img-fluid"
+                                     src="https://mehedihtml.com/chatbox/assets/img/user.png">
                                 <span class="active"></span>
                               </div>
                               <div class="flex-grow-1 ms-3">
@@ -144,60 +144,60 @@
                                 <p>front end developer</p>
                               </div>
                             </a>
-                            <a href="#" class="d-flex align-items-center">
+                            <a class="d-flex align-items-center" href="#">
                               <div class="flex-shrink-0">
-                                <img class="img-fluid" src="https://mehedihtml.com/chatbox/assets/img/user.png"
-                                     alt="user img">
+                                <img alt="user img" class="img-fluid"
+                                     src="https://mehedihtml.com/chatbox/assets/img/user.png">
                               </div>
                               <div class="flex-grow-1 ms-3">
                                 <h3>Ryhan</h3>
                                 <p>front end developer</p>
                               </div>
                             </a>
-                            <a href="#" class="d-flex align-items-center">
+                            <a class="d-flex align-items-center" href="#">
                               <div class="flex-shrink-0">
-                                <img class="img-fluid" src="https://mehedihtml.com/chatbox/assets/img/user.png"
-                                     alt="user img">
+                                <img alt="user img" class="img-fluid"
+                                     src="https://mehedihtml.com/chatbox/assets/img/user.png">
                               </div>
                               <div class="flex-grow-1 ms-3">
                                 <h3>Malek Hasan</h3>
                                 <p>front end developer</p>
                               </div>
                             </a>
-                            <a href="#" class="d-flex align-items-center">
+                            <a class="d-flex align-items-center" href="#">
                               <div class="flex-shrink-0">
-                                <img class="img-fluid" src="https://mehedihtml.com/chatbox/assets/img/user.png"
-                                     alt="user img">
+                                <img alt="user img" class="img-fluid"
+                                     src="https://mehedihtml.com/chatbox/assets/img/user.png">
                               </div>
                               <div class="flex-grow-1 ms-3">
                                 <h3>Sadik Hasan</h3>
                                 <p>front end developer</p>
                               </div>
                             </a>
-                            <a href="#" class="d-flex align-items-center">
+                            <a class="d-flex align-items-center" href="#">
                               <div class="flex-shrink-0">
-                                <img class="img-fluid" src="https://mehedihtml.com/chatbox/assets/img/user.png"
-                                     alt="user img">
+                                <img alt="user img" class="img-fluid"
+                                     src="https://mehedihtml.com/chatbox/assets/img/user.png">
                               </div>
                               <div class="flex-grow-1 ms-3">
                                 <h3>Bulu </h3>
                                 <p>front end developer</p>
                               </div>
                             </a>
-                            <a href="#" class="d-flex align-items-center">
+                            <a class="d-flex align-items-center" href="#">
                               <div class="flex-shrink-0">
-                                <img class="img-fluid" src="https://mehedihtml.com/chatbox/assets/img/user.png"
-                                     alt="user img">
+                                <img alt="user img" class="img-fluid"
+                                     src="https://mehedihtml.com/chatbox/assets/img/user.png">
                               </div>
                               <div class="flex-grow-1 ms-3">
                                 <h3>Maria SK</h3>
                                 <p>front end developer</p>
                               </div>
                             </a>
-                            <a href="#" class="d-flex align-items-center">
+                            <a class="d-flex align-items-center" href="#">
                               <div class="flex-shrink-0">
-                                <img class="img-fluid" src="https://mehedihtml.com/chatbox/assets/img/user.png"
-                                     alt="user img">
+                                <img alt="user img" class="img-fluid"
+                                     src="https://mehedihtml.com/chatbox/assets/img/user.png">
                               </div>
                               <div class="flex-grow-1 ms-3">
                                 <h3>Dipa Hasan</h3>
@@ -206,10 +206,10 @@
                             </a>
 
 
-                            <a href="#" class="d-flex align-items-center">
+                            <a class="d-flex align-items-center" href="#">
                               <div class="flex-shrink-0">
-                                <img class="img-fluid" src="https://mehedihtml.com/chatbox/assets/img/user.png"
-                                     alt="user img">
+                                <img alt="user img" class="img-fluid"
+                                     src="https://mehedihtml.com/chatbox/assets/img/user.png">
                               </div>
                               <div class="flex-grow-1 ms-3">
                                 <h3>Louis Martin</h3>
@@ -251,8 +251,8 @@
                       <div class="col-4">
                         <ul class="moreoption">
                           <li class="navbar nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                               aria-expanded="false"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></a>
+                            <a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#"
+                               role="button"><i aria-hidden="true" class="fa fa-ellipsis-v"></i></a>
                             <ul class="dropdown-menu">
                               <li><a class="dropdown-item" href="#">Action</a></li>
                               <li><a class="dropdown-item" href="#">Another action</a></li>
@@ -317,8 +317,8 @@
 
                   <div class="send-box">
                     <form action="">
-                      <input type="text" class="form-control" aria-label="message…" placeholder="Ecrire un message…">
-                      <button type="button" class="btn btn-primary" aria-hidden="true"> Envoyer</button>
+                      <input aria-label="message…" class="form-control" placeholder="Ecrire un message…" type="text">
+                      <button aria-hidden="true" class="btn btn-primary" type="button"> Envoyer</button>
                     </form>
 
 
@@ -340,8 +340,6 @@
 </template>
 
 <style scoped>
-
-/* HTML5 display-role reset for older browsers */
 
 
 /* *******************************
@@ -611,7 +609,7 @@ a.add img {
   height: 0;
   border-style: solid;
   border-width: 0 12px 15px 12px;
-  border-color: transparent transparent #4b7bec transparent;
+  border-color: transparent transparent var(--button-color) transparent;
   -ms-transform: rotate(37deg);
   transform: rotate(37deg);
 }
@@ -622,7 +620,7 @@ a.add img {
   line-height: 1.5;
   font-weight: 400;
   padding: 15px;
-  background: #4b7bec;
+  background: var(--button-color);
   display: inline-block;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;

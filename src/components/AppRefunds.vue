@@ -4,15 +4,15 @@
 
       <h3 class="text-center mb-4">Paiement rapide</h3>
       <p class="text-center"> Vous devez rembourser 355€ à tous vos groupes </p>
-      <p class="text-center"> Soit 27€+ 286€+ 42€</p>
-      <button type="button" @click="paidDue" class="btn btn-primary justify-content-center">
-        Rembourser l'intégralité
+      <p class="text-center"> Soit 27€ + 286€ + 42€</p>
+      <button class="btn btn-primary justify-content-center" type="button" @click="paidDue">
+        Payer l'intégralité
       </button>
       <hr>
       <p class="text-center mt-1"> Vous devez rembourser 27<i class="bi bi-currency-euro"></i> à votre groupe</p>
       <p class="text-center mt-4">Montant total à rembourser : 27<i class="bi bi-currency-euro"></i></p>
-      <button type="button" @click="paidDue" class="btn btn-primary ">
-        Rembourser 10€ au groupe {{ activeGroup }}
+      <button class="btn btn-primary " type="button" @click="paidDue">
+        Payer 10€ au groupe {{ activeGroup }}
       </button>
     </div>
     <div class="col-md-1">OU</div>
@@ -24,7 +24,7 @@
           <p class="text-center fst-italic">{{ expense.expense.description }}</p>
           <p class="text-center">Dépense de <span class="fw-bold">{{ expense.expense.amount }}€</span> créée par
             {{ expense.expense.createdBy.userName }}</p>
-          <button type="button" @click="createRemboursement()" class="btn btn-primary font-monospace">
+          <button class="btn btn-primary font-monospace" type="button" @click="createRemboursement()">
             Rembourser {{ expense.amount }}€
           </button>
         </li>

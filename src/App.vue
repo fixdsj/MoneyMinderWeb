@@ -72,9 +72,10 @@ export default {
 <style>
 #app {
   --main-background-color: #fbfbfc;
+  --second-background-color: #CCD5AE;
   --first-text-color: white;
   --second-text-color: #3CB371;
-  --second-button-color: #3CB371;
+  --button-color: #D4A373;
   --third-text-color: black;
   --main-header-color: #6E6E6E;
   font-family: Avenir, Helvetica, Arial, sans-serif;

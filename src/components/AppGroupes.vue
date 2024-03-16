@@ -3,40 +3,35 @@
     <h5 class="text-center mb-4">Mon solde total = 3<i class="bi bi-currency-euro"></i></h5>
     <div class="maincontainer">
       <div class="sidebar">
-        <ul class="list-group">
-          <li class="list-group-item">Mes groupes</li>
-          <li v-if="groupes.length === 0" class="list-group-item">
-            <a role="button" class="btn fst-italic">Aucun groupe</a>
-          </li>
-          <li v-for="groupe in groupes" :key="groupe.id" @click="selectGroupe(groupe.name)"
-              class="list-group-item" :class="{'activeGroup': groupe.name === activeGroup}">
-            <a role="button" class="btn">{{ groupe.name }}: (Solde:{{ groupe.soldes }}€)</a>
-          </li>
-
-          <li class="list-group-item">
-            <a href="/account" role="button" class="btn">Créer un groupe</a>
-          </li>
-        </ul>
+        <div aria-label="Liste des groupes" class="btn-group-vertical " role="group">
+          <button v-if="groupes.length === 0" class="btn btn-secondary fst-italic" type="button">Aucun groupe</button>
+          <button v-for="groupe in groupes" :key="groupe.id" :class="{'activeGroup': groupe.name === activeGroup}"
+                  class="btn btn-secondary" type="button" @click="selectGroupe(groupe.name)">
+            {{ groupe.name }}: (Solde:{{ groupe.soldes }}€)
+          </button>
+          <a class="btn btn-secondary my-auto" href="/account" role="button">Créer un groupe</a>
+        </div>
       </div>
 
       <div class="contentcontainer">
         <ul class="nav nav-tabs">
           <li class="nav-item">
-            <p class="nav-link btn" @click="selectTab('depenses')"
-               :class="{ 'selectedtab': selectedTab === 'depenses' }">
+            <p :class="{ 'selectedtab': selectedTab === 'depenses' }" class="nav-link btn tabnav"
+               @click="selectTab('depenses')">
               Dépenses</p>
           </li>
           <li class="nav-item">
-            <p class="nav-link btn" @click="selectTab('refunds')" :class="{ 'selectedtab': selectedTab === 'refunds' }">
+            <p :class="{ 'selectedtab': selectedTab === 'refunds' }" class="nav-link btn" @click="selectTab('refunds')">
               Remboursements</p>
           </li>
-          <li class="nav-item">
-            <p class="nav-link btn" @click="selectTab('historique')"
-               :class="{ 'selectedtab': selectedTab === 'historique' }">
+          <li class="nav-item ">
+            <p :class="{ 'selectedtab': selectedTab === 'historique' }" class="nav-link btn tabnav"
+               @click="selectTab('historique')">
               Historique</p>
           </li>
-          <li class="nav-item">
-            <p class="nav-link btn" @click="selectTab('details')" :class="{ 'selectedtab': selectedTab === 'details' }">
+          <li class="nav-item ">
+            <p :class="{ 'selectedtab': selectedTab === 'details' }" class="nav-link btn tabnav"
+               @click="selectTab('details')">
               Détails</p>
           </li>
         </ul>
@@ -146,29 +141,6 @@ export default {
   flex-grow: 1;
 }
 
-.sidebar {
-  display: flex;
-  height: 70vh;
-  overflow-y: auto;
-}
-
-
-/*.sidebar ul li {
-  padding: 15px;
-  cursor: pointer;
-  text-align: center;
-  text-decoration: none;
-}*/
-
-
-/*.sidebar a {
-  padding: 10px;
-  cursor: pointer;
-  display: block;
-  text-align: center;
-  text-decoration: none;
-  color: inherit;
-}*/
 
 .details {
   flex-grow: 1;
@@ -181,12 +153,20 @@ h1 {
 }
 
 .activeGroup {
-  background-color: var(--second-button-color);
-  border-right: solid 2px #721c24;
+  background-color: var(--second-background-color);
+  border: none;
 }
 
 .selectedtab {
-  background-color: var(--second-button-color);
-  border-bottom: solid 2px #721c24;
+  background-color: var(--second-background-color);
+}
+
+.tabnav:hover {
+  background-color: var(--second-background-color);
+}
+
+.sidebar button:hover, .sidebar a:hover {
+  background-color: var(--second-background-color);
+  border: none;
 }
 </style>

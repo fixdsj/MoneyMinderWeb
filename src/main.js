@@ -9,6 +9,9 @@ import "bootstrap"
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
 
+//Import css personnalisé
+import './custom.css';
+
 export const isLogged = ref(false);
 export const currentUsername = ref("Guest");
 

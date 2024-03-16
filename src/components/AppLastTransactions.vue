@@ -1,18 +1,20 @@
 <template>
 
-  <div class="accordion" id="accordionPanelsStayOpenExample">
+  <div class="accordion">
     <div v-for="transaction in transactions" :key="transaction.id" class="accordion-item">
-      <h2 class="accordion-header" id="panelsStayOpen-heading{{transaction.id}}">
-        <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                data-bs-target="#panelsStayOpen-collapse{{transaction.id}}" aria-expanded="true"
-                aria-controls="panelsStayOpen-collapse{{transaction.id}}">
+      <h2 class="accordion-header">
+        <button aria-controls="panelsStayOpen-collapse{{transaction.id}}" aria-expanded="true" class="accordion-button"
+                data-bs-target="#panelsStayOpen-collapse{{transaction.id}}" data-bs-toggle="collapse"
+                type="button">
           {{ transaction.author }} - {{ transaction.montant }}€ - {{ transaction.date }} -
-          {{ formatType(transaction.type) }}&nbsp; <span style="text-transform: uppercase"
-                                                         class="badge bg-secondary">{{ transaction.categorie }}</span>
+          {{ formatType(transaction.type) }}&nbsp; <span class="badge bg-secondary"
+                                                         style="text-transform: uppercase">{{
+            transaction.categorie
+          }}</span>
         </button>
       </h2>
-      <div id="panelsStayOpen-collapse{{transaction.id}}" class="accordion-collapse collapse show"
-           aria-labelledby="panelsStayOpen-heading{{transaction.id}}">
+      <div id="panelsStayOpen-collapse{{transaction.id}}" aria-labelledby="panelsStayOpen-heading{{transaction.id}}"
+           class="accordion-collapse collapse show">
         <div class="accordion-body">
           Description: {{ transaction.description }}
           <div class="text-end">
@@ -78,10 +80,7 @@ export default {
     };
   },
   methods: {
-    formatDate(dateString) {
-      // Vous pouvez utiliser une bibliothèque comme moment.js pour un formatage plus avancé
-      return new Date(dateString).toLocaleTimeString();
-    },
+
     formatType(type) {
       // Mettez en majuscule la première lettre du type
       return type.charAt(0).toUpperCase() + type.slice(1);
@@ -92,12 +91,4 @@ export default {
 
 <style scoped>
 
-
-.remboursement {
-  background-color: #d3f0d2;
-}
-
-.depense {
-  background-color: #f8d7da;
-}
 </style>

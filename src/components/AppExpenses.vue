@@ -1,18 +1,18 @@
 <template>
   <div class="col-md-10 mx-auto col-lg-5 app-depenses">
     <h3 class="text-center mb-4">Créer une dépense</h3>
-    <form @submit.prevent="submitDepense" v-if="currentStep === 1">
+    <form v-if="currentStep === 1" @submit.prevent="submitDepense">
       <!-- Première étape -->
       <div class="mb-3">
-        <label for="description" class="form-label">Intitulé:</label>
-        <input type="text" id="description" class="form-control" v-model="depense.description"/>
+        <label class="form-label" for="description">Intitulé:</label>
+        <input id="description" v-model="depense.description" class="form-control" type="text"/>
       </div>
 
       <div class="mb-3">
-        <label for="montant" class="form-label">Montant:</label>
+        <label class="form-label" for="montant">Montant:</label>
         <div class="input-group">
           <span class="input-group-text">€</span>
-          <input type="number" class="form-control" id="montant" v-model="depense.montant" v-bind:min="0" step="0.1">
+          <input id="montant" v-model="depense.montant" class="form-control" step="0.1" type="number" v-bind:min="0">
         </div>
 
       </div>
@@ -20,37 +20,37 @@
       <div class="mb-3">
         <div class="d-flex justify-content-between ">
           <label class="form-label">Utilisateurs concernés:</label>
-          <button type="button" class="btn btn-link" @click="selectAllUsers">Tout sélectionner</button>
+          <button class="btn btn-link" type="button" @click="selectAllUsers">Tout sélectionner</button>
         </div>
-        <input type="text" class="form-control" id="weightedinput" placeholder="Ajouter un utilisateur..."
-               v-model="texttosuggest" @input="suggestUsers">
+        <input id="weightedinput" v-model="texttosuggest" class="form-control" placeholder="Ajouter un utilisateur..."
+               type="text" @input="suggestUsers">
 
         <ul class="list-group">
-          <li class="list-group-item d-flex justify-content-between align-items-center" v-for="user in suggestedUsers"
-              :key="user.id" @click="selectUser(user)">
+          <li v-for="user in suggestedUsers" :key="user.id"
+              class="list-group-item d-flex justify-content-between align-items-center" @click="selectUser(user)">
             {{ user.userName }}
             <button class="btn btn-primary">+</button>
           </li>
-          <li class="list-group-item d-flex justify-content-between align-items-center"
-              v-if="suggestedUsers.length === 0 && texttosuggest.length > 1">
+          <li v-if="suggestedUsers.length === 0 && texttosuggest.length > 1"
+              class="list-group-item d-flex justify-content-between align-items-center">
             Aucun utilisateur trouvé
           </li>
         </ul>
 
         <ul class="list-group mt-2">
-          <li class="list-group-item d-flex justify-content-center align-items-center p-0"
-              v-for="user in selectedsUsers"
-              :key="user.id">
+          <li v-for="user in selectedsUsers"
+              :key="user.id"
+              class="list-group-item d-flex justify-content-center align-items-center p-0">
             <span class="input-group-text rounded-0">{{ user.userName }}</span>
-            <input type="number" class="form-control input-group rounded-0" v-bind:min="0" step="0.1"
-                   placeholder="Poids" v-model="user.weight">
+            <input v-model="user.weight" class="form-control input-group rounded-0" placeholder="Poids" step="0.1"
+                   type="number" v-bind:min="0">
             <button class="btn btn-danger rounded-0" @click="removeUserFromSelected(user)"><i class="bi bi-trash"></i>
             </button>
           </li>
         </ul>
       </div>
       <div class="mb-3">
-        <label for="categorie" class="form-label">Catégorie:</label>
+        <label class="form-label" for="categorie">Catégorie:</label>
         <select id="categorie" class="form-select">
           <option value="alimentation">Alimentation</option>
           <option value="sorties">Sorties</option>
@@ -61,19 +61,19 @@
       </div>
 
       <div class="mb-3 text-center">
-        <button type="button" class="btn btn-primary" @click="submitDepense">Créer la dépense</button>
+        <button class="btn btn-primary" type="button" @click="submitDepense">Créer la dépense</button>
       </div>
     </form>
 
-    <form @submit.prevent="submitJustificatif" v-if="currentStep === 2">
+    <form v-if="currentStep === 2" @submit.prevent="submitJustificatif">
       <!-- Deuxième étape -->
       <div class="mb-3">
-        <label for="proof" class="form-label">Justificatif (facultatif):</label>
-        <input type="file" class="form-control" id="proof" @change="handleFileChange"/>
+        <label class="form-label" for="proof">Justificatif (facultatif):</label>
+        <input id="proof" class="form-control" type="file" @change="handleFileChange"/>
       </div>
 
       <div class="mb-3 text-center">
-        <button type="submit" class="btn btn-primary">Envoyer le justificatif</button>
+        <button class="btn btn-primary" type="submit">Envoyer le justificatif</button>
       </div>
     </form>
   </div>
@@ -81,11 +81,11 @@
 
   <!-- Notification -->
   <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div id="liveToast" aria-atomic="true" aria-live="assertive" class="toast" role="alert">
       <div class="toast-header">
         <strong class="me-auto">Money Minder</strong>
         <small>à l'instant</small>
-        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        <button aria-label="Close" class="btn-close" data-bs-dismiss="toast" type="button"></button>
       </div>
       <div class="toast-body">
         {{ alertMessage }}
@@ -129,13 +129,13 @@ export default {
   },
   methods: {
     async submitDepense() {
-      console.log('group id:', this.groupId);
-      this.weightquery = this.selectedsUsers.map((user) => {
-        return `{key:"${user.id}",value:${user.weight}}`;
-      }).join(',');
-      const axios = require('axios');
-      const response = await axios.post('http://localhost:3000/graphql', {
-        query: `mutation {
+      try {
+        this.weightquery = this.selectedsUsers.map((user) => {
+          return `{key:"${user.id}",value:${user.weight}}`;
+        }).join(',');
+        const axios = require('axios');
+        const response = await axios.post('http://localhost:3000/graphql', {
+          query: `mutation {
   addUserExpenses(expenseInsertInput: {amount:${this.depense.montant}, description:"${this.depense.description}", groupId:"${this.groupId}",weightedUsers:
   [${this.weightquery}]
   }){
@@ -146,23 +146,27 @@ export default {
   }
 }
 `
-      }, {
-        withCredentials: true,
-        headers: {
-          'Content-Type': 'application/json',
-          "Accept": "application/json",
-        },
-      });
-      const responseData = response.data;
-      console.log('Réponse:', responseData);
-      if (responseData.errors) {
-        console.log('Erreur : ' + responseData.errors[0].message);
-      }
-      if (responseData.data) {
-        this.alertMessage = 'Dépense créée avec succès';
+        }, {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json',
+            "Accept": "application/json",
+          },
+        });
+        const responseData = response.data;
+        console.log('Réponse:', responseData);
+        if (responseData.errors) {
+          console.log('Erreur : ' + responseData.errors[0].message);
+        }
+        if (responseData.data) {
+          this.alertMessage = 'Dépense créée avec succès';
+        }
+
+        this.currentStep++;
+      } catch (error) {
+        console.error('Erreur lors de la création de la dépense', error);
       }
 
-      this.currentStep++;
     },
     submitJustificatif() {
       console.log('Créer une dépense avec justificatif:', this.justificatif);
@@ -231,29 +235,33 @@ export default {
         this.suggestedUsers = [];
       }
       if (this.texttosuggest.length > 1) {
-        const axios = require('axios');
-        const response = await axios.post('http://localhost:3000/graphql', {
-          query: `query {
+        try {
+          const axios = require('axios');
+          const response = await axios.post('http://localhost:3000/graphql', {
+            query: `query {
     users(where: { userName: { startsWith: "${this.texttosuggest}" } }) {
       userName
       id
     }
   }
   `
-        }, {
-          withCredentials: true,
-          headers: {
-            'Content-Type': 'application/json',
-            "Accept": "application/json",
-          },
-        });
-        const responseData = response.data;
-        if (responseData.data) {
-          this.suggestedUsers = responseData.data.users.filter(user => !this.selectedsUsers.some(selectedUser => selectedUser.id === user.id));
+          }, {
+            withCredentials: true,
+            headers: {
+              'Content-Type': 'application/json',
+              "Accept": "application/json",
+            },
+          });
+          const responseData = response.data;
+          if (responseData.data) {
+            this.suggestedUsers = responseData.data.users.filter(user => !this.selectedsUsers.some(selectedUser => selectedUser.id === user.id));
 
+          }
+        } catch (error) {
+          console.error('Erreur lors de la récupération des utilisateurs', error);
         }
       }
-    },
+    }
 
   },
   mounted() {
