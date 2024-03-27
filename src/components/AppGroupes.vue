@@ -114,8 +114,8 @@ export default {
           },
         });
         const responseData = response.data;
-        if (responseData.data.currentUser[0].userGroups.length > 0) {
-          this.groupes = responseData.data.currentUser[0].userGroups.map((groupe) => {
+        if (responseData.data.currentUser.userGroups.length > 0) {
+          this.groupes = responseData.data.currentUser.userGroups.map((groupe) => {
             return {
               name: groupe.group.name,
               soldes: groupe.user.balance,

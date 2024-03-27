@@ -1,21 +1,16 @@
 <template>
 
   <div class="container">
-    <header
-        class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
-      <div class="col-md-3 mb-2 mb-md-0">
-        <a class="d-inline-flex link-body-emphasis text-decoration-none" href="/">
-          <i class="bi bi-cash-coin" style="font-size: 2rem;">
-            <use xlink:href="/"/>
-          </i>
-        </a>
-      </div>
+    <header class="d-flex flex-wrap align-items-center justify-content-between py-3 mb-4 border-bottom">
 
-      <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-        <li><a class="nav-link px-2" href="/">Accueil</a></li>
-        <li v-if="isLogged"><a class="nav-link px-2" href="/groupes">Mes groupes</a></li>
-        <li v-if="isLogged"><a class="nav-link px-2" href="/messages">Messagerie</a></li>
-        <li v-if="isLogged"><a class="nav-link px-2" href="/account">Mon Compte({{ currentUsername }})</a></li>
+      <ul class="nav col-md-3 col-md-auto mb-2 mb-md-0">
+        <li><a class="nav-link px-2" href="/"> <i class="bi bi-cash-coin" style="font-size: 2rem;"></i></a></li>
+        <li v-if="isLogged"><a class="nav-link px-2" href="/groupes"><i class="bi bi-people-fill"
+                                                                        style="color: var(--button-color);font-size: 2rem;"></i></a>
+        </li>
+        <li v-if="isLogged"><a class="nav-link px-2" href="/messages"><i class="bi bi-chat-left-text-fill"
+                                                                         style="color: var(--button-color);font-size: 2rem;"></i></a>
+        </li>
       </ul>
 
       <div v-if="!isLogged" class="col-md-3 text-end">
@@ -24,7 +19,21 @@
       </div>
 
       <div v-if="isLogged" class="col-md-3 text-end">
-        <button class="btn btn-primary me-2" @click="logout">Déconnexion</button>
+        <div class="dropdown">
+          <a id="dropdownMenuLink" aria-expanded="false" class="btn btn-primary dropdown-toggle"
+             data-bs-toggle="dropdown"
+             href="#" role="button">
+            {{ currentUsername }} <i class="bi bi-person-fill"></i>
+          </a>
+
+          <ul aria-labelledby="dropdownMenuLink" class="dropdown-menu">
+            <li><a class="dropdown-item" href="/account">Mon compte</a></li>
+            <li>
+              <button class="dropdown-item" @click="logout">Déconnexion</button>
+            </li>
+          </ul>
+
+        </div>
       </div>
     </header>
   </div>
@@ -72,5 +81,5 @@ export default {
 </script>
 
 <style scoped>
-
+/* Ajoutez vos styles personnalisés ici si nécessaire */
 </style>

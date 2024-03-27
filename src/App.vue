@@ -43,7 +43,7 @@ export default {
         });
         const responseData = response.data;
         if (responseData.data) {
-          currentUsername.value = responseData.data.currentUser[0].userName;
+          currentUsername.value = responseData.data.currentUser.userName;
           isLoggedRef.value = true;
         }
         if (responseData.errors) {
@@ -76,6 +76,7 @@ export default {
   --first-text-color: white;
   --second-text-color: #3CB371;
   --button-color: #D4A373;
+  --second-button-color: #CCD5AE;
   --third-text-color: black;
   --main-header-color: #6E6E6E;
   font-family: Avenir, Helvetica, Arial, sans-serif;

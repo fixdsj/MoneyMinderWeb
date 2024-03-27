@@ -42,7 +42,8 @@
               :key="user.id"
               class="list-group-item d-flex justify-content-center align-items-center p-0">
             <span class="input-group-text rounded-0">{{ user.userName }}</span>
-            <input v-model="user.weight" class="form-control input-group rounded-0" placeholder="Poids" step="0.1"
+            <input v-model="user.weight" class="form-control input-group rounded-0" placeholder="Participation"
+                   step="0.1"
                    type="number" v-bind:min="0">
             <button class="btn btn-danger rounded-0" @click="removeUserFromSelected(user)"><i class="bi bi-trash"></i>
             </button>
@@ -154,7 +155,6 @@ export default {
           },
         });
         const responseData = response.data;
-        console.log('Réponse:', responseData);
         if (responseData.errors) {
           console.log('Erreur : ' + responseData.errors[0].message);
         }
@@ -220,9 +220,9 @@ export default {
             };
           });
         }
-        if (responseData.data.groups[0].id) {
+        if (responseData.data.groups.id) {
           console.log('group id:', responseData.data.groups[0].id);
-          this.groupId = responseData.data.groups[0].id;
+          this.groupId = responseData.data.groups.id;
         }
       } catch (error) {
         console.error('Erreur lors de la récupération des membres du groupe', error);

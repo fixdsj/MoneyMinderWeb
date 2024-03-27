@@ -29,6 +29,10 @@
           </button>
         </li>
       </ul>
+      <div v-if="userExpenses.length === 0" class="text-center">
+        <p class="text-center">Aucune dépense à rembourser</p>
+        <i class="bi bi-check-circle" style="font-size: 60px; color:green"></i>
+      </div>
     </div>
 
 
@@ -72,8 +76,8 @@ export default {
         const responseData = response.data;
         if (responseData) {
           console.log('response data:', responseData);
-          /*this.groupExpenses = responseData.data.groupById.expenses;
-          console.log('group expenses:', this.groupExpenses);*/
+          this.groupExpenses = responseData.data.groupById.expenses;
+          console.log('group expenses:', this.groupExpenses);
         }
       } catch (error) {
         console.error('Erreur lors de la récupération des dépenses du groupe', error);
@@ -95,7 +99,7 @@ export default {
         const responseData = response.data;
         if (responseData.data) {
           console.log('response data:', responseData);
-          this.userExpenses = responseData.data.currentUser[0].userExpenses;
+          this.userExpenses = responseData.data.currentUser.userExpenses;
           console.log('user expenses:', this.userExpenses);
         }
         if (responseData.errors) {

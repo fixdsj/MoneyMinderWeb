@@ -14,7 +14,7 @@
         </button>
       </h2>
       <div id="panelsStayOpen-collapse{{transaction.id}}" aria-labelledby="panelsStayOpen-heading{{transaction.id}}"
-           class="accordion-collapse collapse show">
+           class="accordion-collapse collapse">
         <div class="accordion-body">
           Description: {{ transaction.description }}
           <div class="text-end">

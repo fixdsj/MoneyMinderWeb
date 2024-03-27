@@ -1,10 +1,4 @@
-<script setup>
-
-</script>
-
 <template>
-
-
   <!-- char-area -->
   <section class="message-area">
     <div class="container">
@@ -29,7 +23,8 @@
                       </li>
                       <li class="nav-item" role="presentation">
                         <button id="Closed-tab" aria-controls="Closed" aria-selected="false" class="nav-link"
-                                data-bs-target="#Closed" data-bs-toggle="tab" role="tab" type="button">Groupes
+                                data-bs-target="#Closed" data-bs-toggle="tab" role="tab" type="button"
+                                @click="fetchCurrentUserGroups">Groupes
                         </button>
                       </li>
                     </ul>
@@ -39,38 +34,20 @@
                     <!-- chat-list -->
                     <div class="chat-lists">
                       <div id="myTabContent" class="tab-content">
+
+                        <!--                        Amis-->
                         <div id="Open" aria-labelledby="Open-tab" class="tab-pane fade show active " role="tabpanel">
                           <!-- chat-list -->
                           <div class="chat-list">
-
-                            <a class="d-flex align-items-center" href="#">
+                            <a v-for="friend in friends" :key="friend.name" class="d-flex align-items-center" href="#"
+                               @click="handleCurrentChat(friend)">
                               <div class="flex-shrink-0">
                                 <img alt="user img" class="img-fluid"
                                      src="https://mehedihtml.com/chatbox/assets/img/user.png">
                               </div>
                               <div class="flex-grow-1 ms-3">
-                                <h3>Ryhan</h3>
-                                <p>front end developer</p>
-                              </div>
-                            </a>
-                            <a class="d-flex align-items-center" href="#">
-                              <div class="flex-shrink-0">
-                                <img alt="user img" class="img-fluid"
-                                     src="https://mehedihtml.com/chatbox/assets/img/user.png">
-                              </div>
-                              <div class="flex-grow-1 ms-3">
-                                <h3>Malek Hasan</h3>
-                                <p>front end developer</p>
-                              </div>
-                            </a>
-                            <a class="d-flex align-items-center" href="#">
-                              <div class="flex-shrink-0">
-                                <img alt="user img" class="img-fluid"
-                                     src="https://mehedihtml.com/chatbox/assets/img/user.png">
-                              </div>
-                              <div class="flex-grow-1 ms-3">
-                                <h3>Sadik Hasan</h3>
-                                <p>front end developer</p>
+                                <h3>{{ friend.name }}</h3>
+                                <p class="text-truncate">{{ friend.email }}</p>
                               </div>
                             </a>
 
@@ -105,34 +82,30 @@
                               </div>
                             </a>
 
-                            <a class="d-flex align-items-center" href="#">
-                              <div class="flex-shrink-0">
-                                <img alt="user img" class="img-fluid"
-                                     src="https://mehedihtml.com/chatbox/assets/img/user.png">
-                              </div>
-                              <div class="flex-grow-1 ms-3">
-                                <h3>Jalal Ahmed</h3>
-                                <p>front end developer</p>
-                              </div>
-                            </a>
-                            <a class="d-flex align-items-center" href="#">
-                              <div class="flex-shrink-0">
-                                <img alt="user img" class="img-fluid"
-                                     src="https://mehedihtml.com/chatbox/assets/img/user.png">
-                              </div>
-                              <div class="flex-grow-1 ms-3">
-                                <h3>Hasan Ali</h3>
-                                <p>front end developer</p>
-                              </div>
-                            </a>
 
                           </div>
                           <!-- chat-list -->
                         </div>
+                        <!--                        Groupes-->
                         <div id="Closed" aria-labelledby="Closed-tab" class="tab-pane fade" role="tabpanel">
-
                           <!-- chat-list -->
                           <div class="chat-list">
+                            <a v-for="group in groups" :key="group.name" class="d-flex align-items-center" href="#"
+                               @click="handleCurrentChat('group',group)">
+                              <div class="flex-shrink-0">
+                                <img alt="user img" class="img-fluid"
+                                     src="https://mehedihtml.com/chatbox/assets/img/user.png">
+                              </div>
+                              <div class="flex-grow-1 ms-3">
+                                <h3>{{ group.name }}</h3>
+                                <p class="text-truncate">{{ group.description }}</p>
+                              </div>
+                            </a>
+                            <a v-if="groups.length === 0" class="d-flex align-items-center" href="/account">
+                              <div class="flex-grow-1 ms-3">
+                                <h3>Aucun groupe</h3>
+                              </div>
+                            </a>
                             <a class="d-flex align-items-center" href="#">
                               <div class="flex-shrink-0">
                                 <img alt="user img" class="img-fluid"
@@ -184,38 +157,6 @@
                                 <p>front end developer</p>
                               </div>
                             </a>
-                            <a class="d-flex align-items-center" href="#">
-                              <div class="flex-shrink-0">
-                                <img alt="user img" class="img-fluid"
-                                     src="https://mehedihtml.com/chatbox/assets/img/user.png">
-                              </div>
-                              <div class="flex-grow-1 ms-3">
-                                <h3>Maria SK</h3>
-                                <p>front end developer</p>
-                              </div>
-                            </a>
-                            <a class="d-flex align-items-center" href="#">
-                              <div class="flex-shrink-0">
-                                <img alt="user img" class="img-fluid"
-                                     src="https://mehedihtml.com/chatbox/assets/img/user.png">
-                              </div>
-                              <div class="flex-grow-1 ms-3">
-                                <h3>Dipa Hasan</h3>
-                                <p>front end developer</p>
-                              </div>
-                            </a>
-
-
-                            <a class="d-flex align-items-center" href="#">
-                              <div class="flex-shrink-0">
-                                <img alt="user img" class="img-fluid"
-                                     src="https://mehedihtml.com/chatbox/assets/img/user.png">
-                              </div>
-                              <div class="flex-grow-1 ms-3">
-                                <h3>Louis Martin</h3>
-                                <p>front end developer</p>
-                              </div>
-                            </a>
 
                           </div>
                           <!-- chat-list -->
@@ -230,7 +171,6 @@
             </div>
             <!-- chatlist -->
 
-
             <!-- chatbox -->
             <div class="chatbox">
               <div class="modal-dialog-scrollable">
@@ -239,12 +179,12 @@
                     <div class="row">
                       <div class="col-8">
                         <div class="d-flex align-items-center">
-                          <i class="bi bi-person-fill"></i>
+                          <i class="bi bi-person-fill" style="color: var(--button-color)"></i>
                           <div class="flex-shrink-0">
                           </div>
                           <div class="flex-grow-1 ms-3">
-                            <h3>Louis Martin</h3>
-                            <p>Dernière connexion: 10:00 am</p>
+                            <h3>{{ activeChat.name }}</h3>
+                            <p>{{ activeChat.email }}</p>
                           </div>
                         </div>
                       </div>
@@ -327,8 +267,6 @@
               </div>
             </div>
           </div>
-          <!-- chatbox -->
-
 
         </div>
       </div>
@@ -339,22 +277,108 @@
 
 </template>
 
+<script>
+
+export default {
+  name: 'AppChatRoom',
+  data() {
+    return {
+      groups: [],
+      friends: [],
+      activeChat: [],
+    };
+  },
+  methods: {
+    handleCurrentChat(place, chat) {
+      if (place === 'group') {
+        this.fetchCurrentGroupChat(chat.id);
+      } else if (place === 'friend') {
+        this.fetchCurrentFriendChat(chat.id);
+      }
+      this.activeChat = chat;
+    },
+    async fetchCurrentFriendChat(idFriend) {
+      console.log('fetchCurrentFriendChat', idFriend);
+    },
+    async fetchCurrentGroupChat(idGroup) {
+      console.log('fetchCurrentGroupChat', idGroup);
+    },
+    async fetchCurrentUserFriends() {
+      try {
+        const axios = require('axios');
+        const response = await axios.post('http://localhost:3000/graphql', {
+          query: `{users{userName,id,email}}`
+        }, {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json',
+            "Accept": "application/json",
+          },
+        });
+        const responseData = response.data;
+        if (responseData.data.users.length > 0) {
+          this.friends = responseData.data.users.map((user) => {
+            return {
+              name: user.userName,
+              id: user.id,
+              email: user.email,
+            };
+          });
+          this.activeChat = this.friends[0];
+          console.log('Amis:', this.friends);
+        }
+      } catch (error) {
+        console.error('Erreur:', error);
+      }
+    },
+    async fetchCurrentUserGroups() {
+      try {
+        const axios = require('axios');
+        const response = await axios.post('http://localhost:3000/graphql', {
+          query: `{currentUser{userGroups{group{name,id,description}}}}`
+        }, {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json',
+            "Accept": "application/json",
+          },
+        });
+        const responseData = response.data;
+        if (responseData.data.currentUser.userGroups.length > 0) {
+          this.groups = responseData.data.currentUser.userGroups.map((groupe) => {
+            return {
+              name: groupe.group.name,
+              id: groupe.group.id,
+              description: groupe.group.description,
+            };
+          });
+        }
+      } catch (error) {
+        console.error('Erreur:', error);
+      }
+    },
+  },
+  mounted() {
+    this.fetchCurrentUserFriends();
+  },
+};
+
+</script>
+
 <style scoped>
 
-
-/* *******************************
-message-area
-******************************** */
+.modal-body {
+  padding: 15px;
+}
 
 .message-area {
-  padding: 20px 0;
+  /*padding: 20px 0;*/
   background: #f5f5f5;
 }
 
 .chat-area {
   position: relative;
   width: 100%;
-  background-color: #fff;
   border-radius: 0.3rem;
   height: 90vh;
   overflow: hidden;
@@ -564,7 +588,7 @@ a.add img {
   height: 0;
   border-style: solid;
   border-width: 0 12px 15px 12px;
-  border-color: transparent transparent #f5f5f5 transparent;
+  border-color: transparent transparent var(--second-button-color) transparent;
   -ms-transform: rotate(-37deg);
   transform: rotate(-37deg);
 }
@@ -575,7 +599,7 @@ a.add img {
   line-height: 1.5;
   font-weight: 400;
   padding: 15px;
-  background: #f5f5f5;
+  background: var(--second-button-color);
   display: inline-block;
   border-bottom-left-radius: 10px;
   border-top-right-radius: 10px;
@@ -797,4 +821,20 @@ li.repaly .time {
     border-bottom-left-radius: 6px;
   }
 }
+
+/*Custom Scrollbar*/
+::-webkit-scrollbar {
+  width: 10px;
+
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
 </style>

@@ -4,7 +4,7 @@
     <form class="p-4 p-md-5 border rounded-3 bg-body-tertiary" @submit="signIn">
       <h3 class="text-center mb-4">Connexion</h3>
       <p v-if="errors.length" class="text-danger">
-        <b>Erreur(s) :</b>
+        <b>Erreur(s): </b>
         <b v-for="error in errors" :key="error">{{ error }}</b>
       </p>
       <div class="form-floating mb-3">

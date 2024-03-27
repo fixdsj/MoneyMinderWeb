@@ -4,26 +4,27 @@
     border-color: #D4A373;
 }
 
-.text-primary, .nav-link {
-    color: #D4A373;
+
+.text-primary, .nav-link, .nav-link.active, .nav-link:hover {
+    color: #D4A373 !important;
 }
 
 
 /* Couleur secondaire */
 .btn-secondary {
-    background-color: #D4A373; /* Remplacez par votre couleur secondaire */
+    background-color: #D4A373;
     border-color: #D4A373;
 }
 
 /* Couleur de succès */
 .btn-success {
-    background-color: #28a745; /* Remplacez par votre couleur de succès */
+    background-color: #28a745;
     border-color: #28a745;
 }
 
 /* Couleur de danger */
 .btn-danger {
-    background-color: #dc3545; /* Remplacez par votre couleur de danger */
+    background-color: #dc3545;
     border-color: #dc3545;
 }
 

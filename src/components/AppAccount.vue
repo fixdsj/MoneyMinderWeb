@@ -325,9 +325,9 @@ export default {
         });
         const responseDataUser = responseUser.data;
         if (responseDataUser.data) {
-          this.utilisateur.username = responseDataUser.data.currentUser[0].userName;
-          this.utilisateur.email = responseDataUser.data.currentUser[0].email;
-          this.invitations = responseDataUser.data.currentUser[0].invitations;
+          this.utilisateur.username = responseDataUser.data.currentUser.userName;
+          this.utilisateur.email = responseDataUser.data.currentUser.email;
+          this.invitations = responseDataUser.data.currentUser.invitations;
         }
         if (responseDataUser.errors) {
           console.log("erreur" + responseDataUser.errors.message);
@@ -352,8 +352,8 @@ export default {
 
           if (responseDataUserGroups.data.currentUser) {
 
-            this.groupsOwned = responseDataUserGroups.data.currentUser[0].ownedGroups.map(group => group.name);
-            this.groupsJoined = responseDataUserGroups.data.currentUser[0].userGroups.map(userGroup => userGroup.group);
+            this.groupsOwned = responseDataUserGroups.data.currentUser.ownedGroups.map(group => group.name);
+            this.groupsJoined = responseDataUserGroups.data.currentUser.userGroups.map(userGroup => userGroup.group);
 
           }
         }
