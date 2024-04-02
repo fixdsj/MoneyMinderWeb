@@ -81,5 +81,8 @@ export default {
 </script>
 
 <style scoped>
-/* Ajoutez vos styles personnalisés ici si nécessaire */
+.container {
+  background: transparent;
+  backdrop-filter: blur(10px);
+}
 </style>

@@ -39,8 +39,9 @@
                         <div id="Open" aria-labelledby="Open-tab" class="tab-pane fade show active " role="tabpanel">
                           <!-- chat-list -->
                           <div class="chat-list">
-                            <a v-for="friend in friends" :key="friend.name" class="d-flex align-items-center" href="#"
-                               @click="handleCurrentChat(friend)">
+                            <a v-for="friend in friends" :key="friend.name" class="d-flex align-items-center "
+                               role="button"
+                               @click="handleCurrentChat('friend',friend)">
                               <div class="flex-shrink-0">
                                 <img alt="user img" class="img-fluid"
                                      src="https://mehedihtml.com/chatbox/assets/img/user.png">
@@ -90,7 +91,7 @@
                         <div id="Closed" aria-labelledby="Closed-tab" class="tab-pane fade" role="tabpanel">
                           <!-- chat-list -->
                           <div class="chat-list">
-                            <a v-for="group in groups" :key="group.name" class="d-flex align-items-center" href="#"
+                            <a v-for="group in groups" :key="group.name" class="d-flex align-items-center" role="button"
                                @click="handleCurrentChat('group',group)">
                               <div class="flex-shrink-0">
                                 <img alt="user img" class="img-fluid"
@@ -209,46 +210,17 @@
 
 
                   <div class="modal-body">
-                    <div class="msg-body">
-                      <ul>
-                        <li class="sender">
-                          <p> Salut, t'es là ?</p>
-                          <span class="time">10:06 am</span>
+                    <div class="msg-body" ref="messageList">
+                      <ul >
+                        <li v-for="message in activeChat.messages" :key="message.id"
+                            :class="{'sender': message.sender.userName !== this.currentUsername, 'repaly': message.sender.userName === this.currentUsername}">
+                          <p>{{ message.content }}</p>
+                          <span class="time">{{ message.sentAt }}</span>
                         </li>
-                        <li class="sender">
-                          <p> Salut, t'es là ?</p>
-                          <span class="time">10:16 am</span>
-                        </li>
-                        <li class="repaly">
-                          <p>Oui !</p>
-                          <span class="time">10:20 am</span>
-                        </li>
-                        <li class="sender">
-                          <p> Salut, t'es là ?</p>
-                          <span class="time">10:26 am</span>
-                        </li>
-                        <li class="sender">
-                          <p> Salut, t'es là ?</p>
-                          <span class="time">10:32 am</span>
-                        </li>
-                        <li class="repaly">
-                          <p>Comment vas-tu?</p>
-                          <span class="time">10:35 am</span>
-                        </li>
-                        <li>
-                          <div class="divider">
-                            <h6>Aujourd'hui</h6>
-                          </div>
-                        </li>
-
-                        <li class="repaly">
-                          <p>Oui, dis-moi</p>
-                          <span class="time">10:36 am</span>
-                        </li>
-                        <li class="repaly">
-                          <p>Oui... je suis dessus</p>
-                          <span class="time">Maintenant</span>
-                        </li>
+                        <!--                        <li>
+                                                  <div class="divider">
+                                                    <h6>Aujourd'hui</h6>
+                                                  </div>-->
 
                       </ul>
                     </div>
@@ -256,11 +228,13 @@
 
 
                   <div class="send-box">
-                    <form action="">
-                      <input aria-label="message…" class="form-control" placeholder="Ecrire un message…" type="text">
-                      <button aria-hidden="true" class="btn btn-primary" type="button"> Envoyer</button>
+                    <form @submit.prevent="sendMessage">
+                      <input v-model="messageToSend" aria-label="message…" class="form-control"
+                             placeholder="Ecrire un message…"
+                             type="text">
+                      <button aria-hidden="true" class="btn btn-primary" type="button" @click="sendMessage">Envoyer
+                      </button>
                     </form>
-
 
                   </div>
                 </div>
@@ -278,30 +252,106 @@
 </template>
 
 <script>
+import {currentUsername} from "@/main";
 
 export default {
   name: 'AppChatRoom',
   data() {
     return {
+      messageToSend: '',
       groups: [],
       friends: [],
       activeChat: [],
+      currentUsername: currentUsername,
+      activeTab: 'friends',
     };
   },
   methods: {
     handleCurrentChat(place, chat) {
+      this.activeChat = chat;
       if (place === 'group') {
         this.fetchCurrentGroupChat(chat.id);
+        this.activeTab = 'groups'
       } else if (place === 'friend') {
         this.fetchCurrentFriendChat(chat.id);
+        this.activeTab = 'friends'
       }
-      this.activeChat = chat;
+
     },
-    async fetchCurrentFriendChat(idFriend) {
-      console.log('fetchCurrentFriendChat', idFriend);
+    async fetchCurrentFriendChat() {
+
+      const axios = require('axios');
+      try {
+
+
+        const response = await axios.post('http://localhost:3000/graphql', {
+          query: `{messagesByOtherUserId(otherUserId: "${this.activeChat.id}"){sender{userName},receiver{userName}, content ,sentAt}}
+`
+        }, {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json',
+            "Accept": "application/json",
+          },
+        });
+        const responseData = response.data;
+
+        if (responseData.data.messagesByOtherUserId.length > 0) {
+          this.activeChat.messages = responseData.data.messagesByOtherUserId.map((message) => {
+            return {
+              sender: message.sender,
+              receiver: message.receiver,
+              content: message.content,
+              sentAt: new Date(message.sentAt).toLocaleTimeString('fr-FR', {
+                weekday: "long",
+                month: "long",
+                day: "numeric",
+                hour: '2-digit',
+                minute: '2-digit',
+              }),
+            };
+          });
+          /*const messageList = this.$refs.messageList;
+          messageList.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});*/
+
+        }
+      } catch (error) {
+        console.error('Erreur:', error);
+      }
     },
-    async fetchCurrentGroupChat(idGroup) {
-      console.log('fetchCurrentGroupChat', idGroup);
+    async fetchCurrentGroupChat() {
+
+      const axios = require('axios');
+      try {
+        const response = await axios.post('http://localhost:3000/graphql', {
+          query: `{groupById(id: "${this.activeChat.id}"){receivedGroupMessages{sender{userName},content,sentAt}}}`
+        }, {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json',
+            "Accept": "application/json",
+          },
+        });
+        const responseData = response.data.data;
+        if (responseData.groupById.receivedGroupMessages) {
+          this.activeChat.messages = responseData.groupById.receivedGroupMessages.map((message) => {
+            return {
+              sender: message.sender,
+              receiver: message.receiver,
+              content: message.content,
+              sentAt: new Date(message.sentAt).toLocaleTimeString('fr-FR', {
+                weekday: "long",
+                month: "long",
+                day: "numeric",
+                hour: '2-digit',
+                minute: '2-digit',
+              }),
+            };
+          });
+        }
+      } catch (error) {
+        console.error('Erreur:', error);
+      }
     },
     async fetchCurrentUserFriends() {
       try {
@@ -325,7 +375,7 @@ export default {
             };
           });
           this.activeChat = this.friends[0];
-          console.log('Amis:', this.friends);
+          await this.fetchCurrentFriendChat();
         }
       } catch (error) {
         console.error('Erreur:', error);
@@ -357,6 +407,72 @@ export default {
         console.error('Erreur:', error);
       }
     },
+    async sendMessage() {
+      if (this.messageToSend === '') return;
+
+      if (this.activeTab === 'friends') {
+        await this.sendMessageToFriend();
+      } else if (this.activeTab === 'groups') {
+        await this.sendMessageToGroup();
+      }
+
+
+    },
+    async sendMessageToFriend() {
+      const axios = require('axios');
+      try {
+        const response = await axios.post('http://localhost:3000/graphql', {
+          query: `mutation {
+  sendMessage(messageInsertInput: { receiverId: "${this.activeChat.id}", content: "${this.messageToSend}" }) {
+    content, sentAt
+  }
+}`
+        }, {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json',
+            "Accept": "application/json",
+          },
+        });
+        const responseData = response.data;
+
+        if (responseData.data) {
+          await this.fetchCurrentFriendChat();
+          this.messageToSend = '';
+        }
+      } catch (error) {
+        console.error('Erreur:', error);
+      }
+    },
+
+    async sendMessageToGroup() {
+      const axios = require('axios');
+      try {
+
+
+        const response = await axios.post('http://localhost:3000/graphql', {
+          query: `mutation {
+  sendGroupMessage(groupMessageInsertInput:  { groupId: "${this.activeChat.id}" , content: "${this.messageToSend}" }) {
+    content
+  }
+}`
+        }, {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json',
+            "Accept": "application/json",
+          },
+        });
+        const responseData = response.data;
+
+        if (responseData.data) {
+          await this.fetchCurrentGroupChat();
+          this.messageToSend = '';
+        }
+      } catch (error) {
+        console.error('Erreur:', error);
+      }
+    }
   },
   mounted() {
     this.fetchCurrentUserFriends();
