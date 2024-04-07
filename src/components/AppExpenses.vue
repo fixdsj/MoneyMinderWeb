@@ -2,9 +2,13 @@
   <div class="col-md-10 mx-auto col-lg-5 app-depenses">
     <h3 class="text-center mb-4">Créer une dépense</h3>
     <form v-if="currentStep === 1" @submit.prevent="submitDepense">
+      <div class="progress" style="height: 5px;">
+        <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="25" class="progress-bar" role="progressbar"
+             style="width: 50%;"></div>
+      </div>
       <!-- Première étape -->
       <div class="mb-3">
-        <label class="form-label" for="description">Intitulé:</label>
+        <label class="form-label" for="description">Titre:</label>
         <input id="description" v-model="depense.description" class="form-control" type="text"/>
       </div>
 
@@ -12,7 +16,8 @@
         <label class="form-label" for="montant">Montant:</label>
         <div class="input-group">
           <span class="input-group-text">€</span>
-          <input id="montant" v-model="depense.montant" class="form-control" step="0.1" type="number" v-bind:min="0">
+          <input id="montant" v-model="depense.montant" class="form-control" step="5" type="number" v-bind:min="0"
+                 @input="previewRefunds()"/>
         </div>
 
       </div>
@@ -20,8 +25,13 @@
       <div class="mb-3">
         <div class="d-flex justify-content-between ">
           <label class="form-label">Utilisateurs concernés:</label>
-          <button class="btn btn-link" type="button" @click="selectAllUsers">Tout sélectionner</button>
+          <button v-if="selectedsUsers.length === 0" class="btn btn-link" type="button" @click="selectAllUsers">Tout
+            sélectionner
+          </button>
+          <button v-else class="btn btn-link" type="button" @click="unselectAllUsers">Tout supprimer</button>
         </div>
+
+
         <input id="weightedinput" v-model="texttosuggest" class="form-control" placeholder="Ajouter un utilisateur..."
                type="text" @input="suggestUsers">
 
@@ -42,24 +52,25 @@
               :key="user.id"
               class="list-group-item d-flex justify-content-center align-items-center p-0">
             <span class="input-group-text rounded-0">{{ user.userName }}</span>
-            <input v-model="user.weight" class="form-control input-group rounded-0" placeholder="Participation"
-                   step="0.1"
+            <input v-model="user.weight" :placeholder="getUserPreviewAmount(user.id)"
+                   class="form-control input-group rounded-0"
+                   step="1"
                    type="number" v-bind:min="0">
             <button class="btn btn-danger rounded-0" @click="removeUserFromSelected(user)"><i class="bi bi-trash"></i>
             </button>
           </li>
         </ul>
       </div>
-      <div class="mb-3">
-        <label class="form-label" for="categorie">Catégorie:</label>
-        <select id="categorie" class="form-select">
-          <option value="alimentation">Alimentation</option>
-          <option value="sorties">Sorties</option>
-          <option value="logement">Logement</option>
-          <option value="transport">Transport</option>
-          <option value="divers">Divers</option>
-        </select>
-      </div>
+      <!--      <div class="mb-3">
+              <label class="form-label" for="categorie">Catégorie:</label>
+              <select id="categorie" class="form-select">
+                <option value="alimentation">Alimentation</option>
+                <option value="sorties">Sorties</option>
+                <option value="logement">Logement</option>
+                <option value="transport">Transport</option>
+                <option value="divers">Divers</option>
+              </select>
+            </div>-->
 
       <div class="mb-3 text-center">
         <button class="btn btn-primary" type="button" @click="submitDepense">Créer la dépense</button>
@@ -67,6 +78,10 @@
     </form>
 
     <form v-if="currentStep === 2" @submit.prevent="submitJustificatif">
+      <div class="progress" style="height: 5px;">
+        <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="25" class="progress-bar" role="progressbar"
+             style="width: 100%;"></div>
+      </div>
       <!-- Deuxième étape -->
       <div class="mb-3">
         <label class="form-label" for="proof">Justificatif (facultatif):</label>
@@ -126,6 +141,14 @@ export default {
       groupId: null,
 
 
+      //Preview expense
+      expensesPreview: [],
+
+      //Justificatif
+
+      expenseId: null,
+
+
     };
   },
   methods: {
@@ -137,12 +160,11 @@ export default {
         const axios = require('axios');
         const response = await axios.post('http://localhost:3000/graphql', {
           query: `mutation {
-  addUserExpenses(expenseInsertInput: {amount:${this.depense.montant}, description:"${this.depense.description}", groupId:"${this.groupId}",weightedUsers:
+  addUserExpense(expenseInsertInput: {amount:${this.depense.montant}, description:"${this.depense.description}", groupId:"${this.groupId}",usersWithAmount:
   [${this.weightquery}]
   }){
     paidAt,
     expense{amount,description,id},
-
     amount
   }
 }
@@ -160,9 +182,10 @@ export default {
         }
         if (responseData.data) {
           this.alertMessage = 'Dépense créée avec succès';
+          this.currentStep++;
+          this.expenseId = responseData.data.addUserExpense.expense.id;
         }
 
-        this.currentStep++;
       } catch (error) {
         console.error('Erreur lors de la création de la dépense', error);
       }
@@ -186,6 +209,10 @@ export default {
     },
     selectAllUsers() {
       this.selectedsUsers = this.usersInGroup;
+      console.log('usersInGroup:', this.usersInGroup);
+    },
+    unselectAllUsers() {
+      this.selectedsUsers = [];
     },
     removeUserFromSelected(user) {
       this.selectedsUsers = this.selectedsUsers.filter((selectedUser) => selectedUser !== user);
@@ -193,6 +220,7 @@ export default {
 
     async fetchMembersGroup() {
       try {
+        console.log('activeGroup:', this.activeGroup);
         const axios = require('axios');
         const response = await axios.post('http://localhost:3000/graphql', {
           query: `query {
@@ -208,21 +236,20 @@ export default {
             "Accept": "application/json",
           },
         });
-        const responseData = response.data;
+        const responseData = await response.data;
+        console.log('responseData:', responseData);
         if (responseData.errors) {
           console.log('Erreur : ' + responseData.errors[0].message);
         }
-        if (responseData.data.groups[0]) {
+        if (responseData.data.groups) {
           this.usersInGroup = responseData.data.groups[0].userGroups.map((user) => {
             return {
               userName: user.user.userName,
               id: user.user.id,
             };
           });
-        }
-        if (responseData.data.groups.id) {
-          console.log('group id:', responseData.data.groups[0].id);
-          this.groupId = responseData.data.groups.id;
+          this.groupId = responseData.data.groups[0].id;
+          console.log('groupId:', this.groupId);
         }
       } catch (error) {
         console.error('Erreur lors de la récupération des membres du groupe', error);
@@ -261,8 +288,60 @@ export default {
           console.error('Erreur lors de la récupération des utilisateurs', error);
         }
       }
-    }
+    },
+    async previewRefunds() {
+      try {
+        console.log('selectedsUsers:', this.selectedsUsers)
+        this.weightquery = this.selectedsUsers.map((user) => {
+          if (user.weight !== undefined) {
+            return `{key:"${user.id}",value:${user.weight}}`;
+          } else {
+            return `{key:"${user.id}"}`;
+          }
+        }).join(',');
+        const axios = require('axios');
+        console.log('userAmountsList:', this.weightquery);
 
+        const response = await axios.post('http://localhost:3000/graphql', {
+          query: `query{previsualizeUserExpenses(
+  expensePrevisualizationInput:{
+    amount:${this.depense.montant},
+    description:"uhe",
+  groupId:"${this.groupId}",
+  userAmountsList:[
+    ${this.weightquery}
+    ]
+})
+  {key,value}}
+`
+        }, {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json',
+            "Accept": "application/json",
+          },
+        });
+        const responseData = response.data;
+        console.log('responseData:', responseData);
+        if (responseData.data.previsualizeUserExpenses) {
+          console.log('previsualizeUserExpenses:', responseData.data.previsualizeUserExpenses);
+          this.expensesPreview = responseData.data.previsualizeUserExpenses;
+        }
+      } catch (error) {
+        console.error('Erreur lors de la prévisualisation de la dépense', error);
+      }
+    },
+
+    getUserPreviewAmount(userId) {
+      const userPreview = this.expensesPreview.find((user) => user.key === userId);
+      if (userPreview) {
+        console.log('userPreview:', userPreview);
+        return userPreview.value;
+      }
+      return 0;
+
+
+    },
   },
   mounted() {
     this.fetchMembersGroup();
@@ -275,3 +354,4 @@ export default {
 
 
 </style>
+

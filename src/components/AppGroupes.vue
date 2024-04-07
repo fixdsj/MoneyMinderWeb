@@ -16,8 +16,8 @@
       <div class="contentcontainer">
         <ul class="nav nav-tabs">
           <li class="nav-item">
-            <p :class="{ 'selectedtab': selectedTab === 'depenses' }" class="nav-link btn tabnav"
-               @click="selectTab('depenses')">
+            <p :class="{ 'selectedtab': selectedTab === 'expenses' }" class="nav-link btn tabnav"
+               @click="selectTab('expenses')">
               Dépenses</p>
           </li>
           <li class="nav-item">
@@ -25,8 +25,8 @@
               Remboursements</p>
           </li>
           <li class="nav-item ">
-            <p :class="{ 'selectedtab': selectedTab === 'historique' }" class="nav-link btn tabnav"
-               @click="selectTab('historique')">
+            <p :class="{ 'selectedtab': selectedTab === 'history' }" class="nav-link btn tabnav"
+               @click="selectTab('history')">
               Historique</p>
           </li>
           <li class="nav-item ">
@@ -40,7 +40,7 @@
           <h4 class="text-center mb-4">{{ activeGroup }}</h4>
           <hr class="my-4">
 
-          <div v-if="selectedTab === 'depenses'">
+          <div v-if="selectedTab === 'expenses'">
             <h3>Dépenses</h3>
             <AppExpenses :activeGroup="activeGroup"/>
           </div>
@@ -49,7 +49,7 @@
             <AppRefunds :activeGroup="activeGroup"/>
           </div>
 
-          <div v-if="selectedTab === 'historique'">
+          <div v-if="selectedTab === 'history'">
             <h3>Historique</h3>
             <AppLastTransactions/>
           </div>
@@ -74,25 +74,13 @@ export default {
   data() {
     return {
       groupes: [],
-      depenses: [
-        {id: 1, montant: 100, destinataire: 'Maurice'},
-        {id: 2, montant: 200, destinataire: 'Groupe B'},
-        {id: 3, montant: 300, destinataire: 'Groupe C'},
-        {id: 4, montant: 400, destinataire: 'Groupe D'}
-      ],
-      historique: [
-        {id: 1, action: 'Remboursement soirée', type: 'remboursement', date: '01/01/2021'},
-        {id: 2, action: 'Action 2', type: 'remboursement', date: '02/01/2021'},
-        {id: 3, action: 'Action 3', type: 'remboursement', date: '03/01/2021'},
-        {id: 4, action: 'Action 4', type: 'remboursement', date: '04/01/2021'}
-      ],
-
-      activeGroup: null,
-      selectedTab: 'refunds',
+      activeGroup: '',
+      selectedTab: 'expenses',
     };
   },
   mounted() {
     this.fetchCurrentUserGroups();
+    this.activeGroup = this.groupes[0];
   },
   methods: {
     selectGroupe(groupe) {
@@ -127,6 +115,10 @@ export default {
         console.error('Erreur:', error);
       }
 
+    },
+
+    async previewRefunds() {
+      console.log('Prévisualiser les remboursements');
     },
   },
 };

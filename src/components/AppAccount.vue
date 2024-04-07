@@ -57,7 +57,9 @@
                 </div>
                 <div class="mb-3">
                   <label class="form-label" for="selectGroup">Groupe</label>
+
                   <select id="selectGroup" v-model="selectedGroup" class="form-select" required>
+                    <option disabled selected value="">Choisir un groupe</option>
                     <option v-for="groupe in groupsJoined" :key="groupe.id" :value="groupe.id">{{ groupe.name }}
                     </option>
                   </select>
@@ -110,13 +112,33 @@
               </li>
             </ul>
             <h4 class="card-title text-md-center">Mes informations</h4>
+            <div class="d-flex justify-content-center align-items-center" style="height: 100px;">
+              <template v-if="avatarUrl">
+                <img :src="avatarUrl" alt="Photo de profil" class="rounded-circle img-thumbnail"
+                     style="width: 100px; height: 100px;">
+              </template>
+              <template v-else>
+                <i class="bi bi-person-fill " style="font-size: 100px;"></i>
+              </template>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label" for="formFileSm">Mettre à jour la photo de profil</label>
+              <div style="display: flex; align-items: center;">
+                <input id="formFileSm" accept="image/png, image/jpeg" class="form-control form-control-sm" type="file"
+                       @change="pictureToUpload = $event.target.files[0]">
+                <button v-if="pictureToUpload" class="btn btn-info" @click="uploadPicture">Changer</button>
+              </div>
+            </div>
+
+
             <form class="form" @submit.prevent="updateCompte">
               <div class="mb-3">
-                <label class="form-label" for="pseudo">Nom d'utilisateur:</label>
+                <label class="form-label" for="pseudo">Nom d'utilisateur :</label>
                 <input id="prenom" v-model="utilisateur.username" class="form-control" type="text"/>
               </div>
               <div class="mb-3">
-                <label class="form-label" for="email">Email:</label>
+                <label class="form-label" for="email">Email :</label>
                 <input id="email" v-model="utilisateur.email" class="form-control" readonly type="email"/>
               </div>
               <div class="d-flex justify-content-center mt-3">
@@ -189,6 +211,7 @@ export default {
       invitations: [],
       groupsOwned: [],
       groupsJoined: [],
+      avatarUrl: '',
 
 
       //Nouveau groupe
@@ -203,13 +226,60 @@ export default {
       suggestedUsers: [],
       selectedUser: {
         userName: '', id: ''
-      }
+      },
+
+
+      //Photo de profil
+      pictureToUpload: null,
+      urlToUpload: '',
 
     };
   },
   methods: {
     updateCompte() {
       console.log('Informations mises à jour:', this.utilisateur);
+    },
+
+    async uploadPicture() {
+      console.log('Photo envoyée:', this.pictureToUpload);
+
+      try {
+        // Récupérer l'URL d'upload
+        const graphqlResponse = await axios.post('http://localhost:3000/graphql', {
+          query: `mutation {
+        uploadProfilePicture
+      }`
+        }, {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+        });
+
+        const responseData = graphqlResponse.data;
+        if (responseData.data.uploadProfilePicture) {
+          const uploadUrl = responseData.data.uploadProfilePicture;
+
+          // Créer un objet FormData pour envoyer la photo
+          const formData = new FormData();
+          formData.append('file', this.pictureToUpload);
+
+          const uploadResponse = await axios.post(uploadUrl, formData);
+
+          // Gérer la réponse de l'upload
+          console.log('Réponse de l\'upload:', uploadResponse.data);
+          if (uploadResponse.status === 200) {
+            this.alertMessage = 'Photo de profil mise à jour';
+            var toastLive = document.getElementById('liveToast')
+            toastLive.classList.add('show')
+          }
+          this.pictureToUpload = null;
+          await this.fetchCurrentUserDetails();
+        }
+      } catch (error) {
+        console.error('Erreur:', error);
+      }
     },
 
     async inviteToGroup() {
@@ -315,7 +385,7 @@ export default {
       try {
         const axios = require('axios');
         const responseUser = await axios.post('http://localhost:3000/graphql', {
-          query: `{currentUser{userName, email, invitations{group{name,id}}}}`
+          query: `{currentUser{userName, email, invitations{group{name,id}},avatarUrl}}`
         }, {
           withCredentials: true,
           headers: {
@@ -328,6 +398,7 @@ export default {
           this.utilisateur.username = responseDataUser.data.currentUser.userName;
           this.utilisateur.email = responseDataUser.data.currentUser.email;
           this.invitations = responseDataUser.data.currentUser.invitations;
+          this.avatarUrl = responseDataUser.data.currentUser.avatarUrl;
         }
         if (responseDataUser.errors) {
           console.log("erreur" + responseDataUser.errors.message);

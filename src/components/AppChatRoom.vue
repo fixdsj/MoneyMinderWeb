@@ -43,46 +43,23 @@
                                role="button"
                                @click="handleCurrentChat('friend',friend)">
                               <div class="flex-shrink-0">
-                                <img alt="user img" class="img-fluid"
-                                     src="https://mehedihtml.com/chatbox/assets/img/user.png">
+                                <template v-if="friend.avatarUrl">
+                                  <img :src="friend.avatarUrl" alt="user img"
+                                       class="img-fluid img-thumbnail rounded-circle" style="width: 50px; height: 50px;">
+
+                                </template>
+                                <template v-else>
+                                  <img alt="user img" class="img-fluid img-thumbnail rounded-circle"
+                                       src="https://mehedihtml.com/chatbox/assets/img/user.png"
+                                       style="width: 50px; height: 50px;">
+
+                                </template>
                               </div>
                               <div class="flex-grow-1 ms-3">
                                 <h3>{{ friend.name }}</h3>
                                 <p class="text-truncate">{{ friend.email }}</p>
                               </div>
                             </a>
-
-                            <a class="d-flex align-items-center" href="#">
-                              <div class="flex-shrink-0">
-                                <img alt="user img" class="img-fluid"
-                                     src="https://mehedihtml.com/chatbox/assets/img/user.png">
-                              </div>
-                              <div class="flex-grow-1 ms-3">
-                                <h3>Payel Akter</h3>
-                                <p>front end developer</p>
-                              </div>
-                            </a>
-                            <a class="d-flex align-items-center" href="#">
-                              <div class="flex-shrink-0">
-                                <img alt="user img" class="img-fluid"
-                                     src="https://mehedihtml.com/chatbox/assets/img/user.png">
-                              </div>
-                              <div class="flex-grow-1 ms-3">
-                                <h3>Baby Akter</h3>
-                                <p>front end developer</p>
-                              </div>
-                            </a>
-                            <a class="d-flex align-items-center" href="#">
-                              <div class="flex-shrink-0">
-                                <img alt="user img" class="img-fluid"
-                                     src="https://mehedihtml.com/chatbox/assets/img/user.png">
-                              </div>
-                              <div class="flex-grow-1 ms-3">
-                                <h3>Zuwel Rana</h3>
-                                <p>front end developer</p>
-                              </div>
-                            </a>
-
 
                           </div>
                           <!-- chat-list -->
@@ -180,7 +157,17 @@
                     <div class="row">
                       <div class="col-8">
                         <div class="d-flex align-items-center">
-                          <i class="bi bi-person-fill" style="color: var(--button-color)"></i>
+                          <div class="flex-shrink-0">
+                            <template v-if="activeChat.avatarUrl">
+                              <img :src="activeChat.avatarUrl" alt="user img"
+                                   class="img-fluid img-thumbnail rounded-circle" style="width: 50px; height: 50px;">
+                            </template>
+                            <template v-else>
+                              <img alt="user img" class="img-fluid img-thumbnail rounded-circle"
+                                   src="https://mehedihtml.com/chatbox/assets/img/user.png"
+                                   style="width: 50px; height: 50px;">
+                            </template>
+                          </div>
                           <div class="flex-shrink-0">
                           </div>
                           <div class="flex-grow-1 ms-3">
@@ -189,29 +176,13 @@
                           </div>
                         </div>
                       </div>
-                      <div class="col-4">
-                        <ul class="moreoption">
-                          <li class="navbar nav-item dropdown">
-                            <a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#"
-                               role="button"><i aria-hidden="true" class="fa fa-ellipsis-v"></i></a>
-                            <ul class="dropdown-menu">
-                              <li><a class="dropdown-item" href="#">Action</a></li>
-                              <li><a class="dropdown-item" href="#">Another action</a></li>
-                              <li>
-                                <hr class="dropdown-divider">
-                              </li>
-                              <li><a class="dropdown-item" href="#">Something else here</a></li>
-                            </ul>
-                          </li>
-                        </ul>
-                      </div>
                     </div>
                   </div>
 
 
                   <div class="modal-body">
-                    <div class="msg-body" ref="messageList">
-                      <ul >
+                    <div ref="messageList" class="msg-body">
+                      <ul>
                         <li v-for="message in activeChat.messages" :key="message.id"
                             :class="{'sender': message.sender.userName !== this.currentUsername, 'repaly': message.sender.userName === this.currentUsername}">
                           <p>{{ message.content }}</p>
@@ -282,8 +253,6 @@ export default {
 
       const axios = require('axios');
       try {
-
-
         const response = await axios.post('http://localhost:3000/graphql', {
           query: `{messagesByOtherUserId(otherUserId: "${this.activeChat.id}"){sender{userName},receiver{userName}, content ,sentAt}}
 `
@@ -357,7 +326,7 @@ export default {
       try {
         const axios = require('axios');
         const response = await axios.post('http://localhost:3000/graphql', {
-          query: `{users{userName,id,email}}`
+          query: `{users{userName,id,email,avatarUrl}}`
         }, {
           withCredentials: true,
           headers: {
@@ -372,6 +341,7 @@ export default {
               name: user.userName,
               id: user.id,
               email: user.email,
+              avatarUrl: user.avatarUrl,
             };
           });
           this.activeChat = this.friends[0];
@@ -416,7 +386,6 @@ export default {
         await this.sendMessageToGroup();
       }
 
-
     },
     async sendMessageToFriend() {
       const axios = require('axios');
@@ -448,8 +417,6 @@ export default {
     async sendMessageToGroup() {
       const axios = require('axios');
       try {
-
-
         const response = await axios.post('http://localhost:3000/graphql', {
           query: `mutation {
   sendGroupMessage(groupMessageInsertInput:  { groupId: "${this.activeChat.id}" , content: "${this.messageToSend}" }) {
