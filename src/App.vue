@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import {ref, watch} from 'vue'; // Importer 'ref' et 'watch' de Vue 3
+import {ref, watch} from 'vue';
 import AppHeader from "@/components/AppHeader.vue";
 import AppFooter from "@/components/AppFooter.vue";
 import {currentUsername, isLogged} from '@/main';
@@ -18,17 +18,16 @@ export default {
     AppFooter
   },
   setup() {
-    // Créer une référence réactive à isLogged
     const isLoggedRef = ref(isLogged);
 
-    // Observer les changements de isLogged
+
     watch(isLoggedRef, (newValue) => {
       if (newValue === true) {
         fetchCurrentUser();
       }
     });
 
-    // Récupérer l'utilisateur actuel
+    // Récupérer l'utilisateur
     const fetchCurrentUser = async () => {
       try {
         const axios = require('axios');

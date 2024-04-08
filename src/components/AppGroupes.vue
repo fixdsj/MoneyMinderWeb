@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h5 class="text-center mb-4">Mon solde total = 3<i class="bi bi-currency-euro"></i></h5>
     <div class="maincontainer">
       <div class="sidebar">
         <div aria-label="Liste des groupes" class="btn-group-vertical " role="group">
@@ -37,24 +36,26 @@
         </ul>
 
         <div class="details">
-          <h4 class="text-center mb-4">{{ activeGroup }}</h4>
+          <div class="d-flex align-items-center">
+            <img alt="Photo de groupe" class="rounded-circle mr-3"
+                 height="50" src="https://mehedihtml.com/chatbox/assets/img/user.png" width="50">
+            <h5 class="text-info mb-0">Groupe: {{ activeGroup }}</h5>
+          </div>
+
+
           <hr class="my-4">
 
           <div v-if="selectedTab === 'expenses'">
-            <h3>Dépenses</h3>
             <AppExpenses :activeGroup="activeGroup"/>
           </div>
           <div v-if="selectedTab === 'refunds'">
-            <h3>Remboursements</h3>
             <AppRefunds :activeGroup="activeGroup"/>
           </div>
 
           <div v-if="selectedTab === 'history'">
-            <h3>Historique</h3>
             <AppLastTransactions/>
           </div>
           <div v-if="selectedTab === 'details'">
-            <h3>Détails du groupe</h3>
             <AppGroupeDetails/>
           </div>
         </div>

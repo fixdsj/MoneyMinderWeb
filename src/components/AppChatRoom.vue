@@ -45,7 +45,8 @@
                               <div class="flex-shrink-0">
                                 <template v-if="friend.avatarUrl">
                                   <img :src="friend.avatarUrl" alt="user img"
-                                       class="img-fluid img-thumbnail rounded-circle" style="width: 50px; height: 50px;">
+                                       class="img-fluid img-thumbnail rounded-circle"
+                                       style="width: 50px; height: 50px;">
 
                                 </template>
                                 <template v-else>
@@ -181,8 +182,8 @@
 
 
                   <div class="modal-body">
-                    <div ref="messageList" class="msg-body">
-                      <ul>
+                    <div class="msg-body">
+                      <ul ref="messageList">
                         <li v-for="message in activeChat.messages" :key="message.id"
                             :class="{'sender': message.sender.userName !== this.currentUsername, 'repaly': message.sender.userName === this.currentUsername}">
                           <p>{{ message.content }}</p>
@@ -280,8 +281,8 @@ export default {
               }),
             };
           });
-          /*const messageList = this.$refs.messageList;
-          messageList.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});*/
+          const messageList = this.$refs.messageList;
+          messageList.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
 
         }
       } catch (error) {
