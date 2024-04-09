@@ -55,7 +55,7 @@ export default {
     async logout() {
       console.log('Déconnexion');
       const axios = require('axios');
-      const response = await axios.post('http://localhost:3000/graphql', {
+      const response = await axios.post('${process.env.VUE_APP_API_URL}', {
         query: `mutation{signOut}`
       }, {
         withCredentials: true,

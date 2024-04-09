@@ -64,7 +64,7 @@ export default {
     async fetchExpensesInGroup() {
       try {
         const axios = require('axios');
-        const response = await axios.post('http://localhost:3000/graphql', {
+        const response = await axios.post('${process.env.VUE_APP_API_URL}', {
           query: `{groupById(id:"${this.activeGroup}" ){expenses{amount,createdAt, createdBy{userName}}}}`
         }, {
           withCredentials: true,
@@ -87,7 +87,7 @@ export default {
     async fetchExpensesCurrrentUser() {
       try {
         const axios = require('axios');
-        const response = await axios.post('http://localhost:3000/graphql', {
+        const response = await axios.post('${process.env.VUE_APP_API_URL}', {
           query: `{currentUser{userExpenses{amount, paidAt, expense{id,amount, description, createdAt , createdBy{userName}}}}}`
         }, {
           withCredentials: true,

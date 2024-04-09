@@ -12,7 +12,7 @@
                   <div class="chat-header">
                     <div class="input-group">
                       <input aria-label="search" class="form-control" placeholder="Rechercher" type="text">
-                      <button class="btn btn-outline-secondary" type="button"><i class="bi bi-plus-lg"></i></button>
+                      <button class="btn btn-outline-secondary" type="button"><i class="bi bi-search"></i></button>
                     </div>
 
                     <ul id="myTab" class="nav nav-tabs" role="tablist">
@@ -39,6 +39,7 @@
                         <div id="Open" aria-labelledby="Open-tab" class="tab-pane fade show active " role="tabpanel">
                           <!-- chat-list -->
                           <div class="chat-list">
+
                             <a v-for="friend in friends" :key="friend.name" class="d-flex align-items-center "
                                role="button"
                                @click="handleCurrentChat('friend',friend)">
@@ -85,58 +86,6 @@
                                 <h3>Aucun groupe</h3>
                               </div>
                             </a>
-                            <a class="d-flex align-items-center" href="#">
-                              <div class="flex-shrink-0">
-                                <img alt="user img" class="img-fluid"
-                                     src="https://mehedihtml.com/chatbox/assets/img/user.png">
-                                <span class="active"></span>
-                              </div>
-                              <div class="flex-grow-1 ms-3">
-                                <h3>Louis Martin</h3>
-                                <p>front end developer</p>
-                              </div>
-                            </a>
-                            <a class="d-flex align-items-center" href="#">
-                              <div class="flex-shrink-0">
-                                <img alt="user img" class="img-fluid"
-                                     src="https://mehedihtml.com/chatbox/assets/img/user.png">
-                              </div>
-                              <div class="flex-grow-1 ms-3">
-                                <h3>Ryhan</h3>
-                                <p>front end developer</p>
-                              </div>
-                            </a>
-                            <a class="d-flex align-items-center" href="#">
-                              <div class="flex-shrink-0">
-                                <img alt="user img" class="img-fluid"
-                                     src="https://mehedihtml.com/chatbox/assets/img/user.png">
-                              </div>
-                              <div class="flex-grow-1 ms-3">
-                                <h3>Malek Hasan</h3>
-                                <p>front end developer</p>
-                              </div>
-                            </a>
-                            <a class="d-flex align-items-center" href="#">
-                              <div class="flex-shrink-0">
-                                <img alt="user img" class="img-fluid"
-                                     src="https://mehedihtml.com/chatbox/assets/img/user.png">
-                              </div>
-                              <div class="flex-grow-1 ms-3">
-                                <h3>Sadik Hasan</h3>
-                                <p>front end developer</p>
-                              </div>
-                            </a>
-                            <a class="d-flex align-items-center" href="#">
-                              <div class="flex-shrink-0">
-                                <img alt="user img" class="img-fluid"
-                                     src="https://mehedihtml.com/chatbox/assets/img/user.png">
-                              </div>
-                              <div class="flex-grow-1 ms-3">
-                                <h3>Bulu </h3>
-                                <p>front end developer</p>
-                              </div>
-                            </a>
-
                           </div>
                           <!-- chat-list -->
                         </div>
@@ -248,13 +197,12 @@ export default {
         this.fetchCurrentFriendChat(chat.id);
         this.activeTab = 'friends'
       }
-
     },
     async fetchCurrentFriendChat() {
 
       const axios = require('axios');
       try {
-        const response = await axios.post('http://localhost:3000/graphql', {
+        const response = await axios.post(`${process.env.VUE_APP_API_URL}`, {
           query: `{messagesByOtherUserId(otherUserId: "${this.activeChat.id}"){sender{userName},receiver{userName}, content ,sentAt}}
 `
         }, {
@@ -293,7 +241,7 @@ export default {
 
       const axios = require('axios');
       try {
-        const response = await axios.post('http://localhost:3000/graphql', {
+        const response = await axios.post('${process.env.VUE_APP_API_URL', {
           query: `{groupById(id: "${this.activeChat.id}"){receivedGroupMessages{sender{userName},content,sentAt}}}`
         }, {
           withCredentials: true,
@@ -326,7 +274,7 @@ export default {
     async fetchCurrentUserFriends() {
       try {
         const axios = require('axios');
-        const response = await axios.post('http://localhost:3000/graphql', {
+        const response = await axios.post('${process.env.VUE_APP_API_URL}', {
           query: `{users{userName,id,email,avatarUrl}}`
         }, {
           withCredentials: true,
@@ -344,7 +292,7 @@ export default {
               email: user.email,
               avatarUrl: user.avatarUrl,
             };
-          });
+          }).filter((friend) => friend.name !== this.currentUsername);
           this.activeChat = this.friends[0];
           await this.fetchCurrentFriendChat();
         }
@@ -355,7 +303,7 @@ export default {
     async fetchCurrentUserGroups() {
       try {
         const axios = require('axios');
-        const response = await axios.post('http://localhost:3000/graphql', {
+        const response = await axios.post('${process.env.VUE_APP_API_URL}', {
           query: `{currentUser{userGroups{group{name,id,description}}}}`
         }, {
           withCredentials: true,
@@ -391,7 +339,7 @@ export default {
     async sendMessageToFriend() {
       const axios = require('axios');
       try {
-        const response = await axios.post('http://localhost:3000/graphql', {
+        const response = await axios.post('${process.env.VUE_APP_API_URL}', {
           query: `mutation {
   sendMessage(messageInsertInput: { receiverId: "${this.activeChat.id}", content: "${this.messageToSend}" }) {
     content, sentAt
@@ -418,7 +366,7 @@ export default {
     async sendMessageToGroup() {
       const axios = require('axios');
       try {
-        const response = await axios.post('http://localhost:3000/graphql', {
+        const response = await axios.post('${process.env.VUE_APP_API_URL}', {
           query: `mutation {
   sendGroupMessage(groupMessageInsertInput:  { groupId: "${this.activeChat.id}" , content: "${this.messageToSend}" }) {
     content
@@ -440,6 +388,41 @@ export default {
       } catch (error) {
         console.error('Erreur:', error);
       }
+    },
+    async sucribeToNewMessages() {
+      const axios = require('axios');
+      try {
+        const response = await axios.post('${process.env.VUE_APP_API_URL}', {
+          query: `subscription{messageAdded{content,sender{userName},receiver{userName}, sentAt}}`
+        }, {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json',
+            "Accept": "application/json",
+          },
+        });
+        const responseData = response.data;
+        if (responseData.data) {
+          console.log('response data:', responseData);
+          this.activeChat.messages.push({
+            sender: responseData.data.messageAdded.sender,
+            receiver: responseData.data.messageAdded.receiver,
+            content: responseData.data.messageAdded.content,
+            sentAt: new Date(responseData.data.messageAdded.sentAt).toLocaleTimeString('fr-FR', {
+              weekday: "long",
+              month: "long",
+              day: "numeric",
+              hour: '2-digit',
+              minute: '2-digit',
+            }),
+          });
+          const messageList = this.$refs.messageList;
+          messageList.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
+        }
+
+      } catch (error) {
+        console.error('Erreur:', error);
+      }
     }
   },
   mounted() {
@@ -452,13 +435,12 @@ export default {
 <style scoped>
 
 .modal-body {
-  padding: 15px;
+  padding: 5px;
 }
 
-.message-area {
-  /*padding: 20px 0;*/
-  background: #f5f5f5;
-}
+/*.message-area {
+  padding: 20px 0;
+}*/
 
 .chat-area {
   position: relative;
@@ -472,7 +454,7 @@ export default {
 .chatlist {
   outline: 0;
   height: 100%;
-  overflow: hidden;
+  overflow: auto;
   width: 300px;
   float: left;
   padding: 15px;
@@ -574,7 +556,6 @@ a.add img {
   font-size: 16px;
   font-weight: 500;
   line-height: 1.5;
-  text-transform: capitalize;
   margin-bottom: 0;
 }
 
@@ -618,32 +599,6 @@ a.add img {
 .msg-head {
   padding: 15px;
   border-bottom: 1px solid #ccc;
-}
-
-.moreoption {
-  display: flex;
-  align-items: center;
-  justify-content: end;
-}
-
-.moreoption .navbar {
-  padding: 0;
-}
-
-.moreoption li .nav-link {
-  color: #222;
-  font-size: 16px;
-}
-
-.moreoption .dropdown-toggle::after {
-  display: none;
-}
-
-.moreoption [data-bs-popper] {
-  top: 100%;
-  left: auto;
-  right: 0;
-  margin-top: 0.125rem;
 }
 
 .msg-body ul {
@@ -908,7 +863,7 @@ li.repaly .time {
 
 /*Custom Scrollbar*/
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 8px;
 
 }
 
@@ -918,7 +873,7 @@ li.repaly .time {
 
 ::-webkit-scrollbar-thumb {
   background: #888;
-  border-radius: 10px;
+  border-radius: 8px;
 }
 
 </style>

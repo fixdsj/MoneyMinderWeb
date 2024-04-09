@@ -158,7 +158,7 @@ export default {
           return `{key:"${user.id}",value:${user.weight}}`;
         }).join(',');
         const axios = require('axios');
-        const response = await axios.post('http://localhost:3000/graphql', {
+        const response = await axios.post('${process.env.VUE_APP_API_URL', {
           query: `mutation {
   addUserExpense(expenseInsertInput: {amount:${this.depense.montant}, description:"${this.depense.description}", groupId:"${this.groupId}",usersWithAmount:
   [${this.weightquery}]
@@ -222,7 +222,7 @@ export default {
       try {
         console.log('activeGroup:', this.activeGroup);
         const axios = require('axios');
-        const response = await axios.post('http://localhost:3000/graphql', {
+        const response = await axios.post('${process.env.VUE_APP_API_URL}', {
           query: `query {
     groups(where: { name: { contains: "${this.activeGroup}" } }) {
       userGroups{user{userName, id}}
@@ -264,7 +264,7 @@ export default {
       if (this.texttosuggest.length > 1) {
         try {
           const axios = require('axios');
-          const response = await axios.post('http://localhost:3000/graphql', {
+          const response = await axios.post('${process.env.VUE_APP_API_URL}', {
             query: `query {
     users(where: { userName: { startsWith: "${this.texttosuggest}" } }) {
       userName
@@ -302,7 +302,7 @@ export default {
         const axios = require('axios');
         console.log('userAmountsList:', this.weightquery);
 
-        const response = await axios.post('http://localhost:3000/graphql', {
+        const response = await axios.post('${process.env.VUE_APP_API_URL}', {
           query: `query{previsualizeUserExpenses(
   expensePrevisualizationInput:{
     amount:${this.depense.montant},

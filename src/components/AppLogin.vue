@@ -54,12 +54,12 @@ export default {
   methods: {
     async signIn(event) {
       event.preventDefault();
-
       console.log('Données saisies :', this.username, this.password);
+      this.errors = [];
 
 
       try {
-        const response = await axios.post('http://localhost:3000/graphql', {
+        const response = await axios.post('${process.env.VUE_APP_API_URL}', {
           query: `
           mutation {
             signIn(appUserLoginDto: {

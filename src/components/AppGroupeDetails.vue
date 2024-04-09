@@ -31,7 +31,7 @@ export default {
 
       try {
         // Récupérer l'URL d'upload
-        const graphqlResponse = await axios.post('http://localhost:3000/graphql', {
+        const graphqlResponse = await axios.post('${process.env.VUE_APP_API_URL}', {
           query: `mutation{uploadGroupImagePicture(groupId:"${this.groupId}" )}`
         }, {
           withCredentials: true,

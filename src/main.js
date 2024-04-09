@@ -15,6 +15,7 @@ import './custom.css';
 export const isLogged = ref(false);
 export const currentUsername = ref("Guest");
 
+
 const app = createApp({
     render() {
         return h(App);

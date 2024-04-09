@@ -93,7 +93,7 @@ export default {
     async fetchCurrentUserGroups() {
       try {
         const axios = require('axios');
-        const response = await axios.post('http://localhost:3000/graphql', {
+        const response = await axios.post('${process.env.VUE_APP_API_URL}', {
           query: `{currentUser{userGroups{user{balance},group{name}}}}`
         }, {
           withCredentials: true,

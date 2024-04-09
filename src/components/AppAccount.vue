@@ -245,7 +245,7 @@ export default {
 
       try {
         // Récupérer l'URL d'upload
-        const graphqlResponse = await axios.post('http://localhost:3000/graphql', {
+        const graphqlResponse = await axios.post('${process.env.VUE_APP_API_URL}', {
           query: `mutation {
         uploadProfilePicture
       }`
@@ -285,7 +285,7 @@ export default {
     async inviteToGroup() {
       try {
         const axios = require('axios');
-        const response = await axios.post('http://localhost:3000/graphql', {
+        const response = await axios.post('${process.env.VUE_APP_API_URL}', {
           query: `mutation{inviteUser(invitationInsertDto:{groupId:"${this.selectedGroup}", userId:"${this.selectedUser.id}"}){invitedAt,group{name}}}`
         }, {
           withCredentials: true,
@@ -324,7 +324,7 @@ export default {
       if (this.selectedUser.userName.length > 1) {
         try {
           const axios = require('axios');
-          const response = await axios.post('http://localhost:3000/graphql', {
+          const response = await axios.post('${process.env.VUE_APP_API_URL}', {
             query: `query {
     users(where: { userName: { startsWith: "${this.selectedUser.userName}" } }) {
       userName
@@ -353,7 +353,7 @@ export default {
     async createGroup() {
       let toastLive = document.getElementById('liveToast')
       const axios = require('axios');
-      const response = await axios.post('http://localhost:3000/graphql', {
+      const response = await axios.post('${process.env.VUE_APP_API_URL}', {
         query: `mutation{
     createGroup(groupInsertInput:  {
         name:"${this.nomGroupe}",
@@ -384,7 +384,7 @@ export default {
     async fetchCurrentUserDetails() {
       try {
         const axios = require('axios');
-        const responseUser = await axios.post('http://localhost:3000/graphql', {
+        const responseUser = await axios.post('${process.env.VUE_APP_API_URL}', {
           query: `{currentUser{userName, email, invitations{group{name,id}},avatarUrl}}`
         }, {
           withCredentials: true,
@@ -409,7 +409,7 @@ export default {
       }
 
       try {
-        const responseUserGroups = await axios.post('http://localhost:3000/graphql', {
+        const responseUserGroups = await axios.post('${process.env.VUE_APP_API_URL}', {
           query: `{currentUser{userGroups{group{name,id}},ownedGroups{name}}}`
         }, {
           withCredentials: true,
@@ -452,7 +452,7 @@ export default {
     async deleteAccount() {
       try {
         const axios = require('axios');
-        const response = await axios.post('http://localhost:3000/graphql', {
+        const response = await axios.post('${process.env.VUE_APP_API_URL}', {
           query: `mutation{deleteSelf}`
         }, {
           withCredentials: true,
@@ -481,7 +481,7 @@ export default {
     async acceptInvitation(groupId) {
       try {
         const axios = require('axios');
-        const response = await axios.post('http://localhost:3000/graphql', {
+        const response = await axios.post('${process.env.VUE_APP_API_URL}', {
           query: `mutation{joinGroup(userGroupInsertInput: {groupId:"${groupId}"}){joinedAt}}`
         }, {
           withCredentials: true,

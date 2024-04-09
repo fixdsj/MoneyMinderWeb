@@ -14,14 +14,13 @@
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
     "core-js": "^3.8.3",
-    "dotenv": "^16.4.1",
+    "dotenv": "^16.4.5",
     "graphql": "^16.8.1",
     "graphql-tag": "^2.12.6",
     "oidc-client": "^1.11.5",
     "vue": "^3.2.13",
     "vue-carousel": "^0.18.0",
-    "vue-router": "^4.2.5",
-    "vuex": "^4.0.2"
+    "vue-router": "^4.2.5"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
