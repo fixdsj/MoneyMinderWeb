@@ -118,7 +118,9 @@
                      style="width: 100px; height: 100px;">
               </template>
               <template v-else>
-                <i class="bi bi-person-fill " style="font-size: 100px;"></i>
+                <!--                <i class="bi bi-person-fill " style="font-size: 100px;"></i>-->
+                <img :src="avatarPlaceholderUrl" alt="Photo de profil" class="rounded-circle img-thumbnail"
+                     style="width: 100px; height: 100px;">
               </template>
             </div>
 
@@ -199,7 +201,11 @@ export default {
   name: 'AppAccount',
   mounted() {
     this.fetchCurrentUserDetails();
-
+  },
+  computed: {
+    avatarPlaceholderUrl() {
+      return 'https://avatar.iran.liara.run/username?username=' + this.utilisateur.username;
+    }
   },
   data() {
     return {
@@ -399,6 +405,10 @@ export default {
           this.utilisateur.email = responseDataUser.data.currentUser.email;
           this.invitations = responseDataUser.data.currentUser.invitations;
           this.avatarUrl = responseDataUser.data.currentUser.avatarUrl;
+
+          /*var imgPlaceholder = document.getElementById('avatarPlaceholder');
+          imgPlaceholder.src = 'https://avatar.iran.liara.run/username?username=' + this.utilisateur.username;
+          console.log('imgPlaceholder:', imgPlaceholder.src);*/
         }
         if (responseDataUser.errors) {
           console.log("erreur" + responseDataUser.errors.message);

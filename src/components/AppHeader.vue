@@ -5,8 +5,8 @@
 
       <ul class="nav col-md-3 col-md-auto mb-2 mb-md-0">
         <li><a class="nav-link px-2" href="/"> <i class="bi bi-cash-coin" style="font-size: 2rem;"></i></a></li>
-        <li v-if="isLogged"><a class="nav-link px-2" href="/groupes"><i class="bi bi-people-fill"
-                                                                        style="color: var(--button-color);font-size: 2rem;"></i></a>
+        <li v-if="isLogged"><a class="nav-link px-2" href="/groups"><i class="bi bi-people-fill"
+                                                                       style="color: var(--button-color);font-size: 2rem;"></i></a>
         </li>
         <li v-if="isLogged"><a class="nav-link px-2" href="/messages"><i class="bi bi-chat-left-text-fill"
                                                                          style="color: var(--button-color);font-size: 2rem;"></i></a>

@@ -10,7 +10,7 @@ import AppChatRoom from "@/components/AppChatRoom.vue";
 const routes =
     [
         {path: '/', component: Home},
-        {path: '/groupes', component: Groupes},
+        {path: '/groups', component: Groupes},
         {path: '/account', component: Account},
         {path: '/messages', component: AppChatRoom},
         {path: '/login', component: AppLogin},

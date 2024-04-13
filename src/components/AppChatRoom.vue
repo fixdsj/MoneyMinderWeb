@@ -40,28 +40,24 @@
                           <!-- chat-list -->
                           <div class="chat-list">
 
-                            <a v-for="friend in friends" :key="friend.name" class="d-flex align-items-center "
-                               role="button"
-                               @click="handleCurrentChat('friend',friend)">
-                              <div class="flex-shrink-0">
-                                <template v-if="friend.avatarUrl">
-                                  <img :src="friend.avatarUrl" alt="user img"
-                                       class="img-fluid img-thumbnail rounded-circle"
-                                       style="width: 50px; height: 50px;">
-
-                                </template>
-                                <template v-else>
-                                  <img alt="user img" class="img-fluid img-thumbnail rounded-circle"
-                                       src="https://mehedihtml.com/chatbox/assets/img/user.png"
-                                       style="width: 50px; height: 50px;">
-
-                                </template>
-                              </div>
-                              <div class="flex-grow-1 ms-3">
-                                <h3>{{ friend.name }}</h3>
-                                <p class="text-truncate">{{ friend.email }}</p>
-                              </div>
-                            </a>
+                            <div v-for="friend in friends" :key="friend.name">
+                              <a class="d-flex align-items-center "
+                                 role="button"
+                                 @click="handleCurrentChat('friend',friend)">
+                                <div class="flex-shrink-0">
+                                  <img
+                                      :src="friend.avatarUrl ? friend.avatarUrl : 'https://avatar.iran.liara.run/username?username=' + friend.name"
+                                      alt="user img"
+                                      class="img-fluid img-thumbnail rounded-circle"
+                                      style="width: 50px; height: 50px;">
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                  <h3>{{ friend.name }}</h3>
+                                  <p class="text-truncate">{{ friend.email }}</p>
+                                </div>
+                              </a>
+                              <hr class="m-0 p-0 mb-2">
+                            </div>
 
                           </div>
                           <!-- chat-list -->
@@ -73,8 +69,9 @@
                             <a v-for="group in groups" :key="group.name" class="d-flex align-items-center" role="button"
                                @click="handleCurrentChat('group',group)">
                               <div class="flex-shrink-0">
-                                <img alt="user img" class="img-fluid"
-                                     src="https://mehedihtml.com/chatbox/assets/img/user.png">
+                                <img :src="group.groupImageUrl ? group.groupImageUrl : 'https://avatar.iran.liara.run/username?username=' + group.name" alt="user img"
+                                     class="img-fluid img-thumbnail rounded-circle"
+                                     style="width: 50px; height: 50px;">
                               </div>
                               <div class="flex-grow-1 ms-3">
                                 <h3>{{ group.name }}</h3>
@@ -108,15 +105,9 @@
                       <div class="col-8">
                         <div class="d-flex align-items-center">
                           <div class="flex-shrink-0">
-                            <template v-if="activeChat.avatarUrl">
-                              <img :src="activeChat.avatarUrl" alt="user img"
-                                   class="img-fluid img-thumbnail rounded-circle" style="width: 50px; height: 50px;">
-                            </template>
-                            <template v-else>
-                              <img alt="user img" class="img-fluid img-thumbnail rounded-circle"
-                                   src="https://mehedihtml.com/chatbox/assets/img/user.png"
-                                   style="width: 50px; height: 50px;">
-                            </template>
+                            <img :src="activeChat.avatarUrl ? activeChat.avatarUrl : 'https://avatar.iran.liara.run/username?username=' + activeChat.name" alt="user img"
+                                 class="img-fluid img-thumbnail rounded-circle"
+                                 style="width: 50px; height: 50px;">
                           </div>
                           <div class="flex-shrink-0">
                           </div>
@@ -304,7 +295,7 @@ export default {
       try {
         const axios = require('axios');
         const response = await axios.post('${process.env.VUE_APP_API_URL}', {
-          query: `{currentUser{userGroups{group{name,id,description}}}}`
+          query: `{currentUser{userGroups{group{name,id,description, groupImageUrl}}}}`
         }, {
           withCredentials: true,
           headers: {
@@ -319,6 +310,7 @@ export default {
               name: groupe.group.name,
               id: groupe.group.id,
               description: groupe.group.description,
+              groupImageUrl: groupe.group.groupImageUrl,
             };
           });
         }
@@ -454,10 +446,11 @@ export default {
 .chatlist {
   outline: 0;
   height: 100%;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
   width: 300px;
   float: left;
-  padding: 15px;
+  /*padding: 15px;*/
 }
 
 .chat-area .modal-content {
