@@ -12,7 +12,7 @@
       <p class="text-center mt-1"> Vous devez rembourser 27<i class="bi bi-currency-euro"></i> à votre groupe</p>
       <p class="text-center mt-4">Montant total à rembourser : 27<i class="bi bi-currency-euro"></i></p>
       <button class="btn btn-primary " type="button" @click="paidDue">
-        Payer 10€ au groupe {{ activeGroup }}
+        Payer 10€ au groupe {{ activeGroup.name }}
       </button>
     </div>
     <div class="col-md-1">OU</div>

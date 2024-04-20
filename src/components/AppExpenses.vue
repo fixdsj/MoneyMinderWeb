@@ -116,7 +116,7 @@
 export default {
   name: 'AppExpenses',
   props: {
-    activeGroup: String,
+    activeGroup: Object,
   },
   data() {
     return {
@@ -160,11 +160,17 @@ export default {
         const axios = require('axios');
         const response = await axios.post('${process.env.VUE_APP_API_URL', {
           query: `mutation {
-  addUserExpense(expenseInsertInput: {amount:${this.depense.montant}, description:"${this.depense.description}", groupId:"${this.groupId}",usersWithAmount:
-  [${this.weightquery}]
-  }){
-    paidAt,
-    expense{amount,description,id},
+  addUserExpense(
+    expenseInsertInput: {
+      amount: ${this.depense.montant}
+      description: "${this.depense.description}"
+      groupId: "${this.groupId}"
+      userAmountsList: [${this.weightquery}]
+    }
+  ) {
+    paidAt
+    expense {
+      amount, description, id},
     amount
   }
 }
@@ -224,7 +230,7 @@ export default {
         const axios = require('axios');
         const response = await axios.post('${process.env.VUE_APP_API_URL}', {
           query: `query {
-    groups(where: { name: { contains: "${this.activeGroup}" } }) {
+    groups(where: { name: { contains: "${this.activeGroup.name}" } }) {
       userGroups{user{userName, id}}
       id
     }
@@ -241,7 +247,8 @@ export default {
         if (responseData.errors) {
           console.log('Erreur : ' + responseData.errors[0].message);
         }
-        if (responseData.data.groups) {
+        if (responseData.data.groups.length > 0) {
+          console.log('usersInGroup:', responseData.data.groups[0].userGroups)
           this.usersInGroup = responseData.data.groups[0].userGroups.map((user) => {
             return {
               userName: user.user.userName,
@@ -306,7 +313,6 @@ export default {
           query: `query{previsualizeUserExpenses(
   expensePrevisualizationInput:{
     amount:${this.depense.montant},
-    description:"uhe",
   groupId:"${this.groupId}",
   userAmountsList:[
     ${this.weightquery}
@@ -345,6 +351,7 @@ export default {
   },
   mounted() {
     this.fetchMembersGroup();
+    console.log('groupe actif:', this.activeGroup);
   },
 
 };

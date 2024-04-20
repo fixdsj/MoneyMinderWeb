@@ -1,61 +1,62 @@
 <template>
   <div>
-    <div class="maincontainer">
+    <div class="maincontainer tab-content col-10">
       <div class="sidebar">
+        <h5 class="text-center">Groupes</h5>
         <div aria-label="Liste des groupes" class="btn-group-vertical " role="group">
-          <button v-if="groupes.length === 0" class="btn btn-secondary fst-italic" type="button">Aucun groupe</button>
-          <button v-for="groupe in groupes" :key="groupe.id" :class="{'activeGroup': groupe.name === activeGroup}"
-                  class="btn btn-secondary" type="button" @click="selectGroupe(groupe.name)">
-            {{ groupe.name }}: (Solde:{{ groupe.soldes }}€)
-          </button>
+          <a v-if="groupes.length === 0" class="btn btn-secondary fst-italic" type="button">Aucun groupe</a>
+          <a v-for="groupe in groupes" :key="groupe.id" :class="{'activeGroup': groupe.name === activeGroup.name}"
+             class="btn btn-secondary" type="button" @click="selectGroupe(groupe)">
+            {{ groupe.name }}: (Solde:{{ groupe.balance }}€)
+          </a>
           <a class="btn btn-secondary my-auto" href="/account" role="button">Créer un groupe</a>
         </div>
       </div>
 
       <div class="contentcontainer">
-        <ul class="nav nav-tabs">
-          <li class="nav-item">
-            <p :class="{ 'selectedtab': selectedTab === 'expenses' }" class="nav-link btn tabnav"
-               @click="selectTab('expenses')">
-              Dépenses</p>
+        <ul id="myTab" class="nav nav-tabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button id="expense-tab" aria-controls="expense-tab-pane" aria-selected="true" class="nav-link active"
+                    data-bs-target="#expense-tab-pane" data-bs-toggle="tab" role="tab" type="button">Dépenses
+            </button>
           </li>
-          <li class="nav-item">
-            <p :class="{ 'selectedtab': selectedTab === 'refunds' }" class="nav-link btn" @click="selectTab('refunds')">
-              Remboursements</p>
+          <li class="nav-item" role="presentation">
+            <button id="refund-tab" aria-controls="refund-tab-pane" aria-selected="false" class="nav-link"
+                    data-bs-target="#refund-tab-pane" data-bs-toggle="tab" role="tab" type="button">Remboursements
+            </button>
           </li>
-          <li class="nav-item ">
-            <p :class="{ 'selectedtab': selectedTab === 'history' }" class="nav-link btn tabnav"
-               @click="selectTab('history')">
-              Historique</p>
+          <li class="nav-item" role="presentation">
+            <button id="lasttransaction-tab" aria-controls="lasttransaction-tab-pane" aria-selected="false"
+                    class="nav-link" data-bs-target="#lasttransaction-tab-pane" data-bs-toggle="tab"
+                    role="tab" type="button">Historique
+            </button>
           </li>
-          <li class="nav-item ">
-            <p :class="{ 'selectedtab': selectedTab === 'details' }" class="nav-link btn tabnav"
-               @click="selectTab('details')">
-              Détails</p>
+          <li class="nav-item" role="presentation">
+            <button id="groupedetail-tab" aria-controls="groupedetail-tab-pane" aria-selected="false" class="nav-link"
+                    data-bs-target="#groupedetail-tab-pane" data-bs-toggle="tab" role="tab" type="button">Détails
+            </button>
           </li>
+
         </ul>
-
-        <div class="details">
-          <div class="d-flex align-items-center">
-            <img alt="Photo de groupe" class="rounded-circle mr-3"
-                 height="50" src="https://mehedihtml.com/chatbox/assets/img/user.png" width="50">
-            <h5 class="text-info mb-0">Groupe: {{ activeGroup }}</h5>
-          </div>
-
-
-          <hr class="my-4">
-
-          <div v-if="selectedTab === 'expenses'">
+        <div class="d-flex align-items-center">
+          <img alt="Photo de groupe" class="rounded-circle mr-3"
+               height="50" src="https://mehedihtml.com/chatbox/assets/img/user.png" width="50">
+          <h5 class="mb-0">{{ activeGroup.name }}</h5>
+        </div>
+        <div id="myTabContent" class="tab-content">
+          <div id="expense-tab-pane" aria-labelledby="expense-tab" class="tab-pane fade show active" role="tabpanel"
+               tabindex="0">
             <AppExpenses :activeGroup="activeGroup"/>
           </div>
-          <div v-if="selectedTab === 'refunds'">
+          <div id="refund-tab-pane" aria-labelledby="refund-tab" class="tab-pane fade" role="tabpanel" tabindex="0">
             <AppRefunds :activeGroup="activeGroup"/>
           </div>
-
-          <div v-if="selectedTab === 'history'">
+          <div id="lasttransaction-tab-pane" aria-labelledby="lasttransaction-tab" class="tab-pane fade" role="tabpanel"
+               tabindex="0">
             <AppLastTransactions/>
           </div>
-          <div v-if="selectedTab === 'details'">
+          <div id="groupedetail-tab-pane" aria-labelledby="groupedetail-tab" class="tab-pane fade" role="tabpanel"
+               tabindex="0">
             <AppGroupeDetails/>
           </div>
         </div>
@@ -75,26 +76,22 @@ export default {
   data() {
     return {
       groupes: [],
-      activeGroup: '',
-      selectedTab: 'expenses',
+      activeGroup: [],
     };
   },
   mounted() {
     this.fetchCurrentUserGroups();
-    this.activeGroup = this.groupes[0];
   },
+
   methods: {
     selectGroupe(groupe) {
       this.activeGroup = groupe;
-    },
-    selectTab(tab) {
-      this.selectedTab = tab;
     },
     async fetchCurrentUserGroups() {
       try {
         const axios = require('axios');
         const response = await axios.post('${process.env.VUE_APP_API_URL}', {
-          query: `{currentUser{userGroups{user{balance},group{name}}}}`
+          query: `{currentUser{userGroups{user{balance},group{name,groupImageUrl}}}}`
         }, {
           withCredentials: true,
           headers: {
@@ -107,10 +104,12 @@ export default {
           this.groupes = responseData.data.currentUser.userGroups.map((groupe) => {
             return {
               name: groupe.group.name,
-              soldes: groupe.user.balance,
+              balance: groupe.user.balance,
+              groupImageUrl: groupe.group.groupImageUrl,
             };
           });
-          this.activeGroup = this.groupes[0].name;
+          this.activeGroup = this.groupes[0];
+          console.log('Groupe actif:', this.activeGroup);
         }
       } catch (error) {
         console.error('Erreur:', error);
@@ -118,9 +117,6 @@ export default {
 
     },
 
-    async previewRefunds() {
-      console.log('Prévisualiser les remboursements');
-    },
   },
 };
 </script>
@@ -135,11 +131,6 @@ export default {
 }
 
 
-.details {
-  flex-grow: 1;
-  padding: 20px;
-}
-
 h1 {
   text-align: center;
   margin: 20px;
@@ -150,16 +141,4 @@ h1 {
   border: none;
 }
 
-.selectedtab {
-  background-color: var(--second-background-color);
-}
-
-.tabnav:hover {
-  background-color: var(--second-background-color);
-}
-
-.sidebar button:hover, .sidebar a:hover {
-  background-color: var(--second-background-color);
-  border: none;
-}
 </style>

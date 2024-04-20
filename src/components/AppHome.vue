@@ -5,7 +5,7 @@
       <p class="lead fw-normal">Simplifiez vos dépenses et gérer facilement les dépenses partagées avec vos amis et
         votre famille.</p>
       <a v-if="!isLogged" class="btn btn-secondary btn-lg px-4 gap-3" href="/register" type="button">S'inscrire</a>
-      <a v-if="isLogged" class="btn btn-secondary btn-lg px-4 gap-3" href="/groupes" type="button">Voir mes groupes</a>
+      <a v-if="isLogged" class="btn btn-secondary btn-lg px-4 gap-3" href="/groups" type="button">Voir mes groupes</a>
     </div>
     <div class="product-device shadow-sm d-none d-md-block"></div>
     <!--    <div class="product-device product-device-2 shadow-sm d-none d-md-block"></div>-->

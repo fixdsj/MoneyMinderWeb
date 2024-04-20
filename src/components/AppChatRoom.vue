@@ -30,7 +30,7 @@
                     </ul>
                   </div>
 
-                  <div class="modal-body">
+                  <div class="modal-body overflow-x-hidden">
                     <!-- chat-list -->
                     <div class="chat-lists">
                       <div id="myTabContent" class="tab-content">
@@ -69,9 +69,11 @@
                             <a v-for="group in groups" :key="group.name" class="d-flex align-items-center" role="button"
                                @click="handleCurrentChat('group',group)">
                               <div class="flex-shrink-0">
-                                <img :src="group.groupImageUrl ? group.groupImageUrl : 'https://avatar.iran.liara.run/username?username=' + group.name" alt="user img"
-                                     class="img-fluid img-thumbnail rounded-circle"
-                                     style="width: 50px; height: 50px;">
+                                <img
+                                    :src="group.groupImageUrl ? group.groupImageUrl : 'https://avatar.iran.liara.run/username?username=' + group.name"
+                                    alt="user img"
+                                    class="img-fluid img-thumbnail rounded-circle"
+                                    style="width: 50px; height: 50px;">
                               </div>
                               <div class="flex-grow-1 ms-3">
                                 <h3>{{ group.name }}</h3>
@@ -105,9 +107,11 @@
                       <div class="col-8">
                         <div class="d-flex align-items-center">
                           <div class="flex-shrink-0">
-                            <img :src="activeChat.avatarUrl ? activeChat.avatarUrl : 'https://avatar.iran.liara.run/username?username=' + activeChat.name" alt="user img"
-                                 class="img-fluid img-thumbnail rounded-circle"
-                                 style="width: 50px; height: 50px;">
+                            <img
+                                :src="activeChat.avatarUrl ? activeChat.avatarUrl : 'https://avatar.iran.liara.run/username?username=' + activeChat.name"
+                                alt="user img"
+                                class="img-fluid img-thumbnail rounded-circle"
+                                style="width: 50px; height: 50px;">
                           </div>
                           <div class="flex-shrink-0">
                           </div>
