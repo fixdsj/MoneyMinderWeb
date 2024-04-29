@@ -1,6 +1,5 @@
-import {createApp, provide, h} from 'vue';
-import {DefaultApolloClient} from '@vue/apollo-composable';
-import {ApolloClient, InMemoryCache, HttpLink} from "@apollo/client/core";
+//import ref for global variables
+import {createApp, h, ref} from 'vue';
 import App from './App.vue';
 import router from './router/index.js';
 
@@ -9,20 +8,15 @@ import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap"
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
-const cache = new InMemoryCache();
 
+//Import css personnalisé
+import './custom.css';
 
-const apolloclient = new ApolloClient({
-    cache,
-    link: new HttpLink({
-        uri: 'http://localhost:3000/graphql',
-    }),
-});
+export const isLogged = ref(false);
+export const currentUsername = ref("Guest");
+
 
 const app = createApp({
-    setup() {
-        provide(DefaultApolloClient, apolloclient);
-    },
     render() {
         return h(App);
     }

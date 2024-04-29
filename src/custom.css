@@ -1,0 +1,30 @@
+/* Couleur principale */
+.btn-primary, .accordion-button:not(.collapsed) {
+    background-color: #D4A373;
+    border-color: #D4A373;
+}
+
+
+.text-primary, .nav-link, .nav-link.active, .nav-link:hover {
+    color: #D4A373 !important;
+}
+
+
+/* Couleur secondaire */
+.btn-secondary {
+    background-color: #D4A373;
+    border-color: #D4A373;
+}
+
+/* Couleur de succès */
+.btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+/* Couleur de danger */
+.btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+

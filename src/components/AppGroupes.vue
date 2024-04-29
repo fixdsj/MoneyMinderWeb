@@ -1,47 +1,63 @@
 <template>
   <div>
-    <!--    <h1>Groupes</h1>-->
-    <div class="maincontainer">
+    <div class="maincontainer tab-content col-10">
       <div class="sidebar">
-
-        <ul>
-          <li>Mes groupes</li>
-          <li v-for="groupe in groupes" :key="groupe.id" @click="selectGroupe(groupe)"
-              :class="{'groupeactif': groupeActif && groupe.id === groupeActif.id}">
-            {{ groupe.nom }}
-          </li>
-          <li>
-            <router-link to="/account">Ajouter un groupe</router-link>
-          </li>
-        </ul>
+        <h5 class="text-center">Groupes</h5>
+        <div aria-label="Liste des groupes" class="btn-group-vertical " role="group">
+          <a v-if="groupes.length === 0" class="btn btn-secondary fst-italic" type="button">Aucun groupe</a>
+          <a v-for="groupe in groupes" :key="groupe.id" :class="{'activeGroup': groupe.name === activeGroup.name}"
+             class="btn btn-secondary" type="button" @click="selectGroupe(groupe)">
+            {{ groupe.name }}: (Solde:{{ groupe.balance }}€)
+          </a>
+          <a class="btn btn-secondary my-auto" href="/account" role="button">Créer un groupe</a>
+        </div>
       </div>
 
       <div class="contentcontainer">
-        <nav class="topbar">
-          <p class="tabmenu" @click="selectTab('messages')" :class="{ 'selectedtab': selectedTab === 'messages' }">
-            Messages</p>
-          <p class="tabmenu" @click="selectTab('depenses')" :class="{ 'selectedtab': selectedTab === 'depenses' }">
-            Dépenses/Remboursements</p>
-          <p class="tabmenu" @click="selectTab('historique')" :class="{ 'selectedtab': selectedTab === 'historique' }">
-            Historique</p>
-        </nav>
+        <ul id="myTab" class="nav nav-tabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button id="expense-tab" aria-controls="expense-tab-pane" aria-selected="true" class="nav-link active"
+                    data-bs-target="#expense-tab-pane" data-bs-toggle="tab" role="tab" type="button">Dépenses
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button id="refund-tab" aria-controls="refund-tab-pane" aria-selected="false" class="nav-link"
+                    data-bs-target="#refund-tab-pane" data-bs-toggle="tab" role="tab" type="button">Remboursements
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button id="lasttransaction-tab" aria-controls="lasttransaction-tab-pane" aria-selected="false"
+                    class="nav-link" data-bs-target="#lasttransaction-tab-pane" data-bs-toggle="tab"
+                    role="tab" type="button">Historique
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button id="groupedetail-tab" aria-controls="groupedetail-tab-pane" aria-selected="false" class="nav-link"
+                    data-bs-target="#groupedetail-tab-pane" data-bs-toggle="tab" role="tab" type="button">Détails
+            </button>
+          </li>
 
-        <div class="details">
-          <h2>{{ groupeActif?.nom }}</h2>
-          <p>{{ groupeActif?.description }}</p>
-
-          <div v-if="selectedTab === 'messages'">
-            <AppChat/>
+        </ul>
+        <div class="d-flex align-items-center">
+          <img alt="Photo de groupe" class="rounded-circle mr-3"
+               height="50" src="https://mehedihtml.com/chatbox/assets/img/user.png" width="50">
+          <h5 class="mb-0">{{ activeGroup.name }}</h5>
+        </div>
+        <div id="myTabContent" class="tab-content">
+          <div id="expense-tab-pane" aria-labelledby="expense-tab" class="tab-pane fade show active" role="tabpanel"
+               tabindex="0">
+            <AppExpenses :activeGroup="activeGroup"/>
           </div>
-
-          <div v-if="selectedTab === 'depenses'">
-            <h3>Dépenses</h3>
-            <AppDepensesEtRemboursements/>
+          <div id="refund-tab-pane" aria-labelledby="refund-tab" class="tab-pane fade" role="tabpanel" tabindex="0">
+            <AppRefunds :activeGroup="activeGroup"/>
           </div>
-
-          <div v-if="selectedTab === 'historique'">
-            <h3>Historique</h3>
+          <div id="lasttransaction-tab-pane" aria-labelledby="lasttransaction-tab" class="tab-pane fade" role="tabpanel"
+               tabindex="0">
             <AppLastTransactions/>
+          </div>
+          <div id="groupedetail-tab-pane" aria-labelledby="groupedetail-tab" class="tab-pane fade" role="tabpanel"
+               tabindex="0">
+            <AppGroupeDetails/>
           </div>
         </div>
       </div>
@@ -49,50 +65,58 @@
   </div>
 </template>
 <script>
-import AppChat from "@/components/AppChat.vue";
-import AppDepensesEtRemboursements from "@/components/AppDepensesEtRemboursements.vue";
+import AppRefunds from "@/components/AppRefunds.vue";
+import AppExpenses from "@/components/AppExpenses.vue";
 import AppLastTransactions from "@/components/AppLastTransactions.vue";
+import AppGroupeDetails from "@/components/AppGroupeDetails.vue";
 
 export default {
   name: 'VueGroupes',
-  components: {AppLastTransactions, AppChat, AppDepensesEtRemboursements},
+  components: {AppLastTransactions, AppRefunds, AppExpenses, AppGroupeDetails},
   data() {
     return {
-      groupes: [
-        {id: 1, nom: 'Groupe A', description: 'Description du Groupe A'},
-        {id: 2, nom: 'Groupe B', description: 'Description du Groupe B'},
-        {id: 3, nom: 'Groupe C', description: 'Description du Groupe C'},
-        {id: 4, nom: 'Groupe D', description: 'Description du Groupe D'},
-      ],
-      depenses: [
-        {id: 1, montant: 100, destinataire: 'Maurice'},
-        {id: 2, montant: 200, destinataire: 'Groupe B'},
-        {id: 3, montant: 300, destinataire: 'Groupe C'},
-        {id: 4, montant: 400, destinataire: 'Groupe D'}
-      ],
-      historique: [
-        {id: 1, action: 'Remboursement soirée', type: 'remboursement', date: '01/01/2021'},
-        {id: 2, action: 'Action 2', type: 'remboursement', date: '02/01/2021'},
-        {id: 3, action: 'Action 3', type: 'remboursement', date: '03/01/2021'},
-        {id: 4, action: 'Action 4', type: 'remboursement', date: '04/01/2021'}
-      ],
-      groupeActif: null,
-      selectedTab: 'depenses',
+      groupes: [],
+      activeGroup: [],
     };
   },
   mounted() {
-    // Sélection du premier groupe par défaut
-    if (this.groupes.length > 0) {
-      this.groupeActif = this.groupes[0];
-    }
+    this.fetchCurrentUserGroups();
   },
+
   methods: {
     selectGroupe(groupe) {
-      this.groupeActif = groupe;
+      this.activeGroup = groupe;
     },
-    selectTab(tab) {
-      this.selectedTab = tab;
+    async fetchCurrentUserGroups() {
+      try {
+        const axios = require('axios');
+        const response = await axios.post('${process.env.VUE_APP_API_URL}', {
+          query: `{currentUser{userGroups{user{balance},group{name,groupImageUrl}}}}`
+        }, {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json',
+            "Accept": "application/json",
+          },
+        });
+        const responseData = response.data;
+        if (responseData.data.currentUser.userGroups.length > 0) {
+          this.groupes = responseData.data.currentUser.userGroups.map((groupe) => {
+            return {
+              name: groupe.group.name,
+              balance: groupe.user.balance,
+              groupImageUrl: groupe.group.groupImageUrl,
+            };
+          });
+          this.activeGroup = this.groupes[0];
+          console.log('Groupe actif:', this.activeGroup);
+        }
+      } catch (error) {
+        console.error('Erreur:', error);
+      }
+
     },
+
   },
 };
 </script>
@@ -103,83 +127,18 @@ export default {
 }
 
 .contentcontainer {
-  background-color: #d6e1ea;
   flex-grow: 1;
 }
 
-.sidebar {
-  display: flex;
-  height: 70vh;
-  overflow-y: auto;
-}
-
-.topbar {
-  display: flex;
-  background-color: #f0f0f0;
-  justify-content: space-between;
-  text-decoration: none;
-  overflow-y: auto;
-  padding-right: 15px;
-  padding-left: 15px;
-}
-
-.sidebar ul ul {
-  list-style: none;
-  padding: 0;
-  text-decoration: none;
-}
-
-.sidebar ul li {
-  padding: 15px;
-  cursor: pointer;
-  text-align: center;
-  text-decoration: none;
-}
-
-
-.sidebar ul li:hover {
-  background-color: var(--second-button-color);
-}
-
-.sidebar a {
-  padding: 10px;
-  cursor: pointer;
-  display: block;
-  text-align: center;
-  text-decoration: none;
-  color: inherit;
-}
-
-.tabmenu {
-  cursor: pointer;
-  text-decoration: none;
-  color: inherit;
-  padding: 10px 20px 10px 20px;
-  display: block;
-  text-align: center;
-}
-
-.tabmenu:hover {
-  background-color: var(--second-button-color);
-}
-
-.details {
-  flex-grow: 1;
-  padding: 20px;
-}
 
 h1 {
   text-align: center;
   margin: 20px;
 }
 
-.groupeactif {
-  background-color: var(--second-button-color);
-  border-right: solid 2px #721c24;
+.activeGroup {
+  background-color: var(--second-background-color);
+  border: none;
 }
 
-.selectedtab {
-  background-color: var(--second-button-color);
-  border-bottom: solid 2px #721c24;
-}
 </style>

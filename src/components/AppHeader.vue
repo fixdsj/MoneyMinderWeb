@@ -1,40 +1,39 @@
 <template>
-  <!--  <div class="header-container">
-      <h1>Money Minder</h1>
-      <nav>
-        <label for="toggle" @click="toggleMenu" >☰</label>
-        <div class="main_pages" :class="{ 'openmenu': menuOpen }">
-          <router-link class="menu" to="/" >Accueil</router-link>
-          <router-link class="menu" to="/groupes" >Groupes</router-link>
-          <router-link class="menu" to="/notifications" >Notifications</router-link>
-          <router-link class="menu" v-if="isAuthenticated" to="/account" @click="closeMenu">Mon compte</router-link>
-          <router-link class="menu" v-if="!isAuthenticated"  to="/login">Connexion / Inscription</router-link>
-          <button class="menu" v-else @click="logout">Déconnexion</button>
-        </div>
-      </nav>
-    </div>-->
-  <div class="container">
-    <header
-        class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
-      <div class="col-md-3 mb-2 mb-md-0">
-        <a href="/" class="d-inline-flex link-body-emphasis text-decoration-none">
-          <i class="bi bi-cash-coin" style="font-size: 2rem;">
-            <use xlink:href="/"/>
-          </i>
-        </a>
-      </div>
 
-      <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-        <li><a href="/" class="nav-link px-2">Accueil</a></li>
-        <li><a href="/groupes" class="nav-link px-2">Groupes</a></li>
-        <li><a href="/notifications" class="nav-link px-2">Notifications</a></li>
-        <li><a href="/account" class="nav-link px-2">Mon Compte</a></li>
+  <div class="container">
+    <header class="d-flex flex-wrap align-items-center justify-content-between py-3 mb-4 border-bottom">
+
+      <ul class="nav col-md-3 col-md-auto mb-2 mb-md-0">
+        <li><a class="nav-link px-2" href="/"> <i class="bi bi-cash-coin" style="font-size: 2rem;"></i></a></li>
+        <li v-if="isLogged"><a class="nav-link px-2" href="/groups"><i class="bi bi-people-fill"
+                                                                       style="color: var(--button-color);font-size: 2rem;"></i></a>
+        </li>
+        <li v-if="isLogged"><a class="nav-link px-2" href="/messages"><i class="bi bi-chat-left-text-fill"
+                                                                         style="color: var(--button-color);font-size: 2rem;"></i></a>
+        </li>
       </ul>
 
-      <div class="col-md-3 text-end">
-        <a class="btn btn-outline-primary me-2" href="/login" role="button">Login</a>
-        <!--        <button type="button" class="btn btn-primary" href="/register">Sign-up</button>-->
-        <a class="btn btn-primary" href="/register" role="button">Sign-up</a>
+      <div v-if="!isLogged" class="col-md-3 text-end">
+        <a class="btn btn-outline-primary me-2" href="/login" role="button">Se connecter</a>
+        <a class="btn btn-primary" href="/register" role="button">S'inscrire</a>
+      </div>
+
+      <div v-if="isLogged" class="col-md-3 text-end">
+        <div class="dropdown">
+          <a id="dropdownMenuLink" aria-expanded="false" class="btn btn-primary dropdown-toggle"
+             data-bs-toggle="dropdown"
+             href="#" role="button">
+            {{ currentUsername }} <i class="bi bi-person-fill"></i>
+          </a>
+
+          <ul aria-labelledby="dropdownMenuLink" class="dropdown-menu">
+            <li><a class="dropdown-item" href="/account">Mon compte</a></li>
+            <li>
+              <button class="dropdown-item" @click="logout">Déconnexion</button>
+            </li>
+          </ul>
+
+        </div>
       </div>
     </header>
   </div>
@@ -42,25 +41,48 @@
 </template>
 
 <script>
+import {currentUsername, isLogged} from "@/main";
 
 export default {
   name: 'AppHeader',
   data() {
     return {
-      menuOpen: false
+      isLogged: isLogged,
+      currentUsername: currentUsername,
     };
   },
-  mounted() {
-    this.menuOpen = false;
-  },
   methods: {
-    toggleMenu() {
-      this.menuOpen = !this.menuOpen;
-    },
+    async logout() {
+      console.log('Déconnexion');
+      const axios = require('axios');
+      const response = await axios.post('${process.env.VUE_APP_API_URL}', {
+        query: `mutation{signOut}`
+      }, {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json',
+          "Accept": "application/json",
+        },
+      });
+      const responseData = response.data;
+      console.log('Réponse:', responseData);
+      if (responseData.data) {
+        this.isLogged = false;
+        this.currentUsername = 'Guest';
+        this.$router.push('/');
+      }
+      if (responseData.errors) {
+        console.log("erreur" + responseData.errors.message);
+      }
+
+    }
   }
 };
 </script>
 
 <style scoped>
-
+.container {
+  background: transparent;
+  backdrop-filter: blur(10px);
+}
 </style>

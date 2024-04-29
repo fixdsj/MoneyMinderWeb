@@ -1,19 +1,37 @@
 <template>
-  <div class="transaction-list">
-    <ul>
-      <li v-for="transaction in transactions" :key="transaction.id"
-          :class="{ 'remboursement': transaction.type === 'remboursement', 'depense': transaction.type === 'depense' }">
-        <div class="transaction-item">
-          <p class="author">{{ transaction.author }}</p>
-          <p :style="{ color: transaction.type === 'depense' ? 'red' : 'green' }" class="montant">{{
-              transaction.montant
-            }}</p>
-          <p class="date">{{ formatDate(transaction.date) }}</p>
-          <p class="type">{{ formatType(transaction.type) }}</p>
+
+  <div class="accordion">
+    <div v-for="transaction in transactions" :key="transaction.id" class="accordion-item">
+      <h2 class="accordion-header">
+        <button aria-controls="panelsStayOpen-collapse{{transaction.id}}" aria-expanded="true" class="accordion-button"
+                data-bs-target="#panelsStayOpen-collapse{{transaction.id}}" data-bs-toggle="collapse"
+                type="button">
+          {{ transaction.author }} - {{ transaction.montant }}€ - {{ transaction.date }} -
+          {{ formatType(transaction.type) }}&nbsp; <span class="badge bg-secondary"
+                                                         style="text-transform: uppercase">{{
+            transaction.categorie
+          }}</span>
+        </button>
+      </h2>
+      <div id="panelsStayOpen-collapse{{transaction.id}}" aria-labelledby="panelsStayOpen-heading{{transaction.id}}"
+           class="accordion-collapse collapse">
+        <div class="accordion-body">
+          Description: {{ transaction.description }}
+          <div class="text-end">
+            Télécharger le justificatif:
+            <button class="btn"><i class="bi bi-file-earmark-arrow-down"></i></button>
+          </div>
+          Membres concernés: {{ transaction.membresconcernes.join(', ') }}
+
+          <div class="text-end">
+            Catégorie: {{ transaction.categorie }}
+          </div>
         </div>
-      </li>
-    </ul>
+      </div>
+    </div>
+
   </div>
+
 </template>
 
 <script>
@@ -22,18 +40,47 @@ export default {
   data() {
     return {
       transactions: [
-        {author: 'Pierre', montant: 100, date: '12:00 PM', type: 'remboursement'},
-        {author: 'Pierre', montant: 200, date: '12:05 PM', type: 'depense'},
-        {author: 'Pierre', montant: 300, date: '12:10 PM', type: 'remboursement'},
-        {author: 'Pierre', montant: 400, date: '12:15 PM', type: 'depense'},
+        {
+          author: 'Pierre',
+          montant: 100,
+          date: '12/03/2002',
+          type: 'remboursement',
+          description: 'Remboursement soirée',
+          membresconcernes: ['Pierre', 'Paul', 'Jacques'],
+          categorie: 'Sorties'
+        },
+        {
+          author: 'Pierre',
+          montant: 200,
+          date: '05/12/2021',
+          type: 'depense',
+          description: 'Achat de matériel',
+          membresconcernes: ['Pierre', 'Paul', 'Jacques'],
+          categorie: 'Divers'
+        },
+        {
+          author: 'Pierre',
+          montant: 300,
+          date: '18/04/2021',
+          type: 'remboursement',
+          description: 'Remboursement soirée',
+          membresconcernes: ['Pierre', 'Paul', 'Jacques'],
+          categorie: 'Sorties'
+        },
+        {
+          author: 'Pierre',
+          montant: 400,
+          date: '13/09/2011',
+          type: 'depense',
+          description: 'Achat de matériel',
+          membresconcernes: ['Pierre', 'Paul', 'Jacques'],
+          categorie: 'Divers'
+        },
       ],
     };
   },
   methods: {
-    formatDate(dateString) {
-      // Vous pouvez utiliser une bibliothèque comme moment.js pour un formatage plus avancé
-      return new Date(dateString).toLocaleTimeString();
-    },
+
     formatType(type) {
       // Mettez en majuscule la première lettre du type
       return type.charAt(0).toUpperCase() + type.slice(1);
@@ -43,46 +90,5 @@ export default {
 </script>
 
 <style scoped>
-.transaction-list {
-  margin: 20px;
-}
 
-.transaction-list li {
-  list-style-type: none;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  overflow: hidden;
-  margin-bottom: 20px;
-}
-
-.transaction-item {
-  padding: 15px;
-}
-
-.author {
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-
-.montant {
-  font-size: 24px;
-  margin-bottom: 10px;
-}
-
-.date {
-  color: #555;
-  margin-bottom: 5px;
-}
-
-.type {
-  text-transform: capitalize;
-}
-
-.remboursement {
-  background-color: #d3f0d2;
-}
-
-.depense {
-  background-color: #f8d7da;
-}
 </style>
