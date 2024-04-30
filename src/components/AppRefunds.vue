@@ -45,7 +45,7 @@
 export default {
   name: 'AppRefunds',
   props: {
-    activeGroup: String,
+    activeGroup: Object
   },
   data() {
     return {
@@ -75,7 +75,6 @@ export default {
         });
         const responseData = response.data;
         if (responseData) {
-          console.log('response data:', responseData);
           this.groupExpenses = responseData.data.groupById.expenses;
           console.log('group expenses:', this.groupExpenses);
         }
@@ -98,9 +97,7 @@ export default {
         });
         const responseData = response.data;
         if (responseData.data) {
-          console.log('response data:', responseData);
           this.userExpenses = responseData.data.currentUser.userExpenses;
-          console.log('user expenses:', this.userExpenses);
         }
         if (responseData.errors) {
           console.log('Erreur dans la réponse : ' + responseData.errors[0].message);

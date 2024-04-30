@@ -1,13 +1,13 @@
 <template>
   <div>
-    <div class="maincontainer tab-content col-10">
+    <div v-if="groups.length > 0 && activeGroup.id" class="maincontainer tab-content">
       <div class="sidebar">
         <h5 class="text-center">Groupes</h5>
         <div aria-label="Liste des groupes" class="btn-group-vertical " role="group">
-          <a v-if="groupes.length === 0" class="btn btn-secondary fst-italic" type="button">Aucun groupe</a>
-          <a v-for="groupe in groupes" :key="groupe.id" :class="{'activeGroup': groupe.name === activeGroup.name}"
-             class="btn btn-secondary" type="button" @click="selectGroupe(groupe)">
-            {{ groupe.name }}: (Solde:{{ groupe.balance }}€)
+          <a v-if="groups.length === 0" class="btn btn-secondary fst-italic" type="button">Aucun groupe</a>
+          <a v-for="group in groups" :key="group.id" :class="{'activeGroup': group.name === activeGroup.name}"
+             class="btn btn-secondary" type="button" @click="selectGroup(group)">
+            {{ group.name }}: (Solde:{{ group.balance }}€)
           </a>
           <a class="btn btn-secondary my-auto" href="/account" role="button">Créer un groupe</a>
         </div>
@@ -39,10 +39,14 @@
 
         </ul>
         <div class="d-flex align-items-center">
-          <img alt="Photo de groupe" class="rounded-circle mr-3"
-               height="50" src="https://mehedihtml.com/chatbox/assets/img/user.png" width="50">
+          <img
+              :src="activeGroup.groupImageUrl ? activeGroup.groupImageUrl : 'https://avatar.iran.liara.run/username?username=' + activeGroup.name"
+              alt="user img"
+              class="img-fluid img-thumbnail rounded-circle"
+              style="width: 50px; height: 50px;">
           <h5 class="mb-0">{{ activeGroup.name }}</h5>
         </div>
+        <hr/>
         <div id="myTabContent" class="tab-content">
           <div id="expense-tab-pane" aria-labelledby="expense-tab" class="tab-pane fade show active" role="tabpanel"
                tabindex="0">
@@ -53,15 +57,16 @@
           </div>
           <div id="lasttransaction-tab-pane" aria-labelledby="lasttransaction-tab" class="tab-pane fade" role="tabpanel"
                tabindex="0">
-            <AppLastTransactions/>
+            <AppLastTransactions :activeGroup="activeGroup"/>
           </div>
           <div id="groupedetail-tab-pane" aria-labelledby="groupedetail-tab" class="tab-pane fade" role="tabpanel"
                tabindex="0">
-            <AppGroupeDetails/>
+            <AppGroupeDetails :activeGroup="activeGroup"/>
           </div>
         </div>
       </div>
     </div>
+
   </div>
 </template>
 <script>
@@ -75,7 +80,7 @@ export default {
   components: {AppLastTransactions, AppRefunds, AppExpenses, AppGroupeDetails},
   data() {
     return {
-      groupes: [],
+      groups: [],
       activeGroup: [],
     };
   },
@@ -84,14 +89,14 @@ export default {
   },
 
   methods: {
-    selectGroupe(groupe) {
-      this.activeGroup = groupe;
+    selectGroup(group) {
+      this.activeGroup = group;
     },
     async fetchCurrentUserGroups() {
       try {
         const axios = require('axios');
         const response = await axios.post('${process.env.VUE_APP_API_URL}', {
-          query: `{currentUser{userGroups{user{balance},group{name,groupImageUrl}}}}`
+          query: `{currentUser{userGroups{user{balance},group{name,id,groupImageUrl}}}}`
         }, {
           withCredentials: true,
           headers: {
@@ -101,19 +106,19 @@ export default {
         });
         const responseData = response.data;
         if (responseData.data.currentUser.userGroups.length > 0) {
-          this.groupes = responseData.data.currentUser.userGroups.map((groupe) => {
+          this.groups = responseData.data.currentUser.userGroups.map((groupe) => {
             return {
               name: groupe.group.name,
+              id: groupe.group.id,
               balance: groupe.user.balance,
               groupImageUrl: groupe.group.groupImageUrl,
             };
           });
-          this.activeGroup = this.groupes[0];
-          console.log('Groupe actif:', this.activeGroup);
         }
       } catch (error) {
         console.error('Erreur:', error);
       }
+      this.activeGroup = this.groups[0];
 
     },
 
