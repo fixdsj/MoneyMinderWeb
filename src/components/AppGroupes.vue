@@ -7,7 +7,7 @@
           <a v-if="groups.length === 0" class="btn btn-secondary fst-italic" type="button">Aucun groupe</a>
           <a v-for="group in groups" :key="group.id" :class="{'activeGroup': group.name === activeGroup.name}"
              class="btn btn-secondary" type="button" @click="selectGroup(group)">
-            {{ group.name }}: (Solde:{{ group.balance }}€)
+            {{ group.name }} ({{ group.balance }}€)
           </a>
           <a class="btn btn-secondary my-auto" href="/account" role="button">Créer un groupe</a>
         </div>

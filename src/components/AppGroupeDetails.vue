@@ -1,25 +1,40 @@
 <template>
   <div>
-    <p>{{ groupe.description }}</p>
+    <p>{{ group.description }}</p>
   </div>
-  <div class="mb-1 d-flex align-items-center">
-    <label class="form-label" for="formFile">Changer la photo de profil :</label>
+  <div class="mb-3 d-flex align-items-center">
+    <label class="form-label me-2" for="formFile">Changer la photo de profil :</label>
     <input id="formFile" accept="image/png, image/jpeg" class="form-control form-control-sm" type="file"
            @change="pictureToUpload = $event.target.files[0]">
-    <button v-if="pictureToUpload" class="btn btn-info" @click="uploadPicture">Changer</button>
+    <button v-if="pictureToUpload" class="btn btn-info ms-2" @click="uploadPicture">Changer</button>
   </div>
-  <!--  <ul class="list-group">
-      <li v-for="membre in groupe.member" :key="membre.id" class="list-group-item">
-        <p>{{ membre.prenom }} {{ membre.nom }}</p>
-        <p>Email: {{ membre.email }}</p>
-        <p>Dernière transaction: {{ membre.lasttransaction }}</p>
-      </li>
-    </ul>-->
-  <!--  <div class="progress">
-      <div class="progress-bar bg-success" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="50" aria-valuemax="100"></div>
-    </div>-->
 
+  <div class="container">
+    <div class="row">
+      <div v-for="member in group.members" :key="member.id" class="col-md-4 mb-3">
+        <div class="card">
+          <div class="card-body d-flex align-items-center">
+            <img
+                :src="member.avatarUrl ? member.avatarUrl : 'https://avatar.iran.liara.run/username?username=' + member.userName"
+                alt="user img"
+                class="img-fluid img-thumbnail rounded-circle me-3"
+                style="width: 50px; height: 50px;">
+
+            <div>
+              <h5 class="card-title mb-1">{{ member.userName }}</h5>
+              <p class="card-text mb-1">
+                {{ member.lasttransaction ? 'Dernière transaction: ' + member.lasttransaction : 'Pas de transaction' }}
+              </p>
+              <p class="card-text mb-1">Email: {{ member.email }}</p>
+              <p class="card-text mb-0">Solde: {{ member.balance }}€</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
+
 <script>
 import axios from "axios";
 
@@ -87,10 +102,15 @@ export default {
         const response = await axios.post('${process.env.VUE_APP_API_URL}', {
           query: `query {
   groups(where: { name: { contains: "${this.activeGroup.name}" } }) {
-  description
+    description
     userGroups {
       joinedAt
       user {
+        paymentsToBeReceived {
+          amountToPay
+        }
+        avatarUrl
+        email
         userName
         balance
       }
@@ -110,13 +130,16 @@ export default {
         if (responseData.data) {
           console.log('responseData.data.groups[0].description', responseData.data.groups[0].description);
           this.group.description = responseData.data.groups[0].description;
-          /*this.group.members = responseData.data.groups[0].userGroups.map((userGroup) => {
+          this.group.members = responseData.data.groups[0].userGroups.map((userGroup) => {
             return {
               userName: userGroup.user.userName,
               balance: userGroup.user.balance,
               joinedAt: new Date(userGroup.joinedAt),
+              avatarUrl: userGroup.user.avatarUrl,
+              email: userGroup.user.email,
+              paymentsToBeReceived: userGroup.user.paymentsToBeReceived,
             };
-          });*/
+          });
         }
         if (responseData.errors) {
           console.log("erreur" + responseData.errors.message);
@@ -129,7 +152,12 @@ export default {
   },
   mounted() {
     this.fetchGroupDetails();
-  }
+  },
+  watch: {
+    activeGroup() {
+      this.fetchGroupDetails();
+    },
+  },
 };
 
 </script>

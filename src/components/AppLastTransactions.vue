@@ -1,5 +1,11 @@
 <template>
 
+  <template v-if="transactions.length === 0">
+    <div class="text-center">
+      <p class="text-center">Aucune transaction</p>
+      <i class="bi bi-check-circle" style="font-size: 60px; color:green"></i>
+    </div>
+  </template>
   <div id="accordionExample" class="accordion">
     <div v-for="(transaction, index) in transactions" :key="index" class="accordion-item">
       <h2 :id="'heading' + index" class="accordion-header">
@@ -134,6 +140,11 @@ export default {
   },
   mounted() {
     this.fetchLastTransactions();
+  },
+  watch: {
+    activeGroup() {
+      this.fetchLastTransactions();
+    }
   }
 };
 </script>
