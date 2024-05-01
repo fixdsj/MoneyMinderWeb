@@ -9,8 +9,9 @@
   <div id="accordionExample" class="accordion">
     <div v-for="(transaction, index) in transactions" :key="index" class="accordion-item">
       <h2 :id="'heading' + index" class="accordion-header">
-        <button :aria-controls="'collapse' + index" :data-bs-target="'#collapse' + index" aria-expanded="false"
-                class="accordion-button collapsed notRefunded" data-bs-toggle="collapse" type="button">
+        <button :aria-controls="'collapse' + index" :class="transaction.paidAt ? 'refunded' : 'notRefunded'" :data-bs-target="'#collapse' + index"
+                aria-expanded="false" class="accordion-button collapsed"
+                data-bs-toggle="collapse" type="button">
           {{ transaction.createdBy }} - {{ transaction.amount }}€ -
           {{ transaction.date.toLocaleString('fr-FR', dateOptions) }} &nbsp;
           <span class="badge bg-secondary"
@@ -23,7 +24,7 @@
            data-bs-parent="#accordionExample">
 
         <div class="accordion-body container">
-          <div class="d-flex justify-content-between"> <!-- Ajout de justify-content-between -->
+          <div class="d-flex justify-content-between">
             <p><strong>Description:</strong> {{ transaction.description }}</p>
             <div class="text-end d-flex">
               <p class="text-end"><strong>Télécharger le justificatif:</strong></p>
@@ -45,10 +46,15 @@
             </div>
           </div>
           <hr>
-          <div class="d-flex justify-content-between"> <!-- Ajout de justify-content-between -->
-            <p><strong>Membres concernés:</strong> {{ transaction.membresconcernes.join(', ') }}</p>
+          <div class="d-flex justify-content-between">
+            <p>
+              <strong>Membres concernés:</strong>
+              <span :class="transaction.membresconcernes.every(member => member.paidAt) ? 'text-success' : 'text-danger'">{{ transaction.membresconcernes.map(member => member.userName).join(', ') }}</span>
+            </p>
+
+
             <div>
-              <p class="text-end"><strong>Catégorie:</strong> {{ transaction.categorie }}</p> <!-- Ajout de text-end -->
+              <p class="text-end"><strong>Catégorie:</strong> {{ transaction.categorie }}</p>
             </div>
           </div>
         </div>
@@ -60,6 +66,9 @@
 </template>
 
 <script>
+import {currentUsername} from "@/main";
+
+
 export default {
   name: 'AppLastTransactions',
   props: {
@@ -67,6 +76,7 @@ export default {
   },
   data() {
     return {
+      currentUsername: currentUsername,
       dateOptions: {
         weekday: 'long',
         year: 'numeric',
@@ -123,9 +133,13 @@ export default {
               date: new Date(transaction.createdAt),
               type: 'remboursement',
               description: transaction.description,
-              membresconcernes: transaction.userExpenses.map((userExpense) => userExpense.user.userName),
+              membresconcernes: transaction.userExpenses.map((userExpense) => ({
+                userName: userExpense.user.userName,
+                paidAt: userExpense.paidAt
+              })),
               categorie: 'Sorties',
               id: transaction.id,
+
             };
           })
         }

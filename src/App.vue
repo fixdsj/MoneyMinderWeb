@@ -41,12 +41,12 @@ export default {
           },
         });
         const responseData = response.data;
-        if (responseData.data) {
+        if (responseData.data && responseData.data.currentUser) {
           currentUsername.value = responseData.data.currentUser.userName;
           isLoggedRef.value = true;
         }
-        if (responseData.errors) {
-          console.log("erreur" + responseData.errors.message);
+        if (responseData.errors && responseData.errors.message!==undefined) {
+          console.log("erreur " + responseData.errors.message);
           isLoggedRef.value = false;
         }
 

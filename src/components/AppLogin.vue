@@ -11,9 +11,15 @@
         <input id="username" v-model="username" class="form-control" placeholder="Votre pseudo" required type="text">
         <label for="username">Nom d'utilisateur</label>
       </div>
-      <div class="form-floating mb-3">
-        <input id="password" v-model="password" class="form-control" placeholder="Password" required type="password">
-        <label for="floatingPassword">Mot de passe</label>
+
+      <div class="form-floating mb-3 position-relative">
+        <input id="password" v-model="password" :type="showPassword ? 'text' : 'password'" class="form-control pr-5"
+               placeholder="Password" required>
+        <label for="password">Mot de passe</label>
+        <button class="btn position-absolute end-0 translate-middle-y" style="top: 50%;" type="button"
+                @click="toggleShowPassword">
+          <i :class="showPassword ?  'bi-eye-slash-fill':'bi-eye-fill'"></i>
+        </button>
       </div>
       <div class="form-check mb-3">
         <input id="rememberPassword" v-model="rememberPassword" class="form-check-input" type="checkbox" value="">
@@ -37,6 +43,7 @@
   </div>
 </template>
 
+
 <script>
 import {isLogged} from "@/main";
 import axios from "axios";
@@ -49,6 +56,7 @@ export default {
       password: '',
       rememberPassword: true,
       errors: [],
+      showPassword: false,
     };
   },
   methods: {
@@ -70,7 +78,6 @@ export default {
               succeeded
               isLockedOut
               isNotAllowed
-              requiresTwoFactor
               }
           }
         `,
@@ -101,6 +108,9 @@ export default {
 
       }
     },
+    toggleShowPassword() {
+      this.showPassword = !this.showPassword;
+    },
 
   }
 
@@ -116,5 +126,6 @@ export default {
 .btn-google:hover {
   background-color: #d73e2b;
 }
+
 
 </style>
