@@ -171,12 +171,6 @@ export default {
   methods: {
     async submitDepense() {
       try {
-        console.log('montant:', this.depense.montant);
-        console.log('description:', this.depense.description);
-        console.log('selectedsUsers:', this.selectedsUsers);
-        console.log('activeGroup:', this.activeGroup.id);
-        console.log('weightquery:', this.weightquery);
-
         this.weightquery = this.selectedsUsers.map((user) => {
           if (user.weight !== undefined) {
             return `{key:"${user.id}",value:${user.weight}}`;
@@ -216,7 +210,6 @@ export default {
         if (responseData.data) {
           this.alertMessage = 'Dépense créée avec succès';
           this.currentStep++;
-          //TODO: Fix retour id dépense
           this.expenseId = responseData.data.addUserExpense[0].expense.id;
         }
 

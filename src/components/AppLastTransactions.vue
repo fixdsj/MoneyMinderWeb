@@ -9,7 +9,7 @@
   <div id="accordionExample" class="accordion">
     <div v-for="(transaction, index) in transactions" :key="index" class="accordion-item">
       <h2 :id="'heading' + index" class="accordion-header">
-        <button :aria-controls="'collapse' + index" :class="transaction.paidAt ? 'refunded' : 'notRefunded'" :data-bs-target="'#collapse' + index"
+        <button :aria-controls="'collapse' + index" :data-bs-target="'#collapse' + index"
                 aria-expanded="false" class="accordion-button collapsed"
                 data-bs-toggle="collapse" type="button">
           {{ transaction.createdBy }} - {{ transaction.amount }}€ -
@@ -27,8 +27,23 @@
           <div class="d-flex justify-content-between">
             <p><strong>Description:</strong> {{ transaction.description }}</p>
             <div class="text-end d-flex">
-              <p class="text-end"><strong>Télécharger le justificatif:</strong></p>
-              <button class="btn btn-primary"><i class="bi bi-file-earmark-arrow-down"></i></button>
+              <p class="text-end "><strong>Télécharger le justificatif:</strong></p>
+              <i class="bi bi-file-earmark-arrow-down" type="button" @click="downloadProof(transaction)"></i>
+            </div>
+          </div>
+          <hr>
+          <div class="d-flex justify-content-between">
+            <p>
+              <strong>Membres concernés: </strong>
+              <span
+                  :class="transaction.membresconcernes.every(member => member.paidAt) ? 'text-success' : 'text-danger'">{{
+                  transaction.membresconcernes.map(member => member.userName).join(', ')
+                }}</span>
+            </p>
+
+
+            <div>
+              <p class="text-end"><strong>Catégorie:</strong> {{ transaction.categorie }}</p>
             </div>
           </div>
           <hr>
@@ -36,25 +51,12 @@
             <div class="col">
               <p><strong>Changer le justificatif:</strong></p>
               <div class="input-group">
-                <input id="inputGroupFile04" accept="image/png, image/jpeg, image/jpg, application/pdf"
-                       aria-describedby="inputProof" aria-label="Upload"
-                       class="form-control" type="file">
-                <button id="inputProof" class="btn btn-outline-secondary" type="button" @click="uploadProof(index)">
+                <input class="form-control" type="file" @change="justificatif = $event.target.files[0]">
+                <button id="inputProof" class="btn btn-outline-secondary" type="button"
+                        @click="uploadProof(transaction.id)">
                   Changer
                 </button>
               </div>
-            </div>
-          </div>
-          <hr>
-          <div class="d-flex justify-content-between">
-            <p>
-              <strong>Membres concernés:</strong>
-              <span :class="transaction.membresconcernes.every(member => member.paidAt) ? 'text-success' : 'text-danger'">{{ transaction.membresconcernes.map(member => member.userName).join(', ') }}</span>
-            </p>
-
-
-            <div>
-              <p class="text-end"><strong>Catégorie:</strong> {{ transaction.categorie }}</p>
             </div>
           </div>
         </div>
@@ -85,15 +87,74 @@ export default {
         hour: '2-digit',
         minute: '2-digit',
       },
+      justificatif: null,
       transactions: [],
     };
   },
   methods: {
-    async uploadProof() {
+    async uploadProof(transactionId) {
       console.log('Upload du justificatif');
+      try {
+        const axios = require('axios');
+        const response = await axios.post('${process.env.VUE_APP_API_URL}', {
+          query: `mutation{uploadExpenseJustification(expenseId: "${transactionId}")}`
+        }, {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+        });
+        const responseData = response.data;
+        if (responseData.data.uploadExpenseJustification) {
+          const uploadUrl = responseData.data.uploadExpenseJustification;
+          const formData = new FormData();
+          formData.append('file', this.justificatif);
+          const uploadResponse = await axios.post(uploadUrl, formData);
+          console.log('uploadResponse', uploadResponse);
+        }
+      } catch (error) {
+        console.error('Erreur:', error);
+      }
+
     },
-    async downloadProof() {
+
+    async downloadProof(transaction) {
       console.log('Téléchargement du justificatif');
+      try {
+        const axios = require('axios');
+        const response = await axios.post('${process.env.VUE_APP_API_URL}', {
+          query: `mutation{expenseJustification(expenseId: "${transaction.id}")} `
+        }, {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json',
+            "Accept": "application/json",
+          },
+        });
+        const responseData = response.data;
+        if (responseData.data && responseData.data.expenseJustification) {
+          const downloadUrl = responseData.data.expenseJustification;
+          const downloadResponse = await axios.get(downloadUrl, {
+            responseType: 'blob',
+          });
+          const url = window.URL.createObjectURL(new Blob([downloadResponse.data]));
+          const link = document.createElement('a');
+          link.href = url;
+          link.setAttribute('download', `justificatif du ${transaction.date.toLocaleString('fr-FR', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+          })}.pdf`);
+          document.body.appendChild(link);
+          link.click();
+        }
+        if (responseData.errors) {
+          console.log("erreur" + responseData.errors.message);
+        }
+      } catch (error) {
+        console.error('Erreur:', error);
+      }
     },
     async fetchLastTransactions() {
       try {

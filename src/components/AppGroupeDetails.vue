@@ -57,7 +57,6 @@ export default {
         minute: '2-digit',
       },
 
-      //Données de test pour le groupe
       group: {},
     };
   },
@@ -86,9 +85,7 @@ export default {
           formData.append('file', this.pictureToUpload);
 
           const uploadResponse = await axios.post(uploadUrl, formData);
-
-          // Gérer la réponse de l'upload
-          console.log('Réponse de l\'upload:', uploadResponse.data);
+          console.log('uploadResponse', uploadResponse);
 
           this.pictureToUpload = null;
         }
@@ -125,10 +122,8 @@ export default {
             "Accept": "application/json",
           },
         });
-        console.log('response', response);
         const responseData = response.data;
         if (responseData.data) {
-          console.log('responseData.data.groups[0].description', responseData.data.groups[0].description);
           this.group.description = responseData.data.groups[0].description;
           this.group.members = responseData.data.groups[0].userGroups.map((userGroup) => {
             return {
