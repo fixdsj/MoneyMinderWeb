@@ -47,17 +47,10 @@
             </div>
           </div>
           <hr>
-          <div class="row">
-            <div class="col">
-              <p><strong>Changer le justificatif:</strong></p>
-              <div class="input-group">
-                <input class="form-control" type="file" @change="justificatif = $event.target.files[0]">
-                <button id="inputProof" class="btn btn-outline-secondary" type="button"
-                        @click="uploadProof(transaction.id)">
-                  Changer
-                </button>
-              </div>
-            </div>
+          <div class="mb-3 d-flex align-items-center">
+            <label class="form-label" for="formFile"><strong>Changer le justificatif:</strong></label>
+            <input class="form-control form-control-sm" id="formFile" type="file" accept="image/png, image/jpeg, image/jpg,application/pdf" @change="justificatif = $event.target.files[0]">
+            <button v-if="justificatif" class="btn btn-info ms-2" @click="uploadProof(transaction.id)">Changer</button>
           </div>
         </div>
       </div>
@@ -112,6 +105,7 @@ export default {
           formData.append('file', this.justificatif);
           const uploadResponse = await axios.post(uploadUrl, formData);
           console.log('uploadResponse', uploadResponse);
+          this.justificatif = null;
         }
       } catch (error) {
         console.error('Erreur:', error);

@@ -56,12 +56,12 @@
               </div>
               <div class="mb-3">
                 <label class="form-label" for="selectGroup">Groupe</label>
-
                 <select id="selectGroup" v-model="selectedGroup" class="form-select" required>
-                  <option disabled selected value="">Choisir un groupe</option>
-                  <option v-for="groupe in groupsJoined" :key="groupe.id" :value="groupe.id">{{ groupe.name }}
-                  </option>
+                  <option disabled value="">Choisir un groupe</option>
+                  <option v-for="groupe in groupsJoined" :key="groupe.id" :value="groupe.id">{{ groupe.name }}</option>
                 </select>
+
+
               </div>
 
               <button class="btn btn-primary" type="submit">Inviter</button>
@@ -224,7 +224,7 @@ export default {
       alertMessage: '',
 
       //Inviter a un groupe
-      selectedGroup: [],
+      selectedGroup: null,
       suggestedUsers: [],
       selectedUser: {
         userName: '', id: ''
@@ -341,6 +341,7 @@ export default {
               "Accept": "application/json",
             },
           });
+          console.log('Réponse:', response.data);
           const responseData = response.data;
           if (responseData.data) {
             this.suggestedUsers = responseData.data.users;

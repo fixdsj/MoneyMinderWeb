@@ -111,9 +111,10 @@ export default {
               name: groupe.group.name,
               id: groupe.group.id,
               balance: groupe.user.balance,
-              groupImageUrl: groupe.group.groupImageUrl,
+              groupImageUrl: groupe.group.groupImageUrl
             };
           });
+          console.log('groupImageUrl:', this.groups[0].groupImageUrl);
         }
       } catch (error) {
         console.error('Erreur:', error);

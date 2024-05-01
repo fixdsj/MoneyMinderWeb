@@ -14,10 +14,10 @@
         <li class="ms-3"><a class="text-body-secondary" href="#"><i class="bi bi-twitter">
           <use xlink:href="#twitter"/>
         </i></a></li>
-        <li class="ms-3"><a class="text-body-secondary" href="#"><i class="bi bi-facebook">
+<!--        <li class="ms-3"><a class="text-body-secondary" href="#"><i class="bi bi-facebook">
           <use xlink:href="#facebook"/>
-        </i></a></li>
-        <li class="ms-3"><a class="text-body-secondary" href="#"><i class="bi bi-instagram">
+        </i></a></li>-->
+        <li class="ms-3"><a class="text-body-secondary" href="https://instagram.com/" target="_blank"><i class="bi bi-instagram">
           <use xlink:href="#instagram"/>
         </i></a></li>
       </ul>

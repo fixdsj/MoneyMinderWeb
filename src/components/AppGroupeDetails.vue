@@ -66,8 +66,8 @@ export default {
 
       try {
         // Récupérer l'URL d'upload
-        const graphqlResponse = await axios.post('${process.env.VUE_APP_API_URL}', {
-          query: `mutation{uploadGroupImagePicture(groupId:"${this.groupId}" )}`
+        const response = await axios.post('${process.env.VUE_APP_API_URL}', {
+          query: `mutation{uploadGroupImagePicture(groupId:"${this.activeGroup.id}" )}`
         }, {
           withCredentials: true,
           headers: {
@@ -76,11 +76,9 @@ export default {
           },
         });
 
-        const responseData = graphqlResponse.data;
-        if (responseData.data.uploadProfilePicture) {
-          const uploadUrl = responseData.data.uploadProfilePicture;
-
-          // Créer un objet FormData pour envoyer la photo
+        const responseData = response.data;
+        if (responseData.data && responseData.data.uploadGroupImagePicture) {
+          const uploadUrl = responseData.data.uploadGroupImagePicture;
           const formData = new FormData();
           formData.append('file', this.pictureToUpload);
 

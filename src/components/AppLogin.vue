@@ -45,7 +45,7 @@
 
 
 <script>
-import {isLogged} from "@/main";
+import {isLogged, currentUsername} from "@/main";
 import axios from "axios";
 
 export default {
@@ -57,6 +57,8 @@ export default {
       rememberPassword: true,
       errors: [],
       showPassword: false,
+      isLogged: isLogged,
+      currentUsername: currentUsername,
     };
   },
   methods: {
@@ -95,6 +97,7 @@ export default {
           if (responseData.data.signIn.succeeded) {
             console.log('Connexion réussie');
             isLogged.value = true;
+            currentUsername.value = this.username;
             this.$router.push('/account');
           }
         }

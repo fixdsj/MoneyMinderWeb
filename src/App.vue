@@ -20,7 +20,6 @@ export default {
   setup() {
     const isLoggedRef = ref(isLogged);
 
-
     watch(isLoggedRef, (newValue) => {
       if (newValue === true) {
         fetchCurrentUser();
