@@ -43,12 +43,15 @@
                 <input id="pseudo" v-model="selectedUser.userName" class="form-control"
                        placeholder="Nom d'utilisateur" required
                        type="text" @input="suggestUsers"/>
-                <ul class="list-group">
-                  <button v-for="user in suggestedUsers" :key="user.id" class="list-group-item list-group-item-action"
+                <ul class="list-group list-unstyled">
+                  <li v-for="user in suggestedUsers" :key="user.id" >
+                  <button  class="list-group-item list-group-item-action"
                           @click="selectUser(user)">
                     {{ user.userName }}
                   </button>
-                  <li v-if="suggestedUsers.length === 0 && selectedUser.userName !== ''" class="list-group-item">
+                  </li>
+
+                  <li v-if="suggestedUsers.length === 0 && selectedUser.userName.length > 1" class="list-group-item">
                     <a class="btn fst-italic" role="button">Aucun utilisateur trouvé</a>
                   </li>
 

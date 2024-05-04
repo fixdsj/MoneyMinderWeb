@@ -1,20 +1,22 @@
 <template>
   <div>
-    <div v-if="groups.length > 0 && activeGroup.id" class="maincontainer tab-content">
-      <div class="sidebar">
-        <h5 class="text-center">Groupes</h5>
-        <div aria-label="Liste des groupes" class="btn-group-vertical " role="group">
-          <a v-if="groups.length === 0" class="btn btn-secondary fst-italic" type="button">Aucun groupe</a>
-          <a v-for="group in groups" :key="group.id" :class="{'activeGroup': group.name === activeGroup.name}"
-             class="btn btn-secondary" type="button" @click="selectGroup(group)">
+    <div v-if="groups.length > 0 && activeGroup.id" class="tab-content row">
+      <div class="col-3">
+        <div class="list-group">
+          <div class="list-group-item text-center">Groupes</div>
+          <div v-for="group in groups" :key="group.id" :class="{'activeGroup': group.name === activeGroup.name}"
+               class="list-group-item text-center" type="button" @click="selectGroup(group)">
             {{ group.name }} ({{ group.balance }}€)
-          </a>
-          <a class="btn btn-secondary my-auto" href="/account" role="button">Créer un groupe</a>
+          </div>
+          <div class="list-group-item my-auto text-center" role="button"
+               @click="$router.push('/account')">Créer un groupe
+          </div>
+          <div v-if="groups.length === 0" class="list-group-item fst-italic" type="button">Aucun groupe</div>
         </div>
       </div>
 
-      <div class="contentcontainer">
-        <ul id="myTab" class="nav nav-tabs" role="tablist">
+      <div class="col-9">
+        <ul class="nav nav-tabs" role="tablist">
           <li class="nav-item" role="presentation">
             <button id="expense-tab" aria-controls="expense-tab-pane" aria-selected="true" class="nav-link active"
                     data-bs-target="#expense-tab-pane" data-bs-toggle="tab" role="tab" type="button">Dépenses
@@ -114,7 +116,6 @@ export default {
               groupImageUrl: groupe.group.groupImageUrl
             };
           });
-          console.log('groupImageUrl:', this.groups[0].groupImageUrl);
         }
       } catch (error) {
         console.error('Erreur:', error);
@@ -128,23 +129,15 @@ export default {
 </script>
 
 <style scoped>
-.maincontainer {
-  display: flex;
-}
-
-.contentcontainer {
-  flex-grow: 1;
-}
-
-
-h1 {
-  text-align: center;
-  margin: 20px;
-}
 
 .activeGroup {
   background-color: var(--second-background-color);
   border: none;
+}
+
+.col-3 {
+  background-color: var(--main-background-color);
+  border-right: 1px solid var(--second-background-color);
 }
 
 </style>
