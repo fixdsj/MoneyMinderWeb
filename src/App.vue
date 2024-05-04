@@ -25,8 +25,6 @@ export default {
         fetchCurrentUser();
       }
     });
-
-    // Récupérer l'utilisateur
     const fetchCurrentUser = async () => {
       try {
         const axios = require('axios');
@@ -44,7 +42,7 @@ export default {
           currentUsername.value = responseData.data.currentUser.userName;
           isLoggedRef.value = true;
         }
-        if (responseData.errors && responseData.errors.message!==undefined) {
+        if (responseData.errors && responseData.errors.message !== undefined) {
           console.log("erreur " + responseData.errors.message);
           isLoggedRef.value = false;
         }
@@ -71,6 +69,7 @@ export default {
 #app {
   --main-background-color: #fbfbfc;
   --second-background-color: #CCD5AE;
+  --third-background-color: #D4A373;
   --first-text-color: white;
   --second-text-color: #3CB371;
   --button-color: #D4A373;

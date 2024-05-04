@@ -116,7 +116,6 @@
                    style="width: 100px; height: 100px;">
             </template>
             <template v-else>
-              <!--                <i class="bi bi-person-fill " style="font-size: 100px;"></i>-->
               <img :src="avatarPlaceholderUrl" alt="Photo de profil" class="rounded-circle img-thumbnail"
                    style="width: 100px; height: 100px;">
             </template>

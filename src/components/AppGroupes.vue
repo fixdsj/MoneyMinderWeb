@@ -40,7 +40,7 @@
           </li>
 
         </ul>
-        <div class="d-flex align-items-center">
+        <div class="d-flex align-items-center p-3 groupHeader">
           <img
               :src="activeGroup.groupImageUrl ? activeGroup.groupImageUrl : 'https://avatar.iran.liara.run/username?username=' + activeGroup.name"
               alt="user img"
@@ -48,7 +48,7 @@
               style="width: 50px; height: 50px;">
           <h5 class="mb-0">{{ activeGroup.name }}</h5>
         </div>
-        <hr/>
+        <br>
         <div id="myTabContent" class="tab-content">
           <div id="expense-tab-pane" aria-labelledby="expense-tab" class="tab-pane fade show active" role="tabpanel"
                tabindex="0">
@@ -135,9 +135,18 @@ export default {
   border: none;
 }
 
+.groupHeader {
+  background-color: var(--third-background-color);
+}
+
 .col-3 {
   background-color: var(--main-background-color);
   border-right: 1px solid var(--second-background-color);
 }
 
+.nav-link.active {
+  background-color: var(--third-background-color) !important;
+  color: white !important;
+  border-bottom: 1px solid var(--third-background-color) !important;
+}
 </style>
