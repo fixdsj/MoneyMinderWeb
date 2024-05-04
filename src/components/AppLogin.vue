@@ -8,12 +8,14 @@
         <b v-for="error in errors" :key="error">{{ error }}</b>
       </p>
       <div class="form-floating mb-3">
-        <input id="username" v-model="username" class="form-control" placeholder="Votre pseudo" required type="text">
+        <input id="username" v-model="username" class="form-control form-styling" placeholder="Votre pseudo" required
+               type="text">
         <label for="username">Nom d'utilisateur</label>
       </div>
 
       <div class="form-floating mb-3 position-relative">
-        <input id="password" v-model="password" :type="showPassword ? 'text' : 'password'" class="form-control pr-5"
+        <input id="password" v-model="password" :type="showPassword ? 'text' : 'password'"
+               class="form-control pr-5 form-styling"
                placeholder="Password" required>
         <label for="password">Mot de passe</label>
         <button class="btn position-absolute end-0 translate-middle-y" style="top: 50%;" type="button"
@@ -31,7 +33,6 @@
         d'utilisation.</small>
       <button class="w-100 btn btn-lg btn-primary" type="submit">Se connecter</button>
 
-      <hr class="my-4">
       <h4 class="text-center my-4 text-uppercase">Ou</h4>
       <div class="d-grid mb-2">
         <a class="btn btn-google btn-login text-uppercase fw-bold" type="submit">
@@ -45,7 +46,7 @@
 
 
 <script>
-import {isLogged, currentUsername} from "@/main";
+import {currentUsername, isLogged} from "@/main";
 import axios from "axios";
 
 export default {
@@ -130,5 +131,13 @@ export default {
   background-color: #d73e2b;
 }
 
+.form-styling {
+  width: 100%;
+  height: 35px;
+  padding-left: 15px;
+  border-radius: 25px;
+  margin-bottom: 20px;
+  background: rgba(255, 255, 255, .2);
+}
 
 </style>

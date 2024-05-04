@@ -3,7 +3,7 @@
     <h3 class="text-center mb-4">Créer une dépense</h3>
     <div v-if="successAlert" class="alert alert-success alert-dismissible fade show" role="alert">
       <strong>Dépense envoyée!</strong> Vous pouvez maintenant ajouter un justificatif.
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      <button aria-label="Close" class="btn-close" data-bs-dismiss="alert" type="button"></button>
     </div>
     <form v-if="currentStep === 1" @submit.prevent="submitDepense">
       <div class="stepwizard">
@@ -86,8 +86,15 @@
               </select>
             </div>-->
 
-      <div class="mb-3 text-center">
+      <div v-if="!isExpenseLoading"
+           class="mb-3 text-center">
         <button class="btn btn-primary" type="button" @click="submitDepense">Créer la dépense</button>
+      </div>
+      <div v-if="isExpenseLoading" class="mb-3 text-center">
+        <button class="btn btn-primary" disabled type="button">
+          <span aria-hidden="true" class="spinner-border spinner-border-sm" role="status"></span>
+          Chargement...
+        </button>
       </div>
     </form>
 
@@ -114,6 +121,8 @@
       <div class="mb-3 text-center">
         <button class="btn btn-primary" type="submit">Envoyer le justificatif</button>
       </div>
+
+
     </form>
   </div>
 
@@ -128,6 +137,7 @@ export default {
   },
   data() {
     return {
+      isExpenseLoading: false,
       successAlert: false,
       currentStep: 1,
       depense: {
@@ -161,6 +171,7 @@ export default {
   methods: {
     async submitDepense() {
       try {
+        this.isExpenseLoading = true;
         this.weightquery = this.selectedsUsers.map((user) => {
           if (user.weight !== undefined) {
             return `{key:"${user.id}",value:${user.weight}}`;
@@ -201,6 +212,7 @@ export default {
           this.successAlert = true;
           this.currentStep++;
           this.expenseId = responseData.data.addUserExpense[0].expense.id;
+          this.isExpenseLoading = false;
         }
 
       } catch (error) {
