@@ -1,6 +1,10 @@
 <template>
   <div class="col-md-10 mx-auto col-lg-5 app-depenses">
     <h3 class="text-center mb-4">Créer une dépense</h3>
+    <div v-if="successAlert" class="alert alert-success alert-dismissible fade show" role="alert">
+      <strong>Dépense envoyée!</strong> Vous pouvez maintenant ajouter un justificatif.
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
     <form v-if="currentStep === 1" @submit.prevent="submitDepense">
       <div class="stepwizard">
         <div class="stepwizard-row setup-panel">
@@ -15,6 +19,7 @@
         </div>
       </div>
       <!-- Première étape -->
+
       <div class="mb-3">
         <label class="form-label" for="description">Titre:</label>
         <input id="description" v-model="depense.description" class="form-control" placeholder="Titre de la dépense"
@@ -40,7 +45,6 @@
           </button>
           <button v-else class="btn btn-link" type="button" @click="unselectUsers">Tout supprimer</button>
         </div>
-
 
         <input id="weightedinput" v-model="texttosuggest" class="form-control" placeholder="Ajouter un utilisateur..."
                type="text" @input="suggestUsers">
@@ -113,24 +117,9 @@
     </form>
   </div>
 
-
-  <!-- Notification -->
-  <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-    <div id="liveToast" aria-atomic="true" aria-live="assertive" class="toast" role="alert">
-      <div class="toast-header">
-        <strong class="me-auto">Money Minder</strong>
-        <small>à l'instant</small>
-        <button aria-label="Close" class="btn-close" data-bs-dismiss="toast" type="button"></button>
-      </div>
-      <div class="toast-body">
-        {{ alertMessage }}
-      </div>
-    </div>
-  </div>
 </template>
 
 <script>
-
 
 export default {
   name: 'AppExpenses',
@@ -139,6 +128,7 @@ export default {
   },
   data() {
     return {
+      successAlert: false,
       currentStep: 1,
       depense: {
         montant: 0,
@@ -208,7 +198,7 @@ export default {
           console.log('Erreur : ' + responseData.errors[0].message);
         }
         if (responseData.data) {
-          this.alertMessage = 'Dépense créée avec succès';
+          this.successAlert = true;
           this.currentStep++;
           this.expenseId = responseData.data.addUserExpense[0].expense.id;
         }

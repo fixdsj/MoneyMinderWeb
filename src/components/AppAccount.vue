@@ -44,11 +44,11 @@
                        placeholder="Nom d'utilisateur" required
                        type="text" @input="suggestUsers"/>
                 <ul class="list-group list-unstyled">
-                  <li v-for="user in suggestedUsers" :key="user.id" >
-                  <button  class="list-group-item list-group-item-action"
-                          @click="selectUser(user)">
-                    {{ user.userName }}
-                  </button>
+                  <li v-for="user in suggestedUsers" :key="user.id">
+                    <button class="list-group-item list-group-item-action"
+                            @click="selectUser(user)">
+                      {{ user.userName }}
+                    </button>
                   </li>
 
                   <li v-if="suggestedUsers.length === 0 && selectedUser.userName.length > 1" class="list-group-item">
@@ -75,21 +75,19 @@
           <ul class="list-group">
             <li v-for="groupe in groupsOwned" :key="groupe.id"
                 class="list-group-item d-flex justify-content-between align-items-center">
+              <i class="bi bi-award-fill"></i>
               {{ groupe }}
               <button style="border: none; background-color: transparent;" @click="deleteGroupe"><i
                   class="bi bi-trash "></i></button>
             </li>
-            <li v-if="groupsOwned.length === 0" class="list-group-item">
-              <a class="btn fst-italic" role="button">Aucun groupe</a>
-            </li>
-          </ul>
-          <h4 class="card-title mt-3 text-md-center">Groupes rejoints</h4>
-          <ul class="list-group">
+
             <li v-for="groupe in groupsJoined" :key="groupe.id"
                 class="list-group-item d-flex justify-content-between align-items-center">
+              <span class="bi bi-people"></span>
               {{ groupe.name }}
+              <span></span>
             </li>
-            <li v-if="groupsJoined.length === 0" class="list-group-item">
+            <li v-if="groupsJoined.length === 0 && groupsOwned.length === 0" class="list-group">
               <a class="btn fst-italic" role="button">Aucun groupe</a>
             </li>
           </ul>

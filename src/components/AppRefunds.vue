@@ -1,7 +1,6 @@
 <template>
   <div class="container justify-content-center d-flex">
     <div class="col-md-5 text-md-center">
-
       <h3 class="text-center mb-4">Paiement rapide</h3>
       <p class="text-center"> Vous devez rembourser 355€ à tous vos groupes </p>
       <p class="text-center"> Soit 27€ + 286€ + 42€</p>
@@ -30,8 +29,7 @@
         </li>
       </ul>
       <div v-if="userExpenses.length === 0" class="text-center">
-        <p class="text-center">Aucune dépense à rembourser</p>
-        <i class="bi bi-check-circle" style="font-size: 60px; color:green"></i>
+        <p class="text-center">Aucune dépense à rembourser.</p>
       </div>
     </div>
 
@@ -118,7 +116,6 @@ export default {
     },
   },
   mounted() {
-    /*this.fetchExpensesInGroup();*/
     this.fetchExpensesCurrrentUser();
   },
 };
