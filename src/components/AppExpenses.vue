@@ -1,40 +1,44 @@
 <template>
   <div class="col-md-10 mx-auto col-lg-5 app-depenses">
     <h3 class="text-center mb-4">Créer une dépense</h3>
-    <div v-if="successAlert" class="alert alert-success alert-dismissible fade show" role="alert">
+    <div v-if="justicatifUploadedSuccess" class="alert alert-success alert-dismissible fade show" role="alert">
+      <strong>Justificatif envoyé!</strong> Vous pouvez maintenant ajouter une autre dépense.
+      <button aria-label="Close" class="btn-close" data-bs-dismiss="alert" type="button"></button>
+    </div>
+    <div v-if="expenseUploadedSuccess" class="alert alert-success alert-dismissible fade show" role="alert">
       <strong>Dépense envoyée!</strong> Vous pouvez maintenant ajouter un justificatif.
       <button aria-label="Close" class="btn-close" data-bs-dismiss="alert" type="button"></button>
     </div>
+    <!--    Première étape-->
     <form v-if="currentStep === 1" @submit.prevent="submitDepense">
       <div class="stepwizard">
         <div class="stepwizard-row setup-panel">
           <div class="stepwizard-step">
             <a class="btn btn-primary btn-circle" type="button">1</a>
-            <p>Step 1</p>
+            <p>Étape 1</p>
           </div>
           <div class="stepwizard-step">
             <a class="btn btn-default btn-circle" disabled="disabled" type="button">2</a>
-            <p>Step 2</p>
+            <p>Étape 2</p>
           </div>
         </div>
       </div>
-      <!-- Première étape -->
 
-      <div class="mb-3">
-        <label class="form-label" for="description">Titre:</label>
-        <input id="description" v-model="depense.description" class="form-control" placeholder="Titre de la dépense"
+      <div class="form-floating mb-3">
+        <input id="description" v-model="depense.description" class="form-control form-styling"
+               placeholder="Titre de la dépense"
                required
                type="text"/>
+        <label for="description">Titre</label>
       </div>
 
-      <div class="mb-3">
-        <label class="form-label" for="montant">Montant:</label>
-        <div class="input-group">
-          <span class="input-group-text">€</span>
-          <input id="montant" v-model="depense.montant" class="form-control" step="5" type="number" v-bind:min="0"
-                 @input="previewRefunds()"/>
+      <div class="input-group mb-3">
+        <div class="form-floating">
+          <input id="montant" v-model="depense.montant" class="form-control" placeholder="Montant" required step="5"
+                 type="number" v-bind:min="0" @input="previewRefunds()">
+          <label for="montant">Montant</label>
         </div>
-
+        <span class="input-group-text">€</span>
       </div>
 
       <div class="mb-3">
@@ -97,7 +101,7 @@
         </button>
       </div>
     </form>
-
+    <!--    Deuxième étape-->
     <form v-if="currentStep === 2" @submit.prevent="submitJustificatif">
       <div class="stepwizard">
         <div class="stepwizard-row setup-panel">
@@ -118,8 +122,14 @@
                class="form-control" type="file"
                @change="handleFileChange"/>
       </div>
-      <div class="mb-3 text-center">
+      <div v-if="!isJustificatifLoading" class="mb-3 text-center">
         <button class="btn btn-primary" type="submit">Envoyer le justificatif</button>
+      </div>
+      <div v-if="isJustificatifLoading" class="mb-3 text-center">
+        <button class="btn btn-primary" disabled type="button">
+          <span aria-hidden="true" class="spinner-border spinner-border-sm" role="status"></span>
+          Chargement...
+        </button>
       </div>
 
 
@@ -138,7 +148,9 @@ export default {
   data() {
     return {
       isExpenseLoading: false,
-      successAlert: false,
+      isJustificatifLoading: false,
+      expenseUploadedSuccess: false,
+      justicatifUploadedSuccess: false,
       currentStep: 1,
       depense: {
         montant: 0,
@@ -146,9 +158,6 @@ export default {
         date: '',
       },
       justificatif: null,
-
-      //Notification
-      alertMessage: '',
 
 
       //Suggestions
@@ -209,10 +218,18 @@ export default {
           console.log('Erreur : ' + responseData.errors[0].message);
         }
         if (responseData.data) {
-          this.successAlert = true;
+          this.expenseUploadedSuccess = true;
           this.currentStep++;
           this.expenseId = responseData.data.addUserExpense[0].expense.id;
           this.isExpenseLoading = false;
+
+          //Reset les champs
+          this.selectedsUsers = [];
+          this.depense = {
+            montant: 0,
+            description: '',
+            date: '',
+          };
         }
 
       } catch (error) {
@@ -221,7 +238,7 @@ export default {
 
     },
     async submitJustificatif() {
-      console.log('Créer une dépense avec justificatif:', this.justificatif);
+      this.isJustificatifLoading = true;
       try {
         const axios = require('axios');
         const response = await axios.post('${process.env.VUE_APP_API_URL}', {
@@ -242,7 +259,12 @@ export default {
           formData.append('file', this.justificatif);
           const uploadResponse = await axios.post(uploadUrl, formData);
           console.log('Réponse de l\'upload:', uploadResponse.data);
-          this.alertMessage = 'Justificatif envoyé avec succès';
+          if (uploadResponse.data) {
+            this.justicatifUploadedSuccess = true;
+            this.isJustificatifLoading = false;
+            this.justificatif = null;
+            this.currentStep = 1;
+          }
         }
       } catch (error) {
         console.error('Erreur lors de l\'envoi du justificatif', error);
@@ -391,6 +413,8 @@ export default {
         if (newGroup !== oldGroup) {
           this.fetchMembersGroup();
           this.selectedsUsers = [];
+          this.isExpenseLoading = false;
+          this.isJustificatifLoading = false;
         }
       },
       deep: true,
@@ -448,6 +472,11 @@ export default {
   border-radius: 15px;
 }
 
+.btn-default, .btn-default:hover {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  color: #333;
+}
 
 </style>
 

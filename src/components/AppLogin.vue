@@ -1,7 +1,7 @@
 <template>
 
   <div class="col-md-10 mx-auto col-lg-5">
-    <form class="p-4 p-md-5 border rounded-3 bg-body-tertiary" @submit="signIn">
+    <form class="p-4 p-md-5 border rounded-3" @submit="signIn">
       <h3 class="text-center mb-4">Connexion</h3>
       <p v-if="errors.length" class="text-danger">
         <b>Erreur(s): </b>
