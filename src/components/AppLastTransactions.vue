@@ -49,7 +49,9 @@
           <hr>
           <div class="mb-3 d-flex align-items-center">
             <label class="form-label" for="formFile"><strong>Changer le justificatif:</strong></label>
-            <input class="form-control form-control-sm" id="formFile" type="file" accept="image/png, image/jpeg, image/jpg,application/pdf" @change="justificatif = $event.target.files[0]">
+            <input id="formFile" accept="image/png, image/jpeg, image/jpg,application/pdf" class="form-control form-control-sm"
+                   type="file"
+                   @change="justificatif = $event.target.files[0]">
             <button v-if="justificatif" class="btn btn-info ms-2" @click="uploadProof(transaction.id)">Changer</button>
           </div>
         </div>
@@ -112,7 +114,6 @@ export default {
       }
 
     },
-
     async downloadProof(transaction) {
       console.log('Téléchargement du justificatif');
       try {
@@ -132,14 +133,23 @@ export default {
           const downloadResponse = await axios.get(downloadUrl, {
             responseType: 'blob',
           });
-          const url = window.URL.createObjectURL(new Blob([downloadResponse.data]));
-          const link = document.createElement('a');
-          link.href = url;
-          link.setAttribute('download', `justificatif du ${transaction.date.toLocaleString('fr-FR', {
+
+          // Extracting file extension
+          const contentType = downloadResponse.headers['content-type'];
+          const extension = contentType.split('/')[1];
+
+          // Creating file name with extension
+          const fileName = `justificatif_${transaction.date.toLocaleString('fr-FR', {
             year: 'numeric',
             month: '2-digit',
             day: '2-digit'
-          })}.pdf`);
+          })}.${extension}`;
+
+          // Creating download link
+          const url = window.URL.createObjectURL(new Blob([downloadResponse.data]));
+          const link = document.createElement('a');
+          link.href = url;
+          link.setAttribute('download', fileName);
           document.body.appendChild(link);
           link.click();
         }
@@ -150,6 +160,7 @@ export default {
         console.error('Erreur:', error);
       }
     },
+
     async fetchLastTransactions() {
       try {
         const axios = require('axios');
