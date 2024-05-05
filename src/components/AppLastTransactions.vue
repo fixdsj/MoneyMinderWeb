@@ -6,6 +6,16 @@
       <i class="bi bi-check-circle" style="font-size: 60px; color:green"></i>
     </div>
   </template>
+  <div class="form-floating mb-3">
+    <select id="sortSelect" class="form-select" @change="handleSort">
+      <option value="dateDesc" @click="sortByDateDesc">Date Descendante</option>
+      <option value="dateAsc" @click="sortByDateAsc">Date Ascendante</option>
+      <option value="amountAsc" @click="sortByAmountAsc">Montant Ascendant</option>
+      <option value="amountDesc" @click="sortByAmountDesc">Montant Descendant</option>
+
+    </select>
+    <label for="sortSelect">Trier par</label>
+  </div>
   <div id="accordionExample" class="accordion">
     <div v-for="(transaction, index) in transactions" :key="index" class="accordion-item">
       <h2 :id="'heading' + index" class="accordion-header">
@@ -49,7 +59,8 @@
           <hr>
           <div class="mb-3 d-flex align-items-center">
             <label class="form-label" for="formFile"><strong>Changer le justificatif:</strong></label>
-            <input id="formFile" accept="image/png, image/jpeg, image/jpg,application/pdf" class="form-control form-control-sm"
+            <input id="formFile" accept="image/png, image/jpeg, image/jpg,application/pdf"
+                   class="form-control form-control-sm"
                    type="file"
                    @change="justificatif = $event.target.files[0]">
             <button v-if="justificatif" class="btn btn-info ms-2" @click="uploadProof(transaction.id)">Changer</button>
@@ -217,6 +228,38 @@ export default {
         console.error('Erreur:', error);
       }
     },
+    handleSort(event) {
+      const sortType = event.target.value;
+      if (sortType === 'dateAsc') {
+        this.sortByDateAsc();
+      } else if (sortType === 'dateDesc') {
+        this.sortByDateDesc();
+      } else if (sortType === 'amountAsc') {
+        this.sortByAmountAsc();
+      } else if (sortType === 'amountDesc') {
+        this.sortByAmountDesc();
+      }
+    },
+    sortByDateDesc() {
+      this.transactions.sort((a, b) => {
+        return new Date(b.date) - new Date(a.date);
+      });
+    },
+    sortByDateAsc() {
+      this.transactions.sort((a, b) => {
+        return new Date(a.date) - new Date(b.date);
+      });
+    },
+    sortByAmountDesc() {
+      this.transactions.sort((a, b) => {
+        return b.amount - a.amount;
+      });
+    },
+    sortByAmountAsc() {
+      this.transactions.sort((a, b) => {
+        return a.amount - b.amount;
+      });
+    }
   },
   mounted() {
     this.fetchLastTransactions();
@@ -239,6 +282,5 @@ export default {
   background-color: #d1ecf1;
   color: #0c5460;
 }
-
 
 </style>

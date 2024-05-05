@@ -38,11 +38,12 @@
 
           <div id="inviteUserForm" class="collapse mt-3 mb-3">
             <form @submit.prevent="inviteToGroup">
-              <div class="mb-3">
-                <label class="form-label" for="pseudo">Nom d'utilisateur</label>
+              <div class="mb-3 form-floating">
+
                 <input id="pseudo" v-model="selectedUser.userName" class="form-control"
                        placeholder="Nom d'utilisateur" required
                        type="text" @input="suggestUsers"/>
+                <label for="pseudo">Nom d'utilisateur</label>
                 <ul class="list-group list-unstyled">
                   <li v-for="user in suggestedUsers" :key="user.id">
                     <button class="list-group-item list-group-item-action"
@@ -51,23 +52,26 @@
                     </button>
                   </li>
 
-                  <li v-if="suggestedUsers.length === 0 && selectedUser.userName.length > 1" class="list-group-item">
-                    <a class="btn fst-italic" role="button">Aucun utilisateur trouvé</a>
+                  <li v-if="suggestedUsers.length === 0 && selectedUser.userName.length > 2 && !hasSelectedUser"
+                      class="list-group-item fst-italic">
+                    Aucun utilisateur trouvé
                   </li>
 
                 </ul>
               </div>
-              <div class="mb-3">
-                <label class="form-label" for="selectGroup">Groupe</label>
+              <div class="form-floating mb-3">
+
                 <select id="selectGroup" v-model="selectedGroup" class="form-select" required>
-                  <option disabled value="">Choisir un groupe</option>
+                  <option disabled selected value="">Choisir un groupe</option>
                   <option v-for="groupe in groupsJoined" :key="groupe.id" :value="groupe.id">{{ groupe.name }}</option>
                 </select>
-
+                <label for="selectGroup">Groupe</label>
 
               </div>
 
-              <button class="btn btn-primary" type="submit">Inviter</button>
+              <div class="text-center">
+                <button class="btn btn-primary" type="submit">Inviter</button>
+              </div>
             </form>
 
           </div>
@@ -91,13 +95,7 @@
               <a class="btn fst-italic" role="button">Aucun groupe</a>
             </li>
           </ul>
-
-        </div>
-      </div>
-
-      <div class="col-md-6">
-        <div>
-          <h5 class="card-title text-md-center">Invitations</h5>
+          <h5 class="text-md-center mt-2">Invitations</h5>
           <ul class="list-group">
             <li v-for="invitation in invitations" :key="invitation.id"
                 class="list-group-item d-flex justify-content-between align-items-center">
@@ -109,6 +107,12 @@
               <a class="btn fst-italic" role="button">Aucune invitation</a>
             </li>
           </ul>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div>
+
           <h4 class="card-title text-md-center">Mes informations</h4>
           <div class="d-flex justify-content-center align-items-center" style="height: 100px;">
             <template v-if="avatarUrl">
@@ -131,7 +135,7 @@
           </div>
 
 
-          <form class="form" @submit.prevent="updateCompte">
+          <form class="form">
             <div class="mb-3">
               <label class="form-label" for="pseudo">Nom d'utilisateur :</label>
               <input id="prenom" v-model="utilisateur.username" class="form-control" type="text"/>
@@ -140,9 +144,9 @@
               <label class="form-label" for="email">Email :</label>
               <input id="email" v-model="utilisateur.email" class="form-control" readonly type="email"/>
             </div>
-            <div class="d-flex justify-content-center mt-3">
-              <button class="btn btn-primary " type="submit">Mettre à jour</button>
-            </div>
+            <!--            <div class="d-flex justify-content-center mt-3">
+                          <button class="btn btn-primary " type="submit">Mettre à jour</button>
+                        </div>-->
           </form>
           <div class="d-flex justify-content-center mt-3">
             <button class="btn btn-danger" data-bs-target="#deleteAccountModal" data-bs-toggle="modal" type="button">
@@ -224,11 +228,13 @@ export default {
       alertMessage: '',
 
       //Inviter a un groupe
-      selectedGroup: null,
+      selectedGroup: '',
       suggestedUsers: [],
       selectedUser: {
-        userName: '', id: ''
+        userName: '',
+        id: ''
       },
+      hasSelectedUser: false,
 
 
       //Photo de profil
@@ -238,12 +244,8 @@ export default {
     };
   },
   methods: {
-    updateCompte() {
-      console.log('Informations mises à jour:', this.utilisateur);
-    },
 
     async uploadPicture() {
-      console.log('Photo envoyée:', this.pictureToUpload);
 
       try {
         // Récupérer l'URL d'upload
@@ -298,11 +300,9 @@ export default {
         });
         const responseData = response.data;
         if (responseData.data.inviteUser) {
-          console.log('Invitation envoyée:', responseData.data.inviteUser);
           this.alertMessage = `Invitation envoyée à ${this.selectedUser.userName} pour le groupe ${responseData.data.inviteUser.group.name}`;
           var toastLive = document.getElementById('liveToast')
           toastLive.classList.add('show')
-          console.log('data', responseData.data);
           this.selectedUser = {
             userName: '', id: ''
           };
@@ -315,6 +315,7 @@ export default {
     },
 
     selectUser(user) {
+      this.hasSelectedUser = true;
       this.selectedUser = user;
       this.suggestedUsers = [];
     },
@@ -325,6 +326,7 @@ export default {
       }
       if (this.selectedUser.userName.length > 1) {
         try {
+          this.hasSelectedUser = false;
           const axios = require('axios');
           const response = await axios.post('${process.env.VUE_APP_API_URL}', {
             query: `query {
@@ -341,7 +343,6 @@ export default {
               "Accept": "application/json",
             },
           });
-          console.log('Réponse:', response.data);
           const responseData = response.data;
           if (responseData.data) {
             this.suggestedUsers = responseData.data.users;
@@ -402,10 +403,6 @@ export default {
           this.utilisateur.email = responseDataUser.data.currentUser.email;
           this.invitations = responseDataUser.data.currentUser.invitations;
           this.avatarUrl = responseDataUser.data.currentUser.avatarUrl;
-
-          /*var imgPlaceholder = document.getElementById('avatarPlaceholder');
-          imgPlaceholder.src = 'https://avatar.iran.liara.run/username?username=' + this.utilisateur.username;
-          console.log('imgPlaceholder:', imgPlaceholder.src);*/
         }
         if (responseDataUser.errors) {
           console.log("erreur" + responseDataUser.errors.message);
@@ -427,18 +424,14 @@ export default {
         });
         const responseDataUserGroups = responseUserGroups.data;
         if (responseDataUserGroups.data) {
-
           if (responseDataUserGroups.data.currentUser) {
-
             this.groupsOwned = responseDataUserGroups.data.currentUser.ownedGroups.map(group => group.name);
             this.groupsJoined = responseDataUserGroups.data.currentUser.userGroups.map(userGroup => userGroup.group);
-
           }
         }
         if (responseDataUserGroups.errors) {
           console.log("erreur" + responseDataUserGroups.errors.message);
         }
-
       } catch (error) {
         console.error('Erreur:', error);
       }
@@ -450,10 +443,8 @@ export default {
         var toastLive = document.getElementById('liveToast')
         this.alertMessage = 'Groupe supprimé';
         toastLive.classList.add('show')
-
         console.log('Groupe supprimé');
       }
-
     },
 
     async deleteAccount() {
@@ -502,7 +493,6 @@ export default {
           var toastLive = document.getElementById('liveToast')
           this.alertMessage = `Invitation acceptée`;
           toastLive.classList.add('show')
-          console.log('Invitation acceptée:', responseData.data.joinGroup);
           await this.fetchCurrentUserDetails();
         }
         console.log('Réponse pour l invitation:', responseData);
