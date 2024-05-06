@@ -7,7 +7,7 @@
       <a v-if="!isLogged" class="btn btn-secondary btn-lg px-4 gap-3" href="/register" type="button">S'inscrire</a>
       <a v-if="isLogged" class="btn btn-secondary btn-lg px-4 gap-3" href="/groups" type="button">Voir mes groupes</a>
     </div>
-    <div class="product-device shadow-sm d-none d-md-block"></div>
+<!--    <div class="product-device shadow-sm d-none d-md-block"></div>-->
     <!--    <div class="product-device product-device-2 shadow-sm d-none d-md-block"></div>-->
   </div>
   <!--  <svg viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg">
