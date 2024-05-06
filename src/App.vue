@@ -20,14 +20,11 @@ export default {
   setup() {
     const isLoggedRef = ref(isLogged);
 
-
     watch(isLoggedRef, (newValue) => {
       if (newValue === true) {
         fetchCurrentUser();
       }
     });
-
-    // Récupérer l'utilisateur
     const fetchCurrentUser = async () => {
       try {
         const axios = require('axios');
@@ -41,12 +38,12 @@ export default {
           },
         });
         const responseData = response.data;
-        if (responseData.data) {
+        if (responseData.data && responseData.data.currentUser) {
           currentUsername.value = responseData.data.currentUser.userName;
           isLoggedRef.value = true;
         }
-        if (responseData.errors) {
-          console.log("erreur" + responseData.errors.message);
+        if (responseData.errors && responseData.errors.message !== undefined) {
+          console.log("erreur " + responseData.errors.message);
           isLoggedRef.value = false;
         }
 
@@ -72,6 +69,7 @@ export default {
 #app {
   --main-background-color: #fbfbfc;
   --second-background-color: #CCD5AE;
+  --third-background-color: #D4A373;
   --first-text-color: white;
   --second-text-color: #3CB371;
   --button-color: #D4A373;
@@ -88,5 +86,19 @@ export default {
 * {
   margin: 0;
   padding: 0;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 8px;
 }
 </style>

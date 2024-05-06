@@ -9,27 +9,27 @@
         </ul>
       </p>
       <div class="form-floating mb-3">
-        <input id="pseudo" v-model="pseudo" class="form-control" placeholder="Pseudo" type="text">
+        <input id="pseudo" v-model="pseudo" class="form-control form-styling" placeholder="Pseudo" type="text">
         <label for="pseudo">Pseudo</label>
       </div>
       <div class="form-floating mb-3">
-        <input id="email" v-model="email" class="form-control" placeholder="name@example.com" type="email">
+        <input id="email" v-model="email" class="form-control form-styling" placeholder="name@example.com" type="email">
         <label for="email">Adresse mail</label>
       </div>
       <div class="form-floating mb-3">
-        <input id="password" v-model="password" class="form-control" placeholder="Password" type="password">
+        <input id="password" v-model="password" class="form-control form-styling" placeholder="Password"
+               type="password">
         <label for="password">Mot de passe</label>
         <small class="text-warning">Le mot de passe doit contenir au moins 8 caractères, un chiffre, une
           majuscule et une minuscule.</small>
       </div>
       <div class="form-floating mb-3">
-        <input id="confirmPassword" v-model="confirmPassword" class="form-control" placeholder="Password"
+        <input id="confirmPassword" v-model="confirmPassword" class="form-control form-styling" placeholder="Password"
                type="password">
         <label for="confirmPassword">Confirmer le mot de passe</label>
       </div>
       <small class="text-body-secondary">En cliquant sur S'inscrire, vous acceptez les conditions d'utilisation.</small>
       <button class="w-100 btn btn-lg btn-primary" type="submit">S'inscrire</button>
-      <hr class="my-4">
       <h4 class="text-center my-4 text-uppercase">Ou</h4>
       <div class="d-grid mb-2">
         <a class="btn btn-google btn-login text-uppercase fw-bold" type="submit">
@@ -123,5 +123,14 @@ export default {
 
 .btn-google:hover {
   background-color: #d73e2b;
+}
+
+.form-styling {
+  width: 100%;
+  height: 35px;
+  padding-left: 15px;
+  border-radius: 25px;
+  margin-bottom: 20px;
+  background: rgba(255, 255, 255, .2);
 }
 </style>

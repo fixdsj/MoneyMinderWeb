@@ -1,19 +1,27 @@
 <template>
 
   <div class="col-md-10 mx-auto col-lg-5">
-    <form class="p-4 p-md-5 border rounded-3 bg-body-tertiary" @submit="signIn">
+    <form class="p-4 p-md-5 border rounded-3" @submit="signIn">
       <h3 class="text-center mb-4">Connexion</h3>
       <p v-if="errors.length" class="text-danger">
         <b>Erreur(s): </b>
         <b v-for="error in errors" :key="error">{{ error }}</b>
       </p>
       <div class="form-floating mb-3">
-        <input id="username" v-model="username" class="form-control" placeholder="Votre pseudo" required type="text">
+        <input id="username" v-model="username" class="form-control form-styling" placeholder="Votre pseudo" required
+               type="text">
         <label for="username">Nom d'utilisateur</label>
       </div>
-      <div class="form-floating mb-3">
-        <input id="password" v-model="password" class="form-control" placeholder="Password" required type="password">
-        <label for="floatingPassword">Mot de passe</label>
+
+      <div class="form-floating mb-3 position-relative">
+        <input id="password" v-model="password" :type="showPassword ? 'text' : 'password'"
+               class="form-control pr-5 form-styling"
+               placeholder="Password" required>
+        <label for="password">Mot de passe</label>
+        <button class="btn position-absolute end-0 translate-middle-y" style="top: 50%;" type="button"
+                @click="toggleShowPassword">
+          <i :class="showPassword ?  'bi-eye-slash-fill':'bi-eye-fill'"></i>
+        </button>
       </div>
       <div class="form-check mb-3">
         <input id="rememberPassword" v-model="rememberPassword" class="form-check-input" type="checkbox" value="">
@@ -25,7 +33,6 @@
         d'utilisation.</small>
       <button class="w-100 btn btn-lg btn-primary" type="submit">Se connecter</button>
 
-      <hr class="my-4">
       <h4 class="text-center my-4 text-uppercase">Ou</h4>
       <div class="d-grid mb-2">
         <a class="btn btn-google btn-login text-uppercase fw-bold" type="submit">
@@ -37,8 +44,9 @@
   </div>
 </template>
 
+
 <script>
-import {isLogged} from "@/main";
+import {currentUsername, isLogged} from "@/main";
 import axios from "axios";
 
 export default {
@@ -49,6 +57,9 @@ export default {
       password: '',
       rememberPassword: true,
       errors: [],
+      showPassword: false,
+      isLogged: isLogged,
+      currentUsername: currentUsername,
     };
   },
   methods: {
@@ -70,7 +81,6 @@ export default {
               succeeded
               isLockedOut
               isNotAllowed
-              requiresTwoFactor
               }
           }
         `,
@@ -88,6 +98,7 @@ export default {
           if (responseData.data.signIn.succeeded) {
             console.log('Connexion réussie');
             isLogged.value = true;
+            currentUsername.value = this.username;
             this.$router.push('/account');
           }
         }
@@ -100,6 +111,9 @@ export default {
         console.error('Erreur de connexion :', error);
 
       }
+    },
+    toggleShowPassword() {
+      this.showPassword = !this.showPassword;
     },
 
   }
@@ -115,6 +129,15 @@ export default {
 
 .btn-google:hover {
   background-color: #d73e2b;
+}
+
+.form-styling {
+  width: 100%;
+  height: 35px;
+  padding-left: 15px;
+  border-radius: 25px;
+  margin-bottom: 20px;
+  background: rgba(255, 255, 255, .2);
 }
 
 </style>

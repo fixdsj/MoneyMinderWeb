@@ -1,11 +1,16 @@
 /* Couleur principale */
-.btn-primary, .accordion-button:not(.collapsed) {
+.btn-primary, .accordion-button:not(.collapsed),.btn-primary:disabled{
+    background-color: #D4A373;
+    border-color: #D4A373;
+}
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open>.dropdown-toggle.btn-primary {
     background-color: #D4A373;
     border-color: #D4A373;
 }
 
 
-.text-primary, .nav-link, .nav-link.active, .nav-link:hover {
+
+.text-primary, .nav-link, .nav-link:active, .nav-link:hover, .btn-link, .btn-link:active, .btn-link:hover, .btn-link:focus, .btn-link:visited, .btn-link:focus, .btn-link:visited {
     color: #D4A373 !important;
 }
 

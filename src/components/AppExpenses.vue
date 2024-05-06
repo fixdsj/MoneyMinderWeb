@@ -1,25 +1,44 @@
 <template>
   <div class="col-md-10 mx-auto col-lg-5 app-depenses">
     <h3 class="text-center mb-4">Créer une dépense</h3>
+    <div v-if="justicatifUploadedSuccess" class="alert alert-success alert-dismissible fade show" role="alert">
+      <strong>Justificatif envoyé!</strong> Vous pouvez maintenant ajouter une autre dépense.
+      <button aria-label="Close" class="btn-close" data-bs-dismiss="alert" type="button"></button>
+    </div>
+    <div v-if="expenseUploadedSuccess" class="alert alert-success alert-dismissible fade show" role="alert">
+      <strong>Dépense envoyée!</strong> Vous pouvez maintenant ajouter un justificatif.
+      <button aria-label="Close" class="btn-close" data-bs-dismiss="alert" type="button"></button>
+    </div>
+    <!--    Première étape-->
     <form v-if="currentStep === 1" @submit.prevent="submitDepense">
-      <div class="progress" style="height: 5px;">
-        <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="25" class="progress-bar" role="progressbar"
-             style="width: 50%;"></div>
-      </div>
-      <!-- Première étape -->
-      <div class="mb-3">
-        <label class="form-label" for="description">Titre:</label>
-        <input id="description" v-model="depense.description" class="form-control" type="text"/>
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label" for="montant">Montant:</label>
-        <div class="input-group">
-          <span class="input-group-text">€</span>
-          <input id="montant" v-model="depense.montant" class="form-control" step="5" type="number" v-bind:min="0"
-                 @input="previewRefunds()"/>
+      <div class="stepwizard">
+        <div class="stepwizard-row setup-panel">
+          <div class="stepwizard-step">
+            <a class="btn btn-primary btn-circle" type="button">1</a>
+            <p>Étape 1</p>
+          </div>
+          <div class="stepwizard-step">
+            <a class="btn btn-default btn-circle" disabled="disabled" type="button">2</a>
+            <p>Étape 2</p>
+          </div>
         </div>
+      </div>
 
+      <div class="form-floating mb-3">
+        <input id="description" v-model="depense.description" class="form-control form-styling"
+               placeholder="Titre de la dépense"
+               required
+               type="text"/>
+        <label for="description">Titre</label>
+      </div>
+
+      <div class="input-group mb-3">
+        <div class="form-floating">
+          <input id="montant" v-model="depense.montant" class="form-control" placeholder="Montant" required step="5"
+                 type="number" v-bind:min="0" @input="previewRefunds()">
+          <label for="montant">Montant</label>
+        </div>
+        <span class="input-group-text">€</span>
       </div>
 
       <div class="mb-3">
@@ -28,9 +47,8 @@
           <button v-if="selectedsUsers.length === 0" class="btn btn-link" type="button" @click="selectAllUsers">Tout
             sélectionner
           </button>
-          <button v-else class="btn btn-link" type="button" @click="unselectAllUsers">Tout supprimer</button>
+          <button v-else class="btn btn-link" type="button" @click="unselectUsers">Tout supprimer</button>
         </div>
-
 
         <input id="weightedinput" v-model="texttosuggest" class="form-control" placeholder="Ajouter un utilisateur..."
                type="text" @input="suggestUsers">
@@ -72,46 +90,55 @@
               </select>
             </div>-->
 
-      <div class="mb-3 text-center">
+      <div v-if="!isExpenseLoading"
+           class="mb-3 text-center">
         <button class="btn btn-primary" type="button" @click="submitDepense">Créer la dépense</button>
       </div>
+      <div v-if="isExpenseLoading" class="mb-3 text-center">
+        <button class="btn btn-primary" disabled type="button">
+          <span aria-hidden="true" class="spinner-border spinner-border-sm" role="status"></span>
+          Chargement...
+        </button>
+      </div>
     </form>
-
+    <!--    Deuxième étape-->
     <form v-if="currentStep === 2" @submit.prevent="submitJustificatif">
-      <div class="progress" style="height: 5px;">
-        <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="25" class="progress-bar" role="progressbar"
-             style="width: 100%;"></div>
+      <div class="stepwizard">
+        <div class="stepwizard-row setup-panel">
+          <div class="stepwizard-step">
+            <a class="btn btn-default btn-circle" type="button">1</a>
+            <p>Step 1</p>
+          </div>
+          <div class="stepwizard-step">
+            <a class="btn btn-primary btn-circle" disabled="disabled" type="button">2</a>
+            <p>Step 2</p>
+          </div>
+        </div>
       </div>
       <!-- Deuxième étape -->
       <div class="mb-3">
         <label class="form-label" for="proof">Justificatif (facultatif):</label>
-        <input id="proof" class="form-control" type="file" @change="handleFileChange"/>
+        <input id="proof" accept="image/png, image/jpeg, image/jpg, application/pdf"
+               class="form-control" type="file"
+               @change="handleFileChange"/>
       </div>
-
-      <div class="mb-3 text-center">
+      <div v-if="!isJustificatifLoading" class="mb-3 text-center">
         <button class="btn btn-primary" type="submit">Envoyer le justificatif</button>
       </div>
+      <div v-if="isJustificatifLoading" class="mb-3 text-center">
+        <button class="btn btn-primary" disabled type="button">
+          <span aria-hidden="true" class="spinner-border spinner-border-sm" role="status"></span>
+          Chargement...
+        </button>
+      </div>
+
+
     </form>
   </div>
 
-
-  <!-- Notification -->
-  <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-    <div id="liveToast" aria-atomic="true" aria-live="assertive" class="toast" role="alert">
-      <div class="toast-header">
-        <strong class="me-auto">Money Minder</strong>
-        <small>à l'instant</small>
-        <button aria-label="Close" class="btn-close" data-bs-dismiss="toast" type="button"></button>
-      </div>
-      <div class="toast-body">
-        {{ alertMessage }}
-      </div>
-    </div>
-  </div>
 </template>
 
 <script>
-
 
 export default {
   name: 'AppExpenses',
@@ -120,6 +147,10 @@ export default {
   },
   data() {
     return {
+      isExpenseLoading: false,
+      isJustificatifLoading: false,
+      expenseUploadedSuccess: false,
+      justicatifUploadedSuccess: false,
       currentStep: 1,
       depense: {
         montant: 0,
@@ -128,17 +159,12 @@ export default {
       },
       justificatif: null,
 
-      //Notification
-      alertMessage: '',
-
 
       //Suggestions
       usersInGroup: [],
       texttosuggest: '',
       selectedsUsers: [],
       suggestedUsers: [],
-
-      groupId: null,
 
 
       //Preview expense
@@ -154,8 +180,13 @@ export default {
   methods: {
     async submitDepense() {
       try {
+        this.isExpenseLoading = true;
         this.weightquery = this.selectedsUsers.map((user) => {
-          return `{key:"${user.id}",value:${user.weight}}`;
+          if (user.weight !== undefined) {
+            return `{key:"${user.id}",value:${user.weight}}`;
+          } else {
+            return `{key:"${user.id}"}`;
+          }
         }).join(',');
         const axios = require('axios');
         const response = await axios.post('${process.env.VUE_APP_API_URL', {
@@ -164,7 +195,7 @@ export default {
     expenseInsertInput: {
       amount: ${this.depense.montant}
       description: "${this.depense.description}"
-      groupId: "${this.groupId}"
+      groupId: "${this.activeGroup.id}"
       userAmountsList: [${this.weightquery}]
     }
   ) {
@@ -187,9 +218,18 @@ export default {
           console.log('Erreur : ' + responseData.errors[0].message);
         }
         if (responseData.data) {
-          this.alertMessage = 'Dépense créée avec succès';
+          this.expenseUploadedSuccess = true;
           this.currentStep++;
-          this.expenseId = responseData.data.addUserExpense.expense.id;
+          this.expenseId = responseData.data.addUserExpense[0].expense.id;
+          this.isExpenseLoading = false;
+
+          //Reset les champs
+          this.selectedsUsers = [];
+          this.depense = {
+            montant: 0,
+            description: '',
+            date: '',
+          };
         }
 
       } catch (error) {
@@ -197,8 +237,38 @@ export default {
       }
 
     },
-    submitJustificatif() {
-      console.log('Créer une dépense avec justificatif:', this.justificatif);
+    async submitJustificatif() {
+      this.isJustificatifLoading = true;
+      try {
+        const axios = require('axios');
+        const response = await axios.post('${process.env.VUE_APP_API_URL}', {
+          query: `mutation{uploadExpenseJustification(expenseId: "${this.expenseId}")}`
+        }, {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+        });
+        const responseData = response.data;
+        console.log('Réponse upload:', responseData);
+
+        if (responseData.data.uploadExpenseJustification) {
+          const uploadUrl = responseData.data.uploadExpenseJustification;
+          const formData = new FormData();
+          formData.append('file', this.justificatif);
+          const uploadResponse = await axios.post(uploadUrl, formData);
+          console.log('Réponse de l\'upload:', uploadResponse.data);
+          if (uploadResponse.data) {
+            this.justicatifUploadedSuccess = true;
+            this.isJustificatifLoading = false;
+            this.justificatif = null;
+            this.currentStep = 1;
+          }
+        }
+      } catch (error) {
+        console.error('Erreur lors de l\'envoi du justificatif', error);
+      }
     },
     handleFileChange(event) {
       this.justificatif = event.target.files[0];
@@ -215,9 +285,8 @@ export default {
     },
     selectAllUsers() {
       this.selectedsUsers = this.usersInGroup;
-      console.log('usersInGroup:', this.usersInGroup);
     },
-    unselectAllUsers() {
+    unselectUsers() {
       this.selectedsUsers = [];
     },
     removeUserFromSelected(user) {
@@ -226,15 +295,9 @@ export default {
 
     async fetchMembersGroup() {
       try {
-        console.log('activeGroup:', this.activeGroup);
         const axios = require('axios');
         const response = await axios.post('${process.env.VUE_APP_API_URL}', {
-          query: `query {
-    groups(where: { name: { contains: "${this.activeGroup.name}" } }) {
-      userGroups{user{userName, id}}
-      id
-    }
-  }`
+          query: `{groupById(id:"${this.activeGroup.id}"){userGroups{user{userName, id}}}}`
         }, {
           withCredentials: true,
           headers: {
@@ -243,20 +306,17 @@ export default {
           },
         });
         const responseData = await response.data;
-        console.log('responseData:', responseData);
         if (responseData.errors) {
           console.log('Erreur : ' + responseData.errors[0].message);
         }
-        if (responseData.data.groups.length > 0) {
-          console.log('usersInGroup:', responseData.data.groups[0].userGroups)
-          this.usersInGroup = responseData.data.groups[0].userGroups.map((user) => {
+        if (responseData.data && responseData.data.groupById.userGroups.length > 0) {
+          this.usersInGroup = responseData.data.groupById.userGroups.map((user) => {
             return {
               userName: user.user.userName,
               id: user.user.id,
             };
           });
-          this.groupId = responseData.data.groups[0].id;
-          console.log('groupId:', this.groupId);
+          this.groupId = responseData.data.groupById.id;
         }
       } catch (error) {
         console.error('Erreur lors de la récupération des membres du groupe', error);
@@ -298,7 +358,6 @@ export default {
     },
     async previewRefunds() {
       try {
-        console.log('selectedsUsers:', this.selectedsUsers)
         this.weightquery = this.selectedsUsers.map((user) => {
           if (user.weight !== undefined) {
             return `{key:"${user.id}",value:${user.weight}}`;
@@ -307,13 +366,12 @@ export default {
           }
         }).join(',');
         const axios = require('axios');
-        console.log('userAmountsList:', this.weightquery);
 
         const response = await axios.post('${process.env.VUE_APP_API_URL}', {
           query: `query{previsualizeUserExpenses(
   expensePrevisualizationInput:{
     amount:${this.depense.montant},
-  groupId:"${this.groupId}",
+  groupId:"${this.activeGroup.id}",
   userAmountsList:[
     ${this.weightquery}
     ]
@@ -328,9 +386,7 @@ export default {
           },
         });
         const responseData = response.data;
-        console.log('responseData:', responseData);
         if (responseData.data.previsualizeUserExpenses) {
-          console.log('previsualizeUserExpenses:', responseData.data.previsualizeUserExpenses);
           this.expensesPreview = responseData.data.previsualizeUserExpenses;
         }
       } catch (error) {
@@ -341,7 +397,6 @@ export default {
     getUserPreviewAmount(userId) {
       const userPreview = this.expensesPreview.find((user) => user.key === userId);
       if (userPreview) {
-        console.log('userPreview:', userPreview);
         return userPreview.value;
       }
       return 0;
@@ -351,14 +406,77 @@ export default {
   },
   mounted() {
     this.fetchMembersGroup();
-    console.log('groupe actif:', this.activeGroup);
+  },
+  watch: {
+    activeGroup: {
+      handler: function (newGroup, oldGroup) {
+        if (newGroup !== oldGroup) {
+          this.fetchMembersGroup();
+          this.selectedsUsers = [];
+          this.isExpenseLoading = false;
+          this.isJustificatifLoading = false;
+        }
+      },
+      deep: true,
+    },
   },
 
 };
 </script>
 
 <style scoped>
+.stepwizard-step p {
+  margin-top: 10px;
+}
 
+.stepwizard-row {
+  display: table-row;
+}
+
+.stepwizard {
+  display: table;
+  width: 100%;
+  position: relative;
+}
+
+.stepwizard-step button[disabled] {
+  opacity: 1 !important;
+  filter: alpha(opacity=100) !important;
+}
+
+.stepwizard-row:before {
+  top: 14px;
+  bottom: 0;
+  position: absolute;
+  content: " ";
+  width: 100%;
+  height: 1px;
+  background-color: #ccc;
+  z-index: 0;
+
+}
+
+.stepwizard-step {
+  display: table-cell;
+  text-align: center;
+  position: relative;
+}
+
+.btn-circle {
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  padding: 6px 0;
+  font-size: 12px;
+  line-height: 1.428571429;
+  border-radius: 15px;
+}
+
+.btn-default, .btn-default:hover {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  color: #333;
+}
 
 </style>
 
