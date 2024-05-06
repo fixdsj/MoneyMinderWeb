@@ -7,6 +7,7 @@ import AppLogin from "@/components/AppLogin.vue";
 import AppRegister from "@/components/AppRegister.vue";
 import AppError404 from "@/components/AppError404.vue";
 import AppChatRoom from "@/components/AppChatRoom.vue";
+import AppPrivacyPolicy from "@/components/AppPrivacyPolicy.vue";
 
 /*import { currentUsername } from "@/main";*/
 
@@ -17,6 +18,7 @@ const routes = [
     { path: '/messages', component: AppChatRoom },
     { path: '/login', component: AppLogin },
     { path: '/register', component: AppRegister },
+    { path: '/privacy-policy', component: AppPrivacyPolicy },
     { path: '/:notFound(.*)', component: AppError404 }
 ];
 
@@ -26,7 +28,7 @@ const router = createRouter({
 });
 
 
-/*router.beforeEach((to, from, next) => {
+/*router.beforeEach((to, from, next) => /!**!/{
     watchEffect(() => {
         const currentUsernameValue = currentUsername.value;
         console.log(currentUsernameValue);
