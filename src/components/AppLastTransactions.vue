@@ -35,11 +35,16 @@
 
         <div class="accordion-body container">
           <div class="d-flex justify-content-between">
-            <p><strong>Description:</strong> {{ transaction.description }}</p>
-            <div class="text-end d-flex">
+            <p v-if="transaction.description !=='' "><strong>Description:</strong> {{ transaction.description }}</p>
+            <p v-else class="text-danger">Pas de description</p>
+            <div v-if="transaction.justificationExtension" class="text-end d-flex">
               <p class="text-end "><strong>Télécharger le justificatif:</strong></p>
               <i class="bi bi-file-earmark-arrow-down" type="button" @click="downloadProof(transaction)"></i>
             </div>
+            <div v-else class="text-end">
+              <p class="text-end text-danger">Pas de justificatif</p>
+            </div>
+
           </div>
           <hr>
           <div class="d-flex justify-content-between">
@@ -183,7 +188,9 @@ export default {
       description
       id
       amount
-      createdAt,
+      createdAt
+      justificationExtension
+      expenseType
       userExpenses {
         paidAt
         user {
@@ -210,11 +217,13 @@ export default {
               date: new Date(transaction.createdAt),
               type: 'remboursement',
               description: transaction.description,
+              justificationExtension: transaction.justificationExtension,
               membresconcernes: transaction.userExpenses.map((userExpense) => ({
                 userName: userExpense.user.userName,
                 paidAt: userExpense.paidAt
               })),
-              categorie: 'Sorties',
+              categorie: this.translateType(transaction.expenseType),
+
               id: transaction.id,
 
             };
@@ -226,6 +235,18 @@ export default {
 
       } catch (error) {
         console.error('Erreur:', error);
+      }
+    },
+
+    translateType(type) {
+      if (type === 'RENT') {
+        return 'Loyer';
+      } else if (type === 'FOOD') {
+        return 'Alimentation';
+      } else if (type === 'TRANSPORT') {
+        return 'Transport';
+      } else if (type === 'OTHER') {
+        return 'Autres';
       }
     },
     handleSort(event) {

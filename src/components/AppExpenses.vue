@@ -79,16 +79,15 @@
           </li>
         </ul>
       </div>
-      <!--      <div class="mb-3">
-              <label class="form-label" for="categorie">Catégorie:</label>
-              <select id="categorie" class="form-select">
-                <option value="alimentation">Alimentation</option>
-                <option value="sorties">Sorties</option>
-                <option value="logement">Logement</option>
-                <option value="transport">Transport</option>
-                <option value="divers">Divers</option>
-              </select>
-            </div>-->
+      <div class="form-floating mb-3">
+        <select id="category" v-model="depense.category" class="form-select">
+          <option value='FOOD'>Alimentation</option>
+          <option value='RENT'>Logement</option>
+          <option value='TRANSPORT'>Transport</option>
+          <option value='OTHER'>Autres</option>
+        </select>
+        <label for="category">Catégorie:</label>
+      </div>
 
       <div v-if="!isExpenseLoading"
            class="mb-3 text-center">
@@ -156,6 +155,7 @@ export default {
         montant: 0,
         description: '',
         date: '',
+        category: 'OTHER',
       },
       justificatif: null,
 
@@ -196,6 +196,7 @@ export default {
       amount: ${this.depense.montant}
       description: "${this.depense.description}"
       groupId: "${this.activeGroup.id}"
+      expenseType: ${this.depense.category}
       userAmountsList: [${this.weightquery}]
     }
   ) {

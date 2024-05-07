@@ -13,6 +13,7 @@
           </div>
           <div v-if="groups.length === 0" class="list-group-item fst-italic" type="button">Aucun groupe</div>
         </div>
+        <img src="../assets/illustrations/userwithphone.png" alt="" height="400" width="400" class="img-fluid">
       </div>
 
       <div class="col-9">

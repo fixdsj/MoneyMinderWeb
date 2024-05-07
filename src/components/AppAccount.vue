@@ -60,7 +60,6 @@
                 </ul>
               </div>
               <div class="form-floating mb-3">
-
                 <select id="selectGroup" v-model="selectedGroup" class="form-select" required>
                   <option disabled selected value="">Choisir un groupe</option>
                   <option v-for="groupe in groupsJoined" :key="groupe.id" :value="groupe.id">{{ groupe.name }}</option>
