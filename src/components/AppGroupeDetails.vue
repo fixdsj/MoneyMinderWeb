@@ -13,21 +13,18 @@
     <div class="row">
       <div v-for="member in group.members" :key="member.id" class="col-md-4 mb-3">
         <div class="card">
-          <div class="card-body d-flex align-items-center">
-            <img
-                :src="member.avatarUrl ? member.avatarUrl : 'https://avatar.iran.liara.run/username?username=' + member.userName"
-                alt="user img"
-                class="img-fluid img-thumbnail rounded-circle me-3"
-                style="width: 50px; height: 50px;">
-
-            <div>
-              <h5 class="card-title mb-1">{{ member.userName }}</h5>
-              <p class="card-text mb-1">
-                {{ member.lasttransaction ? 'Dernière transaction: ' + member.lasttransaction : 'Pas de transaction' }}
-              </p>
-              <p class="card-text mb-1">Email: {{ member.email }}</p>
-              <p class="card-text mb-0">Solde: {{ member.balance }}€</p>
-            </div>
+          <img
+              :src="member.avatarUrl ? member.avatarUrl : 'https://avatar.iran.liara.run/username?username=' + member.userName"
+              alt="user img"
+              class="card-img-top img-fluid img-thumbnail rounded-circle mx-auto mt-2"
+              style="width: 100%; max-width: 100px; height: auto;">
+          <div class="card-body text-center">
+            <h5 class="card-title">{{ member.userName }}</h5>
+            <p class="card-text">{{
+                member.lasttransaction ? 'Dernière transaction: ' + member.lasttransaction : 'Pas de transaction'
+              }}</p>
+            <p class="card-text">Email: {{ member.email }}</p>
+            <p class="card-text">Solde: {{ member.balance }}€</p>
           </div>
         </div>
       </div>
