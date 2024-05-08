@@ -44,14 +44,6 @@
           </li>
 
         </ul>
-        <!--        <div class="d-flex align-items-center p-3 groupHeader">
-                  <img
-                      :src="activeGroup.groupImageUrl ? activeGroup.groupImageUrl : 'https://avatar.iran.liara.run/username?username=' + activeGroup.name"
-                      alt="user img"
-                      class="img-fluid img-thumbnail rounded-circle"
-                      style="width: 50px; height: 50px;">
-                  <h5 class="mb-0">{{ activeGroup.name }}</h5>
-                </div>-->
         <div class="text-center">
           <div class="alert alert-light groupHeader">
             <h5 class="mb-0">{{ activeGroup.name }}</h5>

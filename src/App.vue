@@ -68,7 +68,7 @@ export default {
 <style>
 #app {
   --main-background-color: #fbfbfc;
-  --second-background-color: #CCD5AE;
+  --second-background-color: #5D7052;
   --third-background-color: #D4A373;
   --first-text-color: white;
   --second-text-color: #3CB371;

@@ -14,16 +14,18 @@
           </div>
           <div id="newGroupForm" class="collapse mt-3 mb-3">
             <form @submit.prevent="createGroup">
-              <div class="mb-3">
-                <label class="form-label" for="nom">Nom</label>
+              <div class="mb-3 form-floating">
+                <label for="nom">Nom</label>
                 <input id="nom" v-model="nomGroupe" class="form-control" placeholder="Nom" type="text"/>
               </div>
-              <div class="mb-3">
-                <label class="form-label" for="description">Description</label>
+              <div class="mb-3 form-floating">
+                <label for="description">Description</label>
                 <input id="description" v-model="descriptionGroupe" class="form-control" placeholder="Description"
                        type="text"/>
               </div>
-              <button class="btn btn-primary" type="submit">Créer</button>
+              <div class="text-center">
+                <button class="btn btn-primary" type="submit">Créer</button>
+              </div>
             </form>
           </div>
 
@@ -111,8 +113,6 @@
 
       <div class="col-md-6">
         <div>
-
-          <h4 class="card-title text-md-center">Mes informations</h4>
           <div class="d-flex justify-content-center align-items-center" style="height: 100px;">
             <template v-if="avatarUrl">
               <img :src="avatarUrl" alt="Photo de profil" class="rounded-circle img-thumbnail"

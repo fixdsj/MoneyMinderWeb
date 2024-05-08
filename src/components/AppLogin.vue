@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="row align-items-center">
-      <div class="col-md-8">
+      <div class="col-md-6">
         <form class="p-4 p-md-5" @submit="signIn">
           <h3 class="text-center mb-4">Connexion</h3>
           <p v-if="errors.length" class="text-danger">
@@ -44,7 +44,7 @@
           </div>
         </form>
       </div>
-      <div class="col-md-4">
+      <div class="col-md-5">
         <img alt="" class="img-fluid mx-auto d-block" height="412" size="412"
              src="../assets/illustrations/signup_illustration.svg">
       </div>
