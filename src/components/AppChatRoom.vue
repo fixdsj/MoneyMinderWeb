@@ -1,7 +1,7 @@
 <template>
-  <div class="chat-area m-2">
+  <div class="chat-area ">
     <!-- chatlist -->
-    <div class="chatlist">
+    <div class="chatlist m-2">
       <div class="modal-dialog-scrollable">
         <div class="modal-content">
           <div class="chat-header">
@@ -125,7 +125,6 @@
                   <p>{{ message.content }}</p>
                   <span class="time">{{ message.sentAt }}</span>
                 </li>
-
               </ul>
             </div>
           </div>
@@ -136,7 +135,7 @@
               <input v-model="messageToSend" aria-label="message" class="form-control"
                      placeholder="Ecrire un message…"
                      type="text">
-              <button aria-hidden="true" class="btn btn-primary" type="button" @click="sendMessage">Envoyer
+              <button aria-hidden="true" class="btn btn-primary w-25 mx-1" type="button" @click="sendMessage">Envoyer
               </button>
             </form>
 

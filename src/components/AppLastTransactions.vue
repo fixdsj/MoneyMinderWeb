@@ -6,16 +6,22 @@
       <i class="bi bi-check-circle" style="font-size: 60px; color:green"></i>
     </div>
   </template>
-  <div class="form-floating mb-3">
-    <select id="sortSelect" class="form-select" @change="handleSort">
-      <option value="dateDesc" @click="sortByDateDesc">Date Descendante</option>
-      <option value="dateAsc" @click="sortByDateAsc">Date Ascendante</option>
-      <option value="amountAsc" @click="sortByAmountAsc">Montant Ascendant</option>
-      <option value="amountDesc" @click="sortByAmountDesc">Montant Descendant</option>
+  <div class="d-flex justify-content-between">
+    <div class="form-floating mb-3">
+      <select id="sortSelect" class="form-select" @change="handleSort">
+        <option value="dateDesc" @click="sortByDateDesc">Date Descendante</option>
+        <option value="dateAsc" @click="sortByDateAsc">Date Ascendante</option>
+        <option value="amountAsc" @click="sortByAmountAsc">Montant Ascendant</option>
+        <option value="amountDesc" @click="sortByAmountDesc">Montant Descendant</option>
 
-    </select>
-    <label for="sortSelect">Trier par</label>
+      </select>
+      <label for="sortSelect">Trier par</label>
+    </div>
+    <div class="my-auto pe-2">
+      <button class="btn btn-secondary" @click="downloadSumup">Télécharger le récapitulatif</button>
+    </div>
   </div>
+
   <div id="accordionExample" class="accordion">
     <div v-for="(transaction, index) in transactions" :key="index" class="accordion-item">
       <h2 :id="'heading' + index" class="accordion-header">
@@ -160,6 +166,44 @@ export default {
             month: '2-digit',
             day: '2-digit'
           })}.${extension}`;
+
+          // Creating download link
+          const url = window.URL.createObjectURL(new Blob([downloadResponse.data]));
+          const link = document.createElement('a');
+          link.href = url;
+          link.setAttribute('download', fileName);
+          document.body.appendChild(link);
+          link.click();
+        }
+        if (responseData.errors) {
+          console.log("erreur" + responseData.errors.message);
+        }
+      } catch (error) {
+        console.error('Erreur:', error);
+      }
+    },
+    async downloadSumup() {
+      console.log('Téléchargement du récapitulatif');
+      try {
+        const axios = require('axios');
+        const response = await axios.post('${process.env.VUE_APP_API_URL}', {
+          query: `mutation{groupPdfSumUp(groupId: "${this.activeGroup.id}")}`
+        }, {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json',
+            "Accept": "application/json",
+          },
+        });
+        const responseData = response.data;
+        if (responseData.data && responseData.data.groupPdfSumUp) {
+          const downloadUrl = responseData.data.groupPdfSumUp;
+          const downloadResponse = await axios.get(downloadUrl, {
+            responseType: 'blob',
+          });
+
+          // Creating file name with extension
+          const fileName = `recapitulatif_${this.activeGroup.name}.pdf`;
 
           // Creating download link
           const url = window.URL.createObjectURL(new Blob([downloadResponse.data]));
