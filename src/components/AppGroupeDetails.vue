@@ -12,7 +12,7 @@
   <div class="container">
     <div class="row">
       <div v-for="member in group.members" :key="member.id" class="col-md-4 mb-3">
-        <div class="card">
+        <div class="card" style="opacity: 0.9 ;">
           <img
               :src="member.avatarUrl ? member.avatarUrl : 'https://avatar.iran.liara.run/username?username=' + member.userName"
               alt="user img"
@@ -154,5 +154,18 @@ export default {
 
 
 <style scoped>
+.card {
+  opacity: 0.9;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: opacity 0.3s ease, box-shadow 0.3s ease;
+}
 
+.card:hover {
+  opacity: 1;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.card {
+  background-color: var(--second-background-color);
+}
 </style>

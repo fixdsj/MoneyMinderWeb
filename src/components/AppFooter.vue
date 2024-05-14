@@ -1,6 +1,6 @@
 <template>
   <div class="container-fluid">
-    <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 border-top">
+    <footer class="d-flex flex-wrap justify-content-between align-items-center py-3">
       <div class="col-md-4 d-flex align-items-center">
         <span class="mb-3 mb-md-0 text-white">&copy; 2024 Money Minder</span>
       </div>
@@ -25,7 +25,7 @@ export default {
 
 <style scoped>
 .container-fluid {
-  background-color: var(--second-background-color);
+  background-color: var(--main-background-color);
 }
 
 </style>

@@ -506,5 +506,9 @@ export default {
 
 <style scoped>
 
+.list-group-item {
+  border: none;
+  background-color: var(--second-background-color);
+}
 
 </style>

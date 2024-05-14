@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="text-bg-secondary">
     <div v-if="groups.length > 0 && activeGroup.id" class="tab-content row">
       <div class="col-3">
         <div class="list-group">
@@ -157,12 +157,13 @@ export default {
 <style scoped>
 
 .activeGroup {
-  background-color: var(--second-background-color);
+  background-color: var(--third-background-color) !important;
   border: none;
 }
 
 .groupHeader {
   background-color: var(--third-background-color);
+  border-top: 1px solid var(--second-background-color);
 }
 
 .col-3 {
@@ -173,6 +174,17 @@ export default {
 .nav-link.active {
   background-color: var(--third-background-color) !important;
   color: white !important;
-  border-bottom: 1px solid var(--third-background-color) !important;
+}
+
+.nav-link {
+  color: white !important;
+}
+
+.text-bg-secondary {
+  background-color: var(--main-background-color) !important;
+}
+
+.list-group-item {
+  background-color: var(--second-background-color);
 }
 </style>

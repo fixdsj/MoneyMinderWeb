@@ -1,169 +1,150 @@
 <template>
-  <!-- char-area -->
-  <section class="message-area">
-    <div class="container">
-      <div class="row">
-        <div class="col-12">
-          <div class="chat-area">
-            <!-- chatlist -->
-            <div class="chatlist">
-              <div class="modal-dialog-scrollable">
-                <div class="modal-content">
-                  <div class="chat-header">
-                    <div class="input-group">
-                      <input aria-label="search" class="form-control" placeholder="Rechercher" type="text">
-                      <button class="btn btn-outline-secondary" type="button"><i class="bi bi-search"></i></button>
+  <div class="chat-area m-2">
+    <!-- chatlist -->
+    <div class="chatlist">
+      <div class="modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="chat-header">
+            <div class="input-group">
+              <input aria-label="search" class="form-control" placeholder="Rechercher" type="text">
+              <button class="btn btn-outline-secondary" type="button"><i class="bi bi-search"></i></button>
+            </div>
+
+            <ul id="myTab" class="nav nav-tabs" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button id="Open-tab" aria-controls="Open" aria-selected="true" class="nav-link active"
+                        data-bs-target="#Open" data-bs-toggle="tab" role="tab" type="button">Amis
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button id="Closed-tab" aria-controls="Closed" aria-selected="false" class="nav-link"
+                        data-bs-target="#Closed" data-bs-toggle="tab" role="tab" type="button"
+                        @click="fetchCurrentUserGroups">Groupes
+                </button>
+              </li>
+            </ul>
+          </div>
+
+          <div class="modal-body overflow-x-hidden">
+            <!-- chat-list -->
+            <div class="chat-lists">
+              <div id="myTabContent" class="tab-content">
+
+                <!--                        Amis-->
+                <div id="Open" aria-labelledby="Open-tab" class="tab-pane fade show active " role="tabpanel">
+                  <!-- chat-list -->
+                  <div class="chat-list">
+
+                    <div v-for="friend in friends" :key="friend.name">
+                      <a class="d-flex align-items-center "
+                         role="button"
+                         @click="handleCurrentChat('friend',friend)">
+                        <div class="flex-shrink-0">
+                          <img
+                              :src="friend.avatarUrl ? friend.avatarUrl : 'https://avatar.iran.liara.run/username?username=' + friend.name"
+                              alt="user img"
+                              class="img-fluid img-thumbnail rounded-circle"
+                              style="width: 50px; height: 50px;">
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                          <h3>{{ friend.name }}</h3>
+                          <p class="text-truncate">{{ friend.email }}</p>
+                        </div>
+                      </a>
+                      <hr class="m-0 p-0 mb-2">
                     </div>
 
-                    <ul id="myTab" class="nav nav-tabs" role="tablist">
-                      <li class="nav-item" role="presentation">
-                        <button id="Open-tab" aria-controls="Open" aria-selected="true" class="nav-link active"
-                                data-bs-target="#Open" data-bs-toggle="tab" role="tab" type="button">Amis
-                        </button>
-                      </li>
-                      <li class="nav-item" role="presentation">
-                        <button id="Closed-tab" aria-controls="Closed" aria-selected="false" class="nav-link"
-                                data-bs-target="#Closed" data-bs-toggle="tab" role="tab" type="button"
-                                @click="fetchCurrentUserGroups">Groupes
-                        </button>
-                      </li>
-                    </ul>
                   </div>
-
-                  <div class="modal-body overflow-x-hidden">
-                    <!-- chat-list -->
-                    <div class="chat-lists">
-                      <div id="myTabContent" class="tab-content">
-
-                        <!--                        Amis-->
-                        <div id="Open" aria-labelledby="Open-tab" class="tab-pane fade show active " role="tabpanel">
-                          <!-- chat-list -->
-                          <div class="chat-list">
-
-                            <div v-for="friend in friends" :key="friend.name">
-                              <a class="d-flex align-items-center "
-                                 role="button"
-                                 @click="handleCurrentChat('friend',friend)">
-                                <div class="flex-shrink-0">
-                                  <img
-                                      :src="friend.avatarUrl ? friend.avatarUrl : 'https://avatar.iran.liara.run/username?username=' + friend.name"
-                                      alt="user img"
-                                      class="img-fluid img-thumbnail rounded-circle"
-                                      style="width: 50px; height: 50px;">
-                                </div>
-                                <div class="flex-grow-1 ms-3">
-                                  <h3>{{ friend.name }}</h3>
-                                  <p class="text-truncate">{{ friend.email }}</p>
-                                </div>
-                              </a>
-                              <hr class="m-0 p-0 mb-2">
-                            </div>
-
-                          </div>
-                          <!-- chat-list -->
-                        </div>
-                        <!--                        Groupes-->
-                        <div id="Closed" aria-labelledby="Closed-tab" class="tab-pane fade" role="tabpanel">
-                          <!-- chat-list -->
-                          <div class="chat-list">
-                            <a v-for="group in groups" :key="group.name" class="d-flex align-items-center" role="button"
-                               @click="handleCurrentChat('group',group)">
-                              <div class="flex-shrink-0">
-                                <img
-                                    :src="group.groupImageUrl ? group.groupImageUrl : 'https://avatar.iran.liara.run/username?username=' + group.name"
-                                    alt="user img"
-                                    class="img-fluid img-thumbnail rounded-circle"
-                                    style="width: 50px; height: 50px;">
-                              </div>
-                              <div class="flex-grow-1 ms-3">
-                                <h3>{{ group.name }}</h3>
-                                <p class="text-truncate">{{ group.description }}</p>
-                              </div>
-                            </a>
-                            <a v-if="groups.length === 0" class="d-flex align-items-center" href="/account">
-                              <div class="flex-grow-1 ms-3">
-                                <h3>Aucun groupe</h3>
-                              </div>
-                            </a>
-                          </div>
-                          <!-- chat-list -->
-                        </div>
+                  <!-- chat-list -->
+                </div>
+                <!--                        Groupes-->
+                <div id="Closed" aria-labelledby="Closed-tab" class="tab-pane fade" role="tabpanel">
+                  <!-- chat-list -->
+                  <div class="chat-list">
+                    <a v-for="group in groups" :key="group.name" class="d-flex align-items-center" role="button"
+                       @click="handleCurrentChat('group',group)">
+                      <div class="flex-shrink-0">
+                        <img
+                            :src="group.groupImageUrl ? group.groupImageUrl : 'https://avatar.iran.liara.run/username?username=' + group.name"
+                            alt="user img"
+                            class="img-fluid img-thumbnail rounded-circle"
+                            style="width: 50px; height: 50px;">
                       </div>
-
-                    </div>
-                    <!-- chat-list -->
+                      <div class="flex-grow-1 ms-3">
+                        <h3>{{ group.name }}</h3>
+                        <p class="text-truncate">{{ group.description }}</p>
+                      </div>
+                    </a>
+                    <a v-if="groups.length === 0" class="d-flex align-items-center" href="/account">
+                      <div class="flex-grow-1 ms-3">
+                        <h3>Aucun groupe</h3>
+                      </div>
+                    </a>
                   </div>
+                  <!-- chat-list -->
                 </div>
               </div>
+
             </div>
-            <!-- chatlist -->
-
-            <!-- chatbox -->
-            <div class="chatbox">
-              <div class="modal-dialog-scrollable">
-                <div class="modal-content">
-                  <div class="msg-head">
-                    <div class="row">
-                      <div class="col-8">
-                        <div class="d-flex align-items-center">
-                          <div class="flex-shrink-0">
-                            <img
-                                :src="activeChat.avatarUrl ? activeChat.avatarUrl : 'https://avatar.iran.liara.run/username?username=' + activeChat.name"
-                                alt="user img"
-                                class="img-fluid img-thumbnail rounded-circle"
-                                style="width: 50px; height: 50px;">
-                          </div>
-                          <div class="flex-shrink-0">
-                          </div>
-                          <div class="flex-grow-1 ms-3">
-                            <h3>{{ activeChat.name }}</h3>
-                            <p>{{ activeChat.email }}</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+            <!-- chat-list -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- chatlist -->
+    <!-- chatbox -->
+    <div class="chatbox">
+      <div class="modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="msg-head">
+            <div class="row">
+              <div class="col-8">
+                <div class="d-flex align-items-center">
+                  <div class="flex-shrink-0">
+                    <img
+                        :src="activeChat.avatarUrl ? activeChat.avatarUrl : 'https://avatar.iran.liara.run/username?username=' + activeChat.name"
+                        alt="user img"
+                        class="img-fluid img-thumbnail rounded-circle"
+                        style="width: 50px; height: 50px;">
                   </div>
-
-
-                  <div class="modal-body">
-                    <div class="msg-body">
-                      <ul ref="messageList">
-                        <li v-for="message in activeChat.messages" :key="message.id"
-                            :class="{'sender': message.sender.userName !== this.currentUsername, 'repaly': message.sender.userName === this.currentUsername}">
-                          <p>{{ message.content }}</p>
-                          <span class="time">{{ message.sentAt }}</span>
-                        </li>
-                        <!--                        <li>
-                                                  <div class="divider">
-                                                    <h6>Aujourd'hui</h6>
-                                                  </div>-->
-
-                      </ul>
-                    </div>
+                  <div class="flex-shrink-0">
                   </div>
-
-
-                  <div class="send-box">
-                    <form @submit.prevent="sendMessage">
-                      <input v-model="messageToSend" aria-label="message…" class="form-control"
-                             placeholder="Ecrire un message…"
-                             type="text">
-                      <button aria-hidden="true" class="btn btn-primary" type="button" @click="sendMessage">Envoyer
-                      </button>
-                    </form>
-
+                  <div class="flex-grow-1 ms-3">
+                    <h3>{{ activeChat.name }}</h3>
+                    <p>{{ activeChat.email }}</p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+          <div class="modal-body">
+            <div class="msg-body">
+              <ul ref="messageList">
+                <li v-for="message in activeChat.messages" :key="message.id"
+                    :class="{'sender': message.sender.userName !== this.currentUsername, 'repaly': message.sender.userName === this.currentUsername}">
+                  <p>{{ message.content }}</p>
+                  <span class="time">{{ message.sentAt }}</span>
+                </li>
 
+              </ul>
+            </div>
+          </div>
+
+
+          <div class="send-box">
+            <form @submit.prevent="sendMessage">
+              <input v-model="messageToSend" aria-label="message" class="form-control"
+                     placeholder="Ecrire un message…"
+                     type="text">
+              <button aria-hidden="true" class="btn btn-primary" type="button" @click="sendMessage">Envoyer
+              </button>
+            </form>
+
+          </div>
         </div>
       </div>
     </div>
-
-  </section>
-  <!-- char-area -->
+  </div>
 
 </template>
 
@@ -434,9 +415,6 @@ export default {
   padding: 5px;
 }
 
-/*.message-area {
-  padding: 20px 0;
-}*/
 
 .chat-area {
   position: relative;
@@ -856,6 +834,23 @@ li.repaly .time {
     border-top-right-radius: 6px;
     border-bottom-left-radius: 6px;
   }
+}
+
+.nav-link.active {
+  background-color: var(--third-background-color) !important;
+  color: white !important;
+}
+
+.form-control[aria-label="search"] {
+  background-color: var(--second-background-color);
+}
+
+.form-control[aria-label="message"] {
+  background-color: var(--second-background-color);
+}
+
+.img-thumbnail {
+  background-color: var(--second-background-color);
 }
 
 /*Custom Scrollbar*/

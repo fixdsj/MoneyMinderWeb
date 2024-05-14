@@ -43,11 +43,14 @@
 
       <div class="mb-3">
         <div class="d-flex justify-content-between ">
-          <label class="form-label">Utilisateurs concernés:</label>
-          <button v-if="selectedsUsers.length === 0" class="btn btn-link" type="button" @click="selectAllUsers">Tout
+          <label class="form-label text-white my-auto">Utilisateurs concernés</label>
+          <button v-if="selectedsUsers.length === 0" class="btn btn-link" style="color: white !important;" type="button"
+                  @click="selectAllUsers">Tout
             sélectionner
           </button>
-          <button v-else class="btn btn-link" type="button" @click="unselectUsers">Tout supprimer</button>
+          <button v-else class="btn btn-link" style="color: white !important;" type="button" @click="unselectUsers">Tout
+            supprimer
+          </button>
         </div>
 
         <input id="weightedinput" v-model="texttosuggest" class="form-control" placeholder="Ajouter un utilisateur..."
