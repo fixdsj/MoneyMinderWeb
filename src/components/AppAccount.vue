@@ -41,7 +41,6 @@
           <div id="inviteUserForm" class="collapse mt-3 mb-3">
             <form @submit.prevent="inviteToGroup">
               <div class="mb-3 form-floating">
-
                 <input id="pseudo" v-model="selectedUser.userName" class="form-control"
                        placeholder="Nom d'utilisateur" required
                        type="text" @input="suggestUsers"/>
@@ -124,12 +123,23 @@
             </template>
           </div>
 
-          <div class="mb-3">
-            <label class="form-label" for="formFileSm">Mettre à jour la photo de profil</label>
-            <div style="display: flex; align-items: center;">
-              <input id="formFileSm" accept="image/png, image/jpeg" class="form-control form-control-sm" type="file"
-                     @change="pictureToUpload = $event.target.files[0]">
-              <button v-if="pictureToUpload" class="btn btn-info" @click="uploadPicture">Changer</button>
+          <div class="mb-3 d-flex justify-content-between">
+            <div class="my-auto me-1">
+              <label class="form-label" for="formFilePicture">Mettre à jour la photo de profil</label>
+              <div style="display: flex; align-items: center;">
+                <input id="formFilePicture" accept="image/png, image/jpeg" class="form-control form-control-sm"
+                       type="file"
+                       @change="pictureToUpload = $event.target.files[0]">
+                <button v-if="pictureToUpload" class="btn btn-info ms-1" @click="uploadPicture">Changer</button>
+              </div>
+            </div>
+            <div class="my-auto">
+              <label class="form-label" for="formFileRib">Mettre à jour le RIB</label>
+              <div style="display: flex; align-items: center;">
+                <input id="formFileRib" accept="application/pdf" class="form-control form-control-sm" type="file"
+                       @change="ribToUpload = $event.target.files[0]">
+                <button v-if="ribToUpload" class="btn btn-info ms-1" @click="uploadRib">Changer</button>
+              </div>
             </div>
           </div>
 
@@ -240,6 +250,9 @@ export default {
       pictureToUpload: null,
       urlToUpload: '',
 
+      //RIB
+      ribToUpload: null,
+
     };
   },
   methods: {
@@ -278,6 +291,44 @@ export default {
             toastLive.classList.add('show')
           }
           this.pictureToUpload = null;
+          await this.fetchCurrentUserDetails();
+        }
+      } catch (error) {
+        console.error('Erreur:', error);
+      }
+    },
+
+    async uploadRib() {
+      try {
+        // Récupérer l'URL d'upload
+        const graphqlResponse = await axios.post('${process.env.VUE_APP_API_URL}', {
+          query: `mutation{uploadUserRib}`
+        }, {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+        });
+
+        const responseData = graphqlResponse.data;
+        if (responseData.data.uploadUserRib) {
+          const uploadUrl = responseData.data.uploadUserRib;
+
+          // Créer un objet FormData pour envoyer le RIB
+          const formData = new FormData();
+          formData.append('file', this.ribToUpload);
+
+          const uploadResponse = await axios.post(uploadUrl, formData);
+
+          // Gérer la réponse de l'upload
+          console.log('Réponse de l\'upload:', uploadResponse.data);
+          if (uploadResponse.status === 200) {
+            this.alertMessage = 'RIB mis à jour';
+            var toastLive = document.getElementById('liveToast')
+            toastLive.classList.add('show')
+          }
+          this.ribToUpload = null;
           await this.fetchCurrentUserDetails();
         }
       } catch (error) {

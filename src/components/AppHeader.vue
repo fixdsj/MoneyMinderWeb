@@ -73,7 +73,6 @@ export default {
   },
   methods: {
     async logout() {
-      console.log('Déconnexion');
       const axios = require('axios');
       const response = await axios.post('${process.env.VUE_APP_API_URL}', {
         query: `mutation{signOut}`
