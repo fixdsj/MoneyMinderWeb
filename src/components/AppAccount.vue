@@ -15,8 +15,8 @@
           <div id="newGroupForm" class="collapse mt-3 mb-3">
             <form @submit.prevent="createGroup">
               <div class="mb-3 form-floating">
-                <label for="nom">Nom</label>
                 <input id="nom" v-model="nomGroupe" class="form-control" placeholder="Nom" type="text"/>
+                <label for="nom">Nom</label>
               </div>
               <div class="mb-3 form-floating">
                 <label for="description">Description</label>
@@ -37,7 +37,6 @@
               Inviter un utilisateur
             </button>
           </div>
-
           <div id="inviteUserForm" class="collapse mt-3 mb-3">
             <form @submit.prevent="inviteToGroup">
               <div class="mb-3 form-floating">
@@ -120,7 +119,6 @@
             <template v-else>
               <img :src="avatarPlaceholderUrl" alt="Photo de profil" class="rounded-circle img-thumbnail"
                    style="width: 100px; height: 100px;">
-              avatarPlaceholderUrl: {{ avatarPlaceholderUrl }}
             </template>
           </div>
 

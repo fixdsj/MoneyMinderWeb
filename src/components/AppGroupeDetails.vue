@@ -23,8 +23,9 @@
             <p class="card-text">{{
                 member.lasttransaction ? 'Dernière transaction: ' + member.lasttransaction : 'Pas de transaction'
               }}</p>
+            <p class="card-text">Rejoint le {{ member.joinedAt.toLocaleDateString('fr-FR', dateOptions) }}</p>
+            <p class="card-text">Montant à payer au groupe: {{ member.amountToPay }}€</p>
             <p class="card-text">Email: {{ member.email }}</p>
-            <p class="card-text">Solde: {{ member.balance }}€</p>
           </div>
         </div>
       </div>
@@ -97,6 +98,7 @@ export default {
     description
     userGroups {
       joinedAt
+       payTo{amountToPay}
       user {
         paymentsToBeReceived {
           amountToPay
@@ -104,7 +106,6 @@ export default {
         avatarUrl
         email
         userName
-        balance
       }
     }
   }
@@ -123,8 +124,8 @@ export default {
           this.group.members = responseData.data.groups[0].userGroups.map((userGroup) => {
             return {
               userName: userGroup.user.userName,
-              balance: userGroup.user.balance,
               joinedAt: new Date(userGroup.joinedAt),
+              amountToPay: userGroup.payTo.amountToPay,
               avatarUrl: userGroup.user.avatarUrl,
               email: userGroup.user.email,
               paymentsToBeReceived: userGroup.user.paymentsToBeReceived,

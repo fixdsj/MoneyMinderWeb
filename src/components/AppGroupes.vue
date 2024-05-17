@@ -1,12 +1,18 @@
 <template>
-  <div class="text-bg-secondary">
+  <div v-if="isLoading" class="text-center mt-2">
+    <div class="spinner-border" role="status" style="width: 3rem; height: 3rem;">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <div v-else class="text-bg-secondary">
     <div v-if="groups.length > 0 && activeGroup.id" class="tab-content row">
       <div class="col-3">
         <div class="list-group">
           <div class="list-group-item text-center">Groupes</div>
           <div v-for="group in groups" :key="group.id" :class="{'activeGroup': group.name === activeGroup.name}"
                class="list-group-item text-center" type="button" @click="setActiveGroup(group)">
-            {{ group.name }} ({{ group.balance }}€)
+            {{ group.name }}
           </div>
           <div class="list-group-item my-auto text-center" role="button"
                @click="$router.push('/account')">Créer un groupe
@@ -90,6 +96,7 @@ export default {
   components: {AppLastTransactions, AppRefunds, AppExpenses, AppGroupeDetails},
   data() {
     return {
+      isLoading: false,
       groups: [],
       activeGroup: [],
       activeTab: 'Créer une dépense'
@@ -120,9 +127,10 @@ export default {
     },
     async fetchCurrentUserGroups() {
       try {
+        this.isLoading = true;
         const axios = require('axios');
         const response = await axios.post('${process.env.VUE_APP_API_URL}', {
-          query: `{currentUser{userGroups{user{balance},group{name,id,groupImageUrl}}}}`
+          query: `{currentUser{userGroups{group{name,id,groupImageUrl}}}}`
         }, {
           withCredentials: true,
           headers: {
@@ -136,11 +144,12 @@ export default {
             return {
               name: groupe.group.name,
               id: groupe.group.id,
-              balance: groupe.user.balance,
               groupImageUrl: groupe.group.groupImageUrl
             };
           });
+
         }
+        this.isLoading = false;
       } catch (error) {
         console.error('Erreur:', error);
       }

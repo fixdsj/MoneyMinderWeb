@@ -7,8 +7,11 @@
         <button aria-label="Close" class="btn-close" data-bs-dismiss="alert" type="button"></button>
       </div>
     </div>
-    <div class="container justify-content-center d-flex">
+    <div class="container justify-content-evenly d-flex">
       <div class="col-md-5 text-md-center">
+        <div class="mt-2 mx-2 bg-light rounded">
+          <BarChart :activeGroupID="activeGroup.id"/>
+        </div>
         <h3 class="text-center mb-4">Paiement rapide</h3>
         <p class="text-center mt-1"> Vous devez rembourser 27<i class="bi bi-currency-euro"></i> à votre groupe</p>
         <p class="text-center mt-4">Montant total à rembourser : 27<i class="bi bi-currency-euro"></i></p>
@@ -44,16 +47,13 @@
         </div>
       </div>
     </div>
-    <div class="mt-2 mx-2 bg-light rounded">
-      <BarChart/>
-    </div>
-    <!-- Graphique -->
+
   </div>
 
 </template>
 
 <script>
-import BarChart from "@/components/BarChart.vue";
+import BarChart from "@/components/BalanceChart.vue";
 
 export default {
   name: 'AppRefunds',
@@ -66,13 +66,6 @@ export default {
       groupExpenses: [],
       userExpenses: [],
       hasNoRib: false,
-      chartData: {
-        labels: ['January', 'February', 'March'],
-        datasets: [{data: [40, 20, 12]}],
-      },
-      chartOptions: {
-        responsive: true,
-      },
     };
   },
   methods: {
