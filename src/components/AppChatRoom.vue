@@ -41,7 +41,7 @@
                          @click="handleCurrentChat('friend',friend)">
                         <div class="flex-shrink-0">
                           <img
-                              :src="friend.avatarUrl ? friend.avatarUrl : 'https://avatar.iran.liara.run/username?username=' + friend.name"
+                              :src="friend.avatarUrl ? friend.avatarUrl : 'https://api.dicebear.com/8.x/initials/svg?seed=' + friend.name"
                               alt="user img"
                               class="img-fluid img-thumbnail rounded-circle"
                               style="width: 50px; height: 50px;">
@@ -65,7 +65,7 @@
                        @click="handleCurrentChat('group',group)">
                       <div class="flex-shrink-0">
                         <img
-                            :src="group.groupImageUrl ? group.groupImageUrl : 'https://avatar.iran.liara.run/username?username=' + group.name"
+                            :src="group.groupImageUrl ? group.groupImageUrl : 'https://api.dicebear.com/8.x/initials/svg?seed=' + group.name"
                             alt="user img"
                             class="img-fluid img-thumbnail rounded-circle"
                             style="width: 50px; height: 50px;">
@@ -102,7 +102,7 @@
                 <div class="d-flex align-items-center">
                   <div class="flex-shrink-0">
                     <img
-                        :src="activeChat.avatarUrl ? activeChat.avatarUrl : 'https://avatar.iran.liara.run/username?username=' + activeChat.name"
+                        :src="activeChat.avatarUrl ? activeChat.avatarUrl : 'https://api.dicebear.com/8.x/initials/svg?seed=' + activeChat.name"
                         alt="user img"
                         class="img-fluid img-thumbnail rounded-circle"
                         style="width: 50px; height: 50px;">

@@ -120,6 +120,7 @@
             <template v-else>
               <img :src="avatarPlaceholderUrl" alt="Photo de profil" class="rounded-circle img-thumbnail"
                    style="width: 100px; height: 100px;">
+              avatarPlaceholderUrl: {{ avatarPlaceholderUrl }}
             </template>
           </div>
 
@@ -213,7 +214,7 @@ export default {
   },
   computed: {
     avatarPlaceholderUrl() {
-      return 'https://avatar.iran.liara.run/username?username=' + this.utilisateur.username;
+      return 'https://api.dicebear.com/8.x/initials/svg?seed=' + this.utilisateur.username;
     }
   },
   data() {

@@ -14,7 +14,7 @@
       <div v-for="member in group.members" :key="member.id" class="col-md-4 mb-3">
         <div class="card" style="opacity: 0.9 ;">
           <img
-              :src="member.avatarUrl ? member.avatarUrl : 'https://avatar.iran.liara.run/username?username=' + member.userName"
+              :src="member.avatarUrl ? member.avatarUrl : 'https://api.dicebear.com/8.x/initials/svg?seed=' + member.userName"
               alt="user img"
               class="card-img-top img-fluid img-thumbnail rounded-circle mx-auto mt-2"
               style="width: 100%; max-width: 100px; height: auto;">
