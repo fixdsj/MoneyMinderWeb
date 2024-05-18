@@ -1,52 +1,60 @@
 <template>
-  <div>
+  <div v-if="isLoading" class="text-center mt-2">
+    <div class="spinner-border" role="status" style="width: 3rem; height: 3rem;">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <div v-else class="text-bg-secondary">
     <div v-if="groups.length > 0 && activeGroup.id" class="tab-content row">
       <div class="col-3">
         <div class="list-group">
           <div class="list-group-item text-center">Groupes</div>
           <div v-for="group in groups" :key="group.id" :class="{'activeGroup': group.name === activeGroup.name}"
-               class="list-group-item text-center" type="button" @click="selectGroup(group)">
-            {{ group.name }} ({{ group.balance }}€)
+               class="list-group-item text-center" type="button" @click="setActiveGroup(group)">
+            {{ group.name }}
           </div>
           <div class="list-group-item my-auto text-center" role="button"
                @click="$router.push('/account')">Créer un groupe
           </div>
           <div v-if="groups.length === 0" class="list-group-item fst-italic" type="button">Aucun groupe</div>
         </div>
+        <img alt="" class="img-fluid" height="400" src="../assets/illustrations/userwithphone.png" width="400">
       </div>
 
       <div class="col-9">
         <ul class="nav nav-tabs" role="tablist">
           <li class="nav-item" role="presentation">
             <button id="expense-tab" aria-controls="expense-tab-pane" aria-selected="true" class="nav-link active"
-                    data-bs-target="#expense-tab-pane" data-bs-toggle="tab" role="tab" type="button">Dépenses
+                    data-bs-target="#expense-tab-pane" data-bs-toggle="tab" role="tab" type="button"
+                    @click="setActiveTab('expense-tab-pane')">Dépenses
             </button>
           </li>
           <li class="nav-item" role="presentation">
             <button id="refund-tab" aria-controls="refund-tab-pane" aria-selected="false" class="nav-link"
-                    data-bs-target="#refund-tab-pane" data-bs-toggle="tab" role="tab" type="button">Remboursements
+                    data-bs-target="#refund-tab-pane" data-bs-toggle="tab" role="tab" type="button"
+                    @click="setActiveTab('refund-tab-pane')">Remboursements
             </button>
           </li>
           <li class="nav-item" role="presentation">
             <button id="lasttransaction-tab" aria-controls="lasttransaction-tab-pane" aria-selected="false"
                     class="nav-link" data-bs-target="#lasttransaction-tab-pane" data-bs-toggle="tab"
-                    role="tab" type="button">Historique
+                    role="tab" type="button" @click="setActiveTab('lasttransaction-tab-pane')">Dernières transactions
             </button>
           </li>
           <li class="nav-item" role="presentation">
             <button id="groupedetail-tab" aria-controls="groupedetail-tab-pane" aria-selected="false" class="nav-link"
-                    data-bs-target="#groupedetail-tab-pane" data-bs-toggle="tab" role="tab" type="button">Détails
+                    data-bs-target="#groupedetail-tab-pane" data-bs-toggle="tab" role="tab" type="button"
+                    @click="setActiveTab('groupedetail-tab-pane')">Détails du groupe
             </button>
           </li>
 
         </ul>
-        <div class="d-flex align-items-center p-3 groupHeader">
-          <img
-              :src="activeGroup.groupImageUrl ? activeGroup.groupImageUrl : 'https://avatar.iran.liara.run/username?username=' + activeGroup.name"
-              alt="user img"
-              class="img-fluid img-thumbnail rounded-circle"
-              style="width: 50px; height: 50px;">
-          <h5 class="mb-0">{{ activeGroup.name }}</h5>
+        <div class="text-center">
+          <div class="alert alert-light groupHeader">
+            <h5 class="mb-0">{{ activeGroup.name }}</h5>
+            <div>{{ activeTab }}</div>
+          </div>
         </div>
         <br>
         <div id="myTabContent" class="tab-content">
@@ -68,6 +76,12 @@
         </div>
       </div>
     </div>
+    <div v-else class="text-center pt-4">
+      <div class="alert alert-info">
+        Vous n'avez pas de groupe. Créez-en un pour commencer.
+      </div>
+      <button class="btn btn-primary mt-3" @click="$router.push('/account')">Créer un groupe</button>
+    </div>
 
   </div>
 </template>
@@ -82,8 +96,10 @@ export default {
   components: {AppLastTransactions, AppRefunds, AppExpenses, AppGroupeDetails},
   data() {
     return {
+      isLoading: false,
       groups: [],
       activeGroup: [],
+      activeTab: 'Créer une dépense'
     };
   },
   mounted() {
@@ -91,14 +107,30 @@ export default {
   },
 
   methods: {
-    selectGroup(group) {
+    setActiveGroup(group) {
       this.activeGroup = group;
+    },
+    setActiveTab(tab) {
+
+      if (tab === 'expense-tab-pane') {
+        this.activeTab = 'Créer une dépense';
+      }
+      if (tab === 'refund-tab-pane') {
+        this.activeTab = 'Gérer ou créer un remboursement';
+      }
+      if (tab === 'lasttransaction-tab-pane') {
+        this.activeTab = 'Voir les dernières transactions';
+      }
+      if (tab === 'groupedetail-tab-pane') {
+        this.activeTab = 'Voir les détails du groupe';
+      }
     },
     async fetchCurrentUserGroups() {
       try {
+        this.isLoading = true;
         const axios = require('axios');
         const response = await axios.post('${process.env.VUE_APP_API_URL}', {
-          query: `{currentUser{userGroups{user{balance},group{name,id,groupImageUrl}}}}`
+          query: `{currentUser{userGroups{group{name,id,groupImageUrl}}}}`
         }, {
           withCredentials: true,
           headers: {
@@ -112,15 +144,18 @@ export default {
             return {
               name: groupe.group.name,
               id: groupe.group.id,
-              balance: groupe.user.balance,
               groupImageUrl: groupe.group.groupImageUrl
             };
           });
+
         }
+        this.isLoading = false;
       } catch (error) {
         console.error('Erreur:', error);
       }
-      this.activeGroup = this.groups[0];
+      if (this.groups.length > 0) {
+        this.activeGroup = this.groups[0];
+      }
 
     },
 
@@ -131,12 +166,13 @@ export default {
 <style scoped>
 
 .activeGroup {
-  background-color: var(--second-background-color);
+  background-color: var(--third-background-color) !important;
   border: none;
 }
 
 .groupHeader {
   background-color: var(--third-background-color);
+  border-top: 1px solid var(--second-background-color);
 }
 
 .col-3 {
@@ -147,6 +183,17 @@ export default {
 .nav-link.active {
   background-color: var(--third-background-color) !important;
   color: white !important;
-  border-bottom: 1px solid var(--third-background-color) !important;
+}
+
+.nav-link {
+  color: white !important;
+}
+
+.text-bg-secondary {
+  background-color: var(--main-background-color) !important;
+}
+
+.list-group-item {
+  background-color: var(--second-background-color);
 }
 </style>

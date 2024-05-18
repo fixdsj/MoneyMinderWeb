@@ -14,16 +14,18 @@
           </div>
           <div id="newGroupForm" class="collapse mt-3 mb-3">
             <form @submit.prevent="createGroup">
-              <div class="mb-3">
-                <label class="form-label" for="nom">Nom</label>
+              <div class="mb-3 form-floating">
                 <input id="nom" v-model="nomGroupe" class="form-control" placeholder="Nom" type="text"/>
+                <label for="nom">Nom</label>
               </div>
-              <div class="mb-3">
-                <label class="form-label" for="description">Description</label>
+              <div class="mb-3 form-floating">
+                <label for="description">Description</label>
                 <input id="description" v-model="descriptionGroupe" class="form-control" placeholder="Description"
                        type="text"/>
               </div>
-              <button class="btn btn-primary" type="submit">Créer</button>
+              <div class="text-center">
+                <button class="btn btn-primary" type="submit">Créer</button>
+              </div>
             </form>
           </div>
 
@@ -35,11 +37,9 @@
               Inviter un utilisateur
             </button>
           </div>
-
           <div id="inviteUserForm" class="collapse mt-3 mb-3">
             <form @submit.prevent="inviteToGroup">
               <div class="mb-3 form-floating">
-
                 <input id="pseudo" v-model="selectedUser.userName" class="form-control"
                        placeholder="Nom d'utilisateur" required
                        type="text" @input="suggestUsers"/>
@@ -60,7 +60,6 @@
                 </ul>
               </div>
               <div class="form-floating mb-3">
-
                 <select id="selectGroup" v-model="selectedGroup" class="form-select" required>
                   <option disabled selected value="">Choisir un groupe</option>
                   <option v-for="groupe in groupsJoined" :key="groupe.id" :value="groupe.id">{{ groupe.name }}</option>
@@ -112,8 +111,6 @@
 
       <div class="col-md-6">
         <div>
-
-          <h4 class="card-title text-md-center">Mes informations</h4>
           <div class="d-flex justify-content-center align-items-center" style="height: 100px;">
             <template v-if="avatarUrl">
               <img :src="avatarUrl" alt="Photo de profil" class="rounded-circle img-thumbnail"
@@ -125,12 +122,23 @@
             </template>
           </div>
 
-          <div class="mb-3">
-            <label class="form-label" for="formFileSm">Mettre à jour la photo de profil</label>
-            <div style="display: flex; align-items: center;">
-              <input id="formFileSm" accept="image/png, image/jpeg" class="form-control form-control-sm" type="file"
-                     @change="pictureToUpload = $event.target.files[0]">
-              <button v-if="pictureToUpload" class="btn btn-info" @click="uploadPicture">Changer</button>
+          <div class="mb-3 d-flex justify-content-between">
+            <div class="my-auto me-1">
+              <label class="form-label" for="formFilePicture">Mettre à jour la photo de profil</label>
+              <div style="display: flex; align-items: center;">
+                <input id="formFilePicture" accept="image/png, image/jpeg" class="form-control form-control-sm"
+                       type="file"
+                       @change="pictureToUpload = $event.target.files[0]">
+                <button v-if="pictureToUpload" class="btn btn-info ms-1" @click="uploadPicture">Changer</button>
+              </div>
+            </div>
+            <div class="my-auto">
+              <label class="form-label" for="formFileRib">Mettre à jour le RIB</label>
+              <div style="display: flex; align-items: center;">
+                <input id="formFileRib" accept="application/pdf" class="form-control form-control-sm" type="file"
+                       @change="ribToUpload = $event.target.files[0]">
+                <button v-if="ribToUpload" class="btn btn-info ms-1" @click="uploadRib">Changer</button>
+              </div>
             </div>
           </div>
 
@@ -144,9 +152,11 @@
               <label class="form-label" for="email">Email :</label>
               <input id="email" v-model="utilisateur.email" class="form-control" readonly type="email"/>
             </div>
-            <!--            <div class="d-flex justify-content-center mt-3">
-                          <button class="btn btn-primary " type="submit">Mettre à jour</button>
-                        </div>-->
+            <div class="d-flex justify-content-center mt-3">
+              <button class="btn btn-primary" type="submit"
+                      @click="updateUser">Mettre à jour
+              </button>
+            </div>
           </form>
           <div class="d-flex justify-content-center mt-3">
             <button class="btn btn-danger" data-bs-target="#deleteAccountModal" data-bs-toggle="modal" type="button">
@@ -204,7 +214,7 @@ export default {
   },
   computed: {
     avatarPlaceholderUrl() {
-      return 'https://avatar.iran.liara.run/username?username=' + this.utilisateur.username;
+      return 'https://api.dicebear.com/8.x/initials/svg?seed=' + this.utilisateur.username;
     }
   },
   data() {
@@ -240,6 +250,10 @@ export default {
       //Photo de profil
       pictureToUpload: null,
       urlToUpload: '',
+
+      //RIB
+      ribToUpload: null,
+
 
     };
   },
@@ -279,6 +293,44 @@ export default {
             toastLive.classList.add('show')
           }
           this.pictureToUpload = null;
+          await this.fetchCurrentUserDetails();
+        }
+      } catch (error) {
+        console.error('Erreur:', error);
+      }
+    },
+
+    async uploadRib() {
+      try {
+        // Récupérer l'URL d'upload
+        const graphqlResponse = await axios.post('${process.env.VUE_APP_API_URL}', {
+          query: `mutation{uploadUserRib}`
+        }, {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+        });
+
+        const responseData = graphqlResponse.data;
+        if (responseData.data.uploadUserRib) {
+          const uploadUrl = responseData.data.uploadUserRib;
+
+          // Créer un objet FormData pour envoyer le RIB
+          const formData = new FormData();
+          formData.append('file', this.ribToUpload);
+
+          const uploadResponse = await axios.post(uploadUrl, formData);
+
+          // Gérer la réponse de l'upload
+          console.log('Réponse de l\'upload:', uploadResponse.data);
+          if (uploadResponse.status === 200) {
+            this.alertMessage = 'RIB mis à jour';
+            var toastLive = document.getElementById('liveToast')
+            toastLive.classList.add('show')
+          }
+          this.ribToUpload = null;
           await this.fetchCurrentUserDetails();
         }
       } catch (error) {
@@ -388,7 +440,7 @@ export default {
     async fetchCurrentUserDetails() {
       try {
         const axios = require('axios');
-        const responseUser = await axios.post('${process.env.VUE_APP_API_URL}', {
+        const responseUser = await axios.post(process.env.VUE_APP_API_URL, {
           query: `{currentUser{userName, email, invitations{group{name,id}},avatarUrl}}`
         }, {
           withCredentials: true,
@@ -413,7 +465,7 @@ export default {
       }
 
       try {
-        const responseUserGroups = await axios.post('${process.env.VUE_APP_API_URL}', {
+        const responseUserGroups = await axios.post(process.env.VUE_APP_API_URL, {
           query: `{currentUser{userGroups{group{name,id}},ownedGroups{name}}}`
         }, {
           withCredentials: true,
@@ -450,7 +502,7 @@ export default {
     async deleteAccount() {
       try {
         const axios = require('axios');
-        const response = await axios.post('${process.env.VUE_APP_API_URL}', {
+        const response = await axios.post(process.env.VUE_APP_API_URL, {
           query: `mutation{deleteSelf}`
         }, {
           withCredentials: true,
@@ -479,7 +531,7 @@ export default {
     async acceptInvitation(groupId) {
       try {
         const axios = require('axios');
-        const response = await axios.post('${process.env.VUE_APP_API_URL}', {
+        const response = await axios.post(process.env.VUE_APP_API_URL, {
           query: `mutation{joinGroup(userGroupInsertInput: {groupId:"${groupId}"}){joinedAt}}`
         }, {
           withCredentials: true,
@@ -500,6 +552,31 @@ export default {
         console.error('Erreur:', error);
       }
 
+    },
+    async updateUser() {
+      const axios = require('axios');
+      const response = await axios.post(process.env.VUE_APP_API_URL, {
+        query: `mutation {
+  modifyMyself(
+    appUserModifyDto: {
+      email: "${this.utilisateur.email}",
+      userName: "${this.utilisateur.username}"
+    }
+  ) {
+    id
+  }
+}
+`
+      }, {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      });
+
+      const responseData = response.data;
+      console.log('Réponse:', responseData);
     }
   },
 };
@@ -507,5 +584,9 @@ export default {
 
 <style scoped>
 
+.list-group-item {
+  border: none;
+  background-color: var(--second-background-color);
+}
 
 </style>

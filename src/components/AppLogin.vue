@@ -1,46 +1,54 @@
 <template>
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-6">
+        <form class="p-4 p-md-5" @submit="signIn">
+          <h3 class="text-center mb-4">Connexion</h3>
+          <p v-if="errors.length" class="text-danger">
+            <b>Erreur(s): </b>
+            <b v-for="error in errors" :key="error">{{ error }}</b>
+          </p>
+          <div class="form-floating mb-3">
+            <input id="username" v-model="username" class="form-control form-styling" placeholder="Votre pseudo"
+                   required
+                   type="text">
+            <label for="username">Nom d'utilisateur</label>
+          </div>
 
-  <div class="col-md-10 mx-auto col-lg-5">
-    <form class="p-4 p-md-5 border rounded-3" @submit="signIn">
-      <h3 class="text-center mb-4">Connexion</h3>
-      <p v-if="errors.length" class="text-danger">
-        <b>Erreur(s): </b>
-        <b v-for="error in errors" :key="error">{{ error }}</b>
-      </p>
-      <div class="form-floating mb-3">
-        <input id="username" v-model="username" class="form-control form-styling" placeholder="Votre pseudo" required
-               type="text">
-        <label for="username">Nom d'utilisateur</label>
-      </div>
+          <div class="form-floating mb-3 position-relative">
+            <input id="password" v-model="password" :type="showPassword ? 'text' : 'password'"
+                   class="form-control pr-5 form-styling"
+                   placeholder="Password" required>
+            <label for="password">Mot de passe</label>
+            <button class="btn position-absolute end-0 translate-middle-y" style="top: 50%;" type="button"
+                    @click="toggleShowPassword">
+              <i :class="showPassword ?  'bi-eye-slash-fill':'bi-eye-fill'"></i>
+            </button>
+          </div>
+          <div class="form-check mb-3">
+            <input id="rememberPassword" v-model="rememberPassword" class="form-check-input" type="checkbox" value="">
+            <label class="form-check-label" for="rememberPassword">
+              Se souvenir de moi
+            </label>
+          </div>
+          <small class="text-body-secondary">En cliquant sur Se connecter, vous acceptez les conditions
+            d'utilisation.</small>
+          <button class="w-100 btn btn-lg btn-primary" type="submit">Se connecter</button>
 
-      <div class="form-floating mb-3 position-relative">
-        <input id="password" v-model="password" :type="showPassword ? 'text' : 'password'"
-               class="form-control pr-5 form-styling"
-               placeholder="Password" required>
-        <label for="password">Mot de passe</label>
-        <button class="btn position-absolute end-0 translate-middle-y" style="top: 50%;" type="button"
-                @click="toggleShowPassword">
-          <i :class="showPassword ?  'bi-eye-slash-fill':'bi-eye-fill'"></i>
-        </button>
+          <h4 class="text-center my-4 text-uppercase">Ou</h4>
+          <div class="d-grid mb-2">
+            <a class="btn btn-google btn-login text-uppercase fw-bold" type="submit">
+              <i class="bi bi-google me-2"></i> Se connecter avec Google
+            </a>
+            <i class="fab fa-google me-2"></i>
+          </div>
+        </form>
       </div>
-      <div class="form-check mb-3">
-        <input id="rememberPassword" v-model="rememberPassword" class="form-check-input" type="checkbox" value="">
-        <label class="form-check-label" for="rememberPassword">
-          Se souvenir de moi
-        </label>
+      <div class="col-md-5">
+        <img alt="" class="img-fluid mx-auto d-block" height="412" size="412"
+             src="../assets/illustrations/signup_illustration.svg">
       </div>
-      <small class="text-body-secondary">En cliquant sur Se connecter, vous acceptez les conditions
-        d'utilisation.</small>
-      <button class="w-100 btn btn-lg btn-primary" type="submit">Se connecter</button>
-
-      <h4 class="text-center my-4 text-uppercase">Ou</h4>
-      <div class="d-grid mb-2">
-        <a class="btn btn-google btn-login text-uppercase fw-bold" type="submit">
-          <i class="bi bi-google me-2"></i> Se connecter avec Google
-        </a>
-        <i class="fab fa-google me-2"></i>
-      </div>
-    </form>
+    </div>
   </div>
 </template>
 
@@ -112,9 +120,32 @@ export default {
 
       }
     },
+
     toggleShowPassword() {
       this.showPassword = !this.showPassword;
     },
+
+    /* authWithGoogle() {
+       console.log('Authentification avec Google')
+
+     }*/
+    /*Vue.googleAuth().signIn(function (authorizationCode) {
+
+      // things to do when sign-in succeeds
+
+      // You can send the authorizationCode to your backend server for further processing, for example
+      this.$http.post('http://your/backend/server', { code: authorizationCode, redirect_uri: 'postmessage' }).then(function (response) {
+        if (response.body) {
+          // ...
+        }
+      }, function (error) {
+        console.log(error)
+      })
+
+    }, function (error) {
+      // things to do when sign-in fails
+    ));*/
+
 
   }
 

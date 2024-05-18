@@ -1,5 +1,5 @@
 /*import { watchEffect } from 'vue';*/
-import { createRouter, createWebHistory } from 'vue-router';
+import {createRouter, createWebHistory} from 'vue-router';
 import Groupes from "../components/AppGroupes.vue";
 import Home from "../components/AppHome.vue";
 import Account from "../components/AppAccount.vue";
@@ -12,14 +12,14 @@ import AppPrivacyPolicy from "@/components/AppPrivacyPolicy.vue";
 /*import { currentUsername } from "@/main";*/
 
 const routes = [
-    { path: '/', component: Home },
-    { path: '/groups', component: Groupes },
-    { path: '/account', component: Account },
-    { path: '/messages', component: AppChatRoom },
-    { path: '/login', component: AppLogin },
-    { path: '/register', component: AppRegister },
-    { path: '/privacy-policy', component: AppPrivacyPolicy },
-    { path: '/:notFound(.*)', component: AppError404 }
+    {path: '/', component: Home},
+    {path: '/groups', component: Groupes},
+    {path: '/account', component: Account},
+    {path: '/messages', component: AppChatRoom},
+    {path: '/login', component: AppLogin},
+    {path: '/register', component: AppRegister},
+    {path: '/privacy-policy', component: AppPrivacyPolicy},
+    {path: '/:notFound(.*)', component: AppError404}
 ];
 
 const router = createRouter({

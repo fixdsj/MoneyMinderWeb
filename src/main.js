@@ -21,6 +21,13 @@ const app = createApp({
         return h(App);
     }
 });
+
+/*app.use(GoogleAuth, {clientId:process.env.VUE_APP_GOOGLE_CLIENT_ID});*/
+/*Vue.googleAuth().load()*/
 app.use(router);
+/*router.beforeEach((to, from, next) => {
+    if (!isLogged.value && to.path !== '/login' && to.path !== '/register' && to.path !== '/privacy-policy' && to.path !== '/') next('/login')
+    else next()
+})*/
 
 app.mount('#app');

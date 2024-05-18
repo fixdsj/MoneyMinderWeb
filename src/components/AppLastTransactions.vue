@@ -6,16 +6,22 @@
       <i class="bi bi-check-circle" style="font-size: 60px; color:green"></i>
     </div>
   </template>
-  <div class="form-floating mb-3">
-    <select id="sortSelect" class="form-select" @change="handleSort">
-      <option value="dateDesc" @click="sortByDateDesc">Date Descendante</option>
-      <option value="dateAsc" @click="sortByDateAsc">Date Ascendante</option>
-      <option value="amountAsc" @click="sortByAmountAsc">Montant Ascendant</option>
-      <option value="amountDesc" @click="sortByAmountDesc">Montant Descendant</option>
+  <div class="d-flex justify-content-between">
+    <div class="form-floating mb-3">
+      <select id="sortSelect" class="form-select" @change="handleSort">
+        <option value="dateDesc" @click="sortByDateDesc">Date Descendante</option>
+        <option value="dateAsc" @click="sortByDateAsc">Date Ascendante</option>
+        <option value="amountAsc" @click="sortByAmountAsc">Montant Ascendant</option>
+        <option value="amountDesc" @click="sortByAmountDesc">Montant Descendant</option>
 
-    </select>
-    <label for="sortSelect">Trier par</label>
+      </select>
+      <label for="sortSelect">Trier par</label>
+    </div>
+    <div class="my-auto pe-2">
+      <button class="btn btn-secondary" @click="downloadSumup">Télécharger le récapitulatif</button>
+    </div>
   </div>
+
   <div id="accordionExample" class="accordion">
     <div v-for="(transaction, index) in transactions" :key="index" class="accordion-item">
       <h2 :id="'heading' + index" class="accordion-header">
@@ -35,11 +41,16 @@
 
         <div class="accordion-body container">
           <div class="d-flex justify-content-between">
-            <p><strong>Description:</strong> {{ transaction.description }}</p>
-            <div class="text-end d-flex">
+            <p v-if="transaction.description !=='' "><strong>Description:</strong> {{ transaction.description }}</p>
+            <p v-else class="text-danger">Pas de description</p>
+            <div v-if="transaction.justificationExtension" class="text-end d-flex">
               <p class="text-end "><strong>Télécharger le justificatif:</strong></p>
               <i class="bi bi-file-earmark-arrow-down" type="button" @click="downloadProof(transaction)"></i>
             </div>
+            <div v-else class="text-end">
+              <p class="text-end text-danger">Pas de justificatif</p>
+            </div>
+
           </div>
           <hr>
           <div class="d-flex justify-content-between">
@@ -171,6 +182,44 @@ export default {
         console.error('Erreur:', error);
       }
     },
+    async downloadSumup() {
+      console.log('Téléchargement du récapitulatif');
+      try {
+        const axios = require('axios');
+        const response = await axios.post('${process.env.VUE_APP_API_URL}', {
+          query: `mutation{groupPdfSumUp(groupId: "${this.activeGroup.id}")}`
+        }, {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json',
+            "Accept": "application/json",
+          },
+        });
+        const responseData = response.data;
+        if (responseData.data && responseData.data.groupPdfSumUp) {
+          const downloadUrl = responseData.data.groupPdfSumUp;
+          const downloadResponse = await axios.get(downloadUrl, {
+            responseType: 'blob',
+          });
+
+          // Creating file name with extension
+          const fileName = `recapitulatif_${this.activeGroup.name}.pdf`;
+
+          // Creating download link
+          const url = window.URL.createObjectURL(new Blob([downloadResponse.data]));
+          const link = document.createElement('a');
+          link.href = url;
+          link.setAttribute('download', fileName);
+          document.body.appendChild(link);
+          link.click();
+        }
+        if (responseData.errors) {
+          console.log("erreur" + responseData.errors.message);
+        }
+      } catch (error) {
+        console.error('Erreur:', error);
+      }
+    },
 
     async fetchLastTransactions() {
       try {
@@ -183,7 +232,9 @@ export default {
       description
       id
       amount
-      createdAt,
+      createdAt
+      justificationExtension
+      expenseType
       userExpenses {
         paidAt
         user {
@@ -210,11 +261,13 @@ export default {
               date: new Date(transaction.createdAt),
               type: 'remboursement',
               description: transaction.description,
+              justificationExtension: transaction.justificationExtension,
               membresconcernes: transaction.userExpenses.map((userExpense) => ({
                 userName: userExpense.user.userName,
                 paidAt: userExpense.paidAt
               })),
-              categorie: 'Sorties',
+              categorie: this.translateType(transaction.expenseType),
+
               id: transaction.id,
 
             };
@@ -226,6 +279,18 @@ export default {
 
       } catch (error) {
         console.error('Erreur:', error);
+      }
+    },
+
+    translateType(type) {
+      if (type === 'RENT') {
+        return 'Loyer';
+      } else if (type === 'FOOD') {
+        return 'Alimentation';
+      } else if (type === 'TRANSPORT') {
+        return 'Transport';
+      } else if (type === 'OTHER') {
+        return 'Autres';
       }
     },
     handleSort(event) {

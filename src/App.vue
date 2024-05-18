@@ -64,15 +64,14 @@ export default {
   }
 }
 </script>
-
 <style>
 #app {
-  --main-background-color: #fbfbfc;
-  --second-background-color: #CCD5AE;
-  --third-background-color: #D4A373;
+  --main-background-color: #B5C18E;
+  --second-background-color: #F7DCB9;
+  --third-background-color: #B99470;
   --first-text-color: white;
   --second-text-color: #3CB371;
-  --button-color: #D4A373;
+  --button-color: #B99470;
   --second-button-color: #CCD5AE;
   --third-text-color: black;
   --main-header-color: #6E6E6E;
@@ -90,7 +89,6 @@ export default {
 
 ::-webkit-scrollbar {
   width: 8px;
-
 }
 
 ::-webkit-scrollbar-track {

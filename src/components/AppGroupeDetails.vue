@@ -12,22 +12,20 @@
   <div class="container">
     <div class="row">
       <div v-for="member in group.members" :key="member.id" class="col-md-4 mb-3">
-        <div class="card">
-          <div class="card-body d-flex align-items-center">
-            <img
-                :src="member.avatarUrl ? member.avatarUrl : 'https://avatar.iran.liara.run/username?username=' + member.userName"
-                alt="user img"
-                class="img-fluid img-thumbnail rounded-circle me-3"
-                style="width: 50px; height: 50px;">
-
-            <div>
-              <h5 class="card-title mb-1">{{ member.userName }}</h5>
-              <p class="card-text mb-1">
-                {{ member.lasttransaction ? 'Dernière transaction: ' + member.lasttransaction : 'Pas de transaction' }}
-              </p>
-              <p class="card-text mb-1">Email: {{ member.email }}</p>
-              <p class="card-text mb-0">Solde: {{ member.balance }}€</p>
-            </div>
+        <div class="card" style="opacity: 0.9 ;">
+          <img
+              :src="member.avatarUrl ? member.avatarUrl : 'https://api.dicebear.com/8.x/initials/svg?seed=' + member.userName"
+              alt="user img"
+              class="card-img-top img-fluid img-thumbnail rounded-circle mx-auto mt-2"
+              style="width: 100%; max-width: 100px; height: auto;">
+          <div class="card-body text-center">
+            <h5 class="card-title">{{ member.userName }}</h5>
+            <p class="card-text">{{
+                member.lasttransaction ? 'Dernière transaction: ' + member.lasttransaction : 'Pas de transaction'
+              }}</p>
+            <p class="card-text">Rejoint le {{ member.joinedAt.toLocaleDateString('fr-FR', dateOptions) }}</p>
+            <p class="card-text">Montant à payer au groupe: {{ member.amountToPay }}€</p>
+            <p class="card-text">Email: {{ member.email }}</p>
           </div>
         </div>
       </div>
@@ -100,6 +98,7 @@ export default {
     description
     userGroups {
       joinedAt
+       payTo{amountToPay}
       user {
         paymentsToBeReceived {
           amountToPay
@@ -107,7 +106,6 @@ export default {
         avatarUrl
         email
         userName
-        balance
       }
     }
   }
@@ -126,8 +124,8 @@ export default {
           this.group.members = responseData.data.groups[0].userGroups.map((userGroup) => {
             return {
               userName: userGroup.user.userName,
-              balance: userGroup.user.balance,
               joinedAt: new Date(userGroup.joinedAt),
+              amountToPay: userGroup.payTo.amountToPay,
               avatarUrl: userGroup.user.avatarUrl,
               email: userGroup.user.email,
               paymentsToBeReceived: userGroup.user.paymentsToBeReceived,
@@ -157,5 +155,18 @@ export default {
 
 
 <style scoped>
+.card {
+  opacity: 0.9;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: opacity 0.3s ease, box-shadow 0.3s ease;
+}
 
+.card:hover {
+  opacity: 1;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.card {
+  background-color: var(--second-background-color);
+}
 </style>

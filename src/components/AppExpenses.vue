@@ -43,11 +43,14 @@
 
       <div class="mb-3">
         <div class="d-flex justify-content-between ">
-          <label class="form-label">Utilisateurs concernés:</label>
-          <button v-if="selectedsUsers.length === 0" class="btn btn-link" type="button" @click="selectAllUsers">Tout
+          <label class="form-label text-white my-auto">Utilisateurs concernés</label>
+          <button v-if="selectedsUsers.length === 0" class="btn btn-link" style="color: white !important;" type="button"
+                  @click="selectAllUsers">Tout
             sélectionner
           </button>
-          <button v-else class="btn btn-link" type="button" @click="unselectUsers">Tout supprimer</button>
+          <button v-else class="btn btn-link" style="color: white !important;" type="button" @click="unselectUsers">Tout
+            supprimer
+          </button>
         </div>
 
         <input id="weightedinput" v-model="texttosuggest" class="form-control" placeholder="Ajouter un utilisateur..."
@@ -79,16 +82,15 @@
           </li>
         </ul>
       </div>
-      <!--      <div class="mb-3">
-              <label class="form-label" for="categorie">Catégorie:</label>
-              <select id="categorie" class="form-select">
-                <option value="alimentation">Alimentation</option>
-                <option value="sorties">Sorties</option>
-                <option value="logement">Logement</option>
-                <option value="transport">Transport</option>
-                <option value="divers">Divers</option>
-              </select>
-            </div>-->
+      <div class="form-floating mb-3">
+        <select id="category" v-model="depense.category" class="form-select">
+          <option value='FOOD'>Alimentation</option>
+          <option value='RENT'>Logement</option>
+          <option value='TRANSPORT'>Transport</option>
+          <option value='OTHER'>Autres</option>
+        </select>
+        <label for="category">Catégorie:</label>
+      </div>
 
       <div v-if="!isExpenseLoading"
            class="mb-3 text-center">
@@ -156,6 +158,7 @@ export default {
         montant: 0,
         description: '',
         date: '',
+        category: 'OTHER',
       },
       justificatif: null,
 
@@ -196,6 +199,7 @@ export default {
       amount: ${this.depense.montant}
       description: "${this.depense.description}"
       groupId: "${this.activeGroup.id}"
+      expenseType: ${this.depense.category}
       userAmountsList: [${this.weightquery}]
     }
   ) {
@@ -278,13 +282,14 @@ export default {
         this.selectedsUsers = this.selectedsUsers.filter((selectedUser) => selectedUser !== user);
         return;
       }
-      user.weight = 1;
+      user.weight = undefined;
       this.selectedsUsers.push(user);
       this.suggestedUsers = [];
       this.texttosuggest = '';
     },
     selectAllUsers() {
       this.selectedsUsers = this.usersInGroup;
+      this.previewRefunds()
     },
     unselectUsers() {
       this.selectedsUsers = [];

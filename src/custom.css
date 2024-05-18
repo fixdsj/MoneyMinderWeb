@@ -1,24 +1,19 @@
+/*----------------Button color---------------------*/
 /* Couleur principale */
-.btn-primary, .accordion-button:not(.collapsed),.btn-primary:disabled{
-    background-color: #D4A373;
-    border-color: #D4A373;
-}
-.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open>.dropdown-toggle.btn-primary {
-    background-color: #D4A373;
-    border-color: #D4A373;
+.btn-primary, .accordion-button:not(.collapsed), .btn-primary:disabled {
+    background-color: var(--button-color);
+    border-color: var(--button-color);
 }
 
-
-
-.text-primary, .nav-link, .nav-link:active, .nav-link:hover, .btn-link, .btn-link:active, .btn-link:hover, .btn-link:focus, .btn-link:visited, .btn-link:focus, .btn-link:visited {
-    color: #D4A373 !important;
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open > .dropdown-toggle.btn-primary {
+    background-color: var(--button-color);
+    border-color: var(--button-color);
 }
-
 
 /* Couleur secondaire */
 .btn-secondary {
-    background-color: #D4A373;
-    border-color: #D4A373;
+    background-color: var(--second-button-color);
+    border-color: var(--second-button-color);
 }
 
 /* Couleur de succès */
@@ -33,3 +28,58 @@
     border-color: #dc3545;
 }
 
+.text-primary, .nav-link, .nav-link:active, .nav-link:hover, .btn-link, .btn-link:active, .btn-link:hover, .btn-link:focus, .btn-link:visited, .btn-link:focus, .btn-link:visited {
+    color: var(--button-color) !important;
+}
+
+/*----------------Input color---------------------*/
+.input-group-text {
+    background-color: var(--button-color);
+    border-color: var(--button-color);
+}
+
+.form-control:focus {
+    background-color: var(--second-button-color);
+    border-color: var(--button-color);
+    box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+}
+
+.form-control {
+    border-color: var(--second-background-color);
+    background-color: var(--second-background-color);
+}
+
+.form-label {
+    color: var(--button-color);
+}
+
+.form-select {
+    background-color: var(--second-background-color);
+    border-color: var(--second-background-color);
+}
+
+/*----------------Accordion color---------------------*/
+
+
+/* Custom Accordion Header Color */
+.accordion-header {
+    background-color: var(--second-background-color);
+    color: var(--button-color);
+}
+
+/* Custom Accordion Body Color */
+.accordion-body {
+    background-color: var(--second-background-color);
+    color: var(--button-color);
+}
+
+/* Custom Accordion Header Color when collapsed */
+.accordion-header.collapsed {
+    background-color: var(--second-background-color);
+    color: var(--button-color);
+}
+
+.accordion-button.collapsed {
+    background-color: var(--third-background-color);
+    /* color: var(--button-color);*/
+}
