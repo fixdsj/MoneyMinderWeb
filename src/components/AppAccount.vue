@@ -152,9 +152,11 @@
               <label class="form-label" for="email">Email :</label>
               <input id="email" v-model="utilisateur.email" class="form-control" readonly type="email"/>
             </div>
-            <!--            <div class="d-flex justify-content-center mt-3">
-                          <button class="btn btn-primary " type="submit">Mettre à jour</button>
-                        </div>-->
+            <div class="d-flex justify-content-center mt-3">
+              <button class="btn btn-primary" type="submit"
+                      @click="updateUser">Mettre à jour
+              </button>
+            </div>
           </form>
           <div class="d-flex justify-content-center mt-3">
             <button class="btn btn-danger" data-bs-target="#deleteAccountModal" data-bs-toggle="modal" type="button">
@@ -251,6 +253,7 @@ export default {
 
       //RIB
       ribToUpload: null,
+
 
     };
   },
@@ -437,7 +440,7 @@ export default {
     async fetchCurrentUserDetails() {
       try {
         const axios = require('axios');
-        const responseUser = await axios.post('${process.env.VUE_APP_API_URL}', {
+        const responseUser = await axios.post(process.env.VUE_APP_API_URL, {
           query: `{currentUser{userName, email, invitations{group{name,id}},avatarUrl}}`
         }, {
           withCredentials: true,
@@ -462,7 +465,7 @@ export default {
       }
 
       try {
-        const responseUserGroups = await axios.post('${process.env.VUE_APP_API_URL}', {
+        const responseUserGroups = await axios.post(process.env.VUE_APP_API_URL, {
           query: `{currentUser{userGroups{group{name,id}},ownedGroups{name}}}`
         }, {
           withCredentials: true,
@@ -499,7 +502,7 @@ export default {
     async deleteAccount() {
       try {
         const axios = require('axios');
-        const response = await axios.post('${process.env.VUE_APP_API_URL}', {
+        const response = await axios.post(process.env.VUE_APP_API_URL, {
           query: `mutation{deleteSelf}`
         }, {
           withCredentials: true,
@@ -528,7 +531,7 @@ export default {
     async acceptInvitation(groupId) {
       try {
         const axios = require('axios');
-        const response = await axios.post('${process.env.VUE_APP_API_URL}', {
+        const response = await axios.post(process.env.VUE_APP_API_URL, {
           query: `mutation{joinGroup(userGroupInsertInput: {groupId:"${groupId}"}){joinedAt}}`
         }, {
           withCredentials: true,
@@ -549,6 +552,31 @@ export default {
         console.error('Erreur:', error);
       }
 
+    },
+    async updateUser() {
+      const axios = require('axios');
+      const response = await axios.post(process.env.VUE_APP_API_URL, {
+        query: `mutation {
+  modifyMyself(
+    appUserModifyDto: {
+      email: "${this.utilisateur.email}",
+      userName: "${this.utilisateur.username}"
+    }
+  ) {
+    id
+  }
+}
+`
+      }, {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      });
+
+      const responseData = response.data;
+      console.log('Réponse:', responseData);
     }
   },
 };
