@@ -9,15 +9,10 @@
     </div>
     <div class="container justify-content-evenly d-flex">
       <div class="col-md-5 text-md-center">
+        <h3 class="text-center mb-4">Aperçu des soldes</h3>
         <div class="mt-2 mx-2 bg-light rounded">
           <BarChart :activeGroupID="activeGroup.id"/>
         </div>
-        <h3 class="text-center mb-4">Paiement rapide</h3>
-        <p class="text-center mt-1">Vous devez rembourser 27<i class="bi bi-currency-euro"></i> à votre groupe</p>
-        <p class="text-center mt-4">Montant total à rembourser : 27<i class="bi bi-currency-euro"></i></p>
-        <button class="btn btn-primary justify-content-center" type="button" @click="paidDue">
-          Payer 10€ au groupe {{ activeGroup.name }}
-        </button>
       </div>
       <hr class="d-md-none">
       <div class="col-md-5">
@@ -47,12 +42,10 @@
               paymentsToBePaid.length
             }}</span></h3>
           <div class="d-flex justify-content-evenly">
-            <button class="btn btn-sm btn-primary" @click="paywithPaypal(activeGroup.id)">Payer au groupe avec Paypal
+            <button class="btn btn-sm btn-primary me-1" @click="paywithPaypal(activeGroup.id)">Payer au groupe avec
+              Paypal
             </button>
-            <button v-if="waitingVirement === activeGroup.id" class="btn btn-sm btn-secondary"
-                    @click="confirmRibpayment(activeGroup.id)">Confirmer le virement
-            </button>
-            <button v-else class="btn btn-sm btn-secondary" @click="payforGroup(activeGroup.id)">J'ai payé au groupe
+            <button class="btn btn-sm btn-secondary ms-1" @click="payforGroup(activeGroup.id)">J'ai payé au groupe
               d'un autre façon
             </button>
           </div>
@@ -177,8 +170,28 @@ export default {
       });
     },
     confirmRibpayment(id) {
-      console.log('Confirmer le virement à l user id:', id);
+      console.log('Confirmer le paiement avec RIB à l user id:', id);
+      const axios = require('axios');
+      axios.post(process.env.VUE_APP_API_URL, {
+        query: `mutation{manuallyValidatePayment(groupId: "${this.activeGroup.id}",payerId: "${id}")}`
+      }, {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json',
+          "Accept": "application/json",
+        },
+      }).then(response => {
+        const responseData = response.data;
+        console.log('Réponse de la requête de validation de paiement', responseData);
+        if (responseData.data && responseData.data.manuallyValidatePayment) {
+          this.waitingVirement = null;
+          this.fetchPaymentToBePaid();
+        }
+      }).catch(error => {
+        console.error('Erreur lors de la validation du paiement', error);
+      });
     },
+
     payforGroup(id) {
       console.log('Payer pour le groupe id:', id);
     },
@@ -235,25 +248,24 @@ export default {
       try {
         const axios = require('axios');
         const response = await axios.post(process.env.VUE_APP_API_URL, {
-          query: `query {
-        groupById(id: "${this.activeGroup.id}") {
-          userGroups {
-            user {
-              userName
-              id
-              userGroups {
-                payTo {
-                  amountToPay
-                  payToUser {
-                    userName
-                    id
-                  }
-                }
-              }
-            }
-          }
+          query: `{
+  groupById(id: "${this.activeGroup.id}") {
+    userGroups {
+      user {
+        id
+        userName
+      }
+      payTo {
+        amountToPay
+        payToUser {
+          id
+          userName
         }
-      }`
+      }
+    }
+  }
+}
+`
         }, {
           withCredentials: true,
           headers: {
@@ -266,17 +278,13 @@ export default {
         if (responseData.data) {
           const userGroups = responseData.data.groupById.userGroups;
           this.paymentsToBePaid = [];
-
-          userGroups.forEach(userGroup => {
+          console.log('userGroups', userGroups);
+          userGroups.map(userGroup => {
             if (userGroup.user.userName === this.currentUsername) {
-              userGroup.user.userGroups.forEach(group => {
-                if (group.payTo && group.payTo.payToUser) {
-                  this.paymentsToBePaid.push({
-                    amountToPay: group.payTo.amountToPay,
-                    userName: group.payTo.payToUser.userName,
-                    id: group.payTo.payToUser.id,
-                  });
-                }
+              this.paymentsToBePaid.push({
+                amountToPay: userGroup.payTo.amountToPay,
+                id: userGroup.payTo.payToUser.id,
+                userName: userGroup.payTo.payToUser.userName,
               });
             }
           });
