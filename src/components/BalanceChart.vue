@@ -120,7 +120,6 @@ export default {
         });
 
         const responseData = response.data;
-        console.log('Réponse:', responseData);
         if (responseData.data && responseData.data.groupBalances) {
           const groupBalances = responseData.data.groupBalances;
           this.chartData.datasets[0].data = groupBalances.map(balance => balance.value);
@@ -161,7 +160,6 @@ export default {
         const responseData = response.data;
         if (responseData.data && responseData.data.groupById) {
           this.userGroups = responseData.data.groupById.userGroups;
-          console.log('userGroups:', this.userGroups);
         }
 
       } catch (error) {
