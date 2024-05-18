@@ -95,6 +95,14 @@ export default {
       }
 
     }
+  },
+  watch: {
+    isLogged() {
+      this.isLogged = isLogged;
+    },
+    currentUsername() {
+      this.currentUsername = currentUsername;
+    }
   }
 };
 </script>

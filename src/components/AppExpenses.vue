@@ -282,13 +282,14 @@ export default {
         this.selectedsUsers = this.selectedsUsers.filter((selectedUser) => selectedUser !== user);
         return;
       }
-      user.weight = 1;
+      user.weight = undefined;
       this.selectedsUsers.push(user);
       this.suggestedUsers = [];
       this.texttosuggest = '';
     },
     selectAllUsers() {
       this.selectedsUsers = this.usersInGroup;
+      this.previewRefunds()
     },
     unselectUsers() {
       this.selectedsUsers = [];

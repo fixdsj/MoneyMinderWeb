@@ -172,6 +172,13 @@ export default {
     this.fetchUsersInGroup().then(() => {
       this.fetchBalanceInGroup();
     });
+  },
+  watch: {
+    activeGroupID() {
+      this.fetchUsersInGroup().then(() => {
+        this.fetchBalanceInGroup();
+      });
+    }
   }
 }
 </script>

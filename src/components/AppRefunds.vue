@@ -88,12 +88,6 @@ export default {
   props: {
     activeGroup: Object,
   },
-  watch: {
-    activeGroup() {
-      this.fetchPaymentToBeReceived();
-      this.fetchPaymentToBePaid();
-    }
-  },
   components: {BarChart},
   data() {
     return {
@@ -278,9 +272,8 @@ export default {
         if (responseData.data) {
           const userGroups = responseData.data.groupById.userGroups;
           this.paymentsToBePaid = [];
-          console.log('userGroups', userGroups);
           userGroups.map(userGroup => {
-            if (userGroup.user.userName === this.currentUsername) {
+            if (userGroup.user.userName === this.currentUsername && userGroup.payTo.PayToUser) {
               this.paymentsToBePaid.push({
                 amountToPay: userGroup.payTo.amountToPay,
                 id: userGroup.payTo.payToUser.id,
@@ -297,6 +290,12 @@ export default {
   mounted() {
     this.fetchPaymentToBeReceived();
     this.fetchPaymentToBePaid();
+  },
+  watch: {
+    activeGroup() {
+      this.fetchPaymentToBeReceived();
+      this.fetchPaymentToBePaid();
+    }
   }
 };
 </script>

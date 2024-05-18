@@ -6,14 +6,30 @@
         <div class="modal-content">
           <div class="chat-header">
             <div class="input-group">
-              <input aria-label="search" class="form-control" placeholder="Rechercher" type="text">
+              <input v-model="texttosuggest" aria-label="search" class="form-control" placeholder="Rechercher..."
+                     type="text"
+                     @input="suggestUsers">
               <button class="btn btn-outline-secondary" type="button"><i class="bi bi-search"></i></button>
             </div>
+            <ul class="list-group">
+              <li v-for="user in suggestedUsers" :key="user.id"
+                  class="list-group-item d-flex justify-content-between align-items-center"
+                  @click="selectUser(user)">
+                {{ user.name }}
+                <button class="btn btn-primary" @click="selectUser(user)"
+                ><i class="bi bi-chat-left-fill"></i></button>
+              </li>
+              <li v-if="suggestedUsers.length === 0 && texttosuggest.length > 1"
+                  class="list-group-item d-flex justify-content-between align-items-center">
+                Aucun utilisateur trouvé
+              </li>
+            </ul>
 
             <ul id="myTab" class="nav nav-tabs" role="tablist">
               <li class="nav-item" role="presentation">
                 <button id="Open-tab" aria-controls="Open" aria-selected="true" class="nav-link active"
-                        data-bs-target="#Open" data-bs-toggle="tab" role="tab" type="button">Amis
+                        data-bs-target="#Open" data-bs-toggle="tab" role="tab" type="button"
+                        @click="fetchCurrentUserFriends">Amis
                 </button>
               </li>
               <li class="nav-item" role="presentation">
@@ -34,8 +50,13 @@
                 <div id="Open" aria-labelledby="Open-tab" class="tab-pane fade show active " role="tabpanel">
                   <!-- chat-list -->
                   <div class="chat-list">
+                    <div v-if="hasNoFriends">
+                      <div class="flex-grow-1 ms-3 text-center">
+                        <h3>Aucun ami</h3>
+                      </div>
 
-                    <div v-for="friend in friends" :key="friend.name">
+                    </div>
+                    <div v-for="friend in friends" v-else :key="friend.name">
                       <a class="d-flex align-items-center "
                          role="button"
                          @click="handleCurrentChat('friend',friend)">
@@ -95,7 +116,15 @@
     <!-- chatbox -->
     <div class="chatbox">
       <div class="modal-dialog-scrollable">
-        <div class="modal-content">
+        <div v-if="hasNoFriends && activeTab === 'friends'"
+             class="modal-content">
+          <div class="modal-body">
+            <div class="msg-body">
+              <h6 class="text-center">Aucun message</h6>
+            </div>
+          </div>
+        </div>
+        <div v-else class="modal-content">
           <div class="msg-head">
             <div class="row">
               <div class="col-8">
@@ -160,6 +189,14 @@ export default {
       activeChat: [],
       currentUsername: currentUsername,
       activeTab: 'friends',
+
+      //search
+      texttosuggest: '',
+      suggestedUsers: [],
+
+
+      hasNoFriends: false,
+
     };
   },
   methods: {
@@ -250,7 +287,7 @@ export default {
       try {
         const axios = require('axios');
         const response = await axios.post('${process.env.VUE_APP_API_URL}', {
-          query: `{users{userName,id,email,avatarUrl}}`
+          query: `{friends{userName,id,email,avatarUrl}}`
         }, {
           withCredentials: true,
           headers: {
@@ -259,17 +296,23 @@ export default {
           },
         });
         const responseData = response.data;
-        if (responseData.data.users.length > 0) {
-          this.friends = responseData.data.users.map((user) => {
+        if (responseData.data.friends.length > 0) {
+          this.friends = responseData.data.friends.map((friend) => {
             return {
-              name: user.userName,
-              id: user.id,
-              email: user.email,
-              avatarUrl: user.avatarUrl,
+              name: friend.userName,
+              id: friend.id,
+              email: friend.email,
+              avatarUrl: friend.avatarUrl,
             };
           }).filter((friend) => friend.name !== this.currentUsername);
-          this.activeChat = this.friends[0];
-          await this.fetchCurrentFriendChat();
+
+          if (this.friends.length > 0) {
+            this.activeChat = this.friends[0];
+            await this.fetchCurrentFriendChat();
+            this.hasNoFriends = false;
+          } else {
+            this.hasNoFriends = true;
+          }
         }
       } catch (error) {
         console.error('Erreur:', error);
@@ -365,41 +408,54 @@ export default {
         console.error('Erreur:', error);
       }
     },
-    async sucribeToNewMessages() {
-      const axios = require('axios');
-      try {
-        const response = await axios.post('${process.env.VUE_APP_API_URL}', {
-          query: `subscription{messageAdded{content,sender{userName},receiver{userName}, sentAt}}`
-        }, {
-          withCredentials: true,
-          headers: {
-            'Content-Type': 'application/json',
-            "Accept": "application/json",
-          },
-        });
-        const responseData = response.data;
-        if (responseData.data) {
-          console.log('response data:', responseData);
-          this.activeChat.messages.push({
-            sender: responseData.data.messageAdded.sender,
-            receiver: responseData.data.messageAdded.receiver,
-            content: responseData.data.messageAdded.content,
-            sentAt: new Date(responseData.data.messageAdded.sentAt).toLocaleTimeString('fr-FR', {
-              weekday: "long",
-              month: "long",
-              day: "numeric",
-              hour: '2-digit',
-              minute: '2-digit',
-            }),
-          });
-          const messageList = this.$refs.messageList;
-          messageList.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
-        }
-
-      } catch (error) {
-        console.error('Erreur:', error);
+    async suggestUsers() {
+      if (this.texttosuggest === '') {
+        this.suggestedUsers = [];
       }
+      if (this.texttosuggest.length > 1) {
+        try {
+          const axios = require('axios');
+          const response = await axios.post('${process.env.VUE_APP_API_URL}', {
+            query: `query {
+    users(where: { userName: { startsWith: "${this.texttosuggest}" } }) {
+      userName
+      id
+      avatarUrl
+      email
     }
+  }
+  `
+          }, {
+            withCredentials: true,
+            headers: {
+              'Content-Type': 'application/json',
+              "Accept": "application/json",
+            },
+          });
+          const responseData = response.data;
+          if (responseData.data) {
+            this.suggestedUsers = responseData.data.users.map(user => {
+              return {
+                id: user.id,
+                name: user.userName,
+                email: user.email,
+                avatarUrl: user.avatarUrl,
+              };
+            });
+          }
+        } catch (error) {
+          console.error('Erreur lors de la récupération des utilisateurs', error);
+        }
+      }
+    },
+
+    selectUser(user) {
+      this.activeChat = user;
+      this.texttosuggest = '';
+      this.suggestedUsers = [];
+      this.handleCurrentChat('friend', user);
+      this.hasNoFriends = false;
+    },
   },
   mounted() {
     this.fetchCurrentUserFriends();
