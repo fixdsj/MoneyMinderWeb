@@ -6,8 +6,8 @@
       </div>
 
       <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
-        <li class="ms-3"><a class="text-white link-underline-light" href="/privacy-policy">Politique de
-          confidentialité</a></li>
+        <li class="ms-3"><a class="text-white link-underline-light" href="/privacy-policy">Privacy Policy
+        </a></li>
         <li class="ms-3"><a class="text-white" href="https://twitter.com/" target="_blank"><i
             class="bi bi-twitter"></i></a></li>
         <li class="ms-3"><a class="text-white" href="https://instagram.com/" target="_blank"><i

@@ -9,15 +9,17 @@
     <div v-if="groups.length > 0 && activeGroup.id" class="tab-content row">
       <div class="col-3">
         <div class="list-group">
-          <div class="list-group-item text-center">Groupes</div>
+          <div class="list-group-item text-center">Groups</div>
           <div v-for="group in groups" :key="group.id" :class="{'activeGroup': group.name === activeGroup.name}"
                class="list-group-item text-center" type="button" @click="setActiveGroup(group)">
             {{ group.name }}
           </div>
           <div class="list-group-item my-auto text-center" role="button"
-               @click="$router.push('/account')">Créer un groupe
+               @click="$router.push('/account')">Create a group
           </div>
-          <div v-if="groups.length === 0" class="list-group-item fst-italic" type="button">Aucun groupe</div>
+          <div v-if="groups.length === 0" class="list-group-item fst-italic" type="button">
+            You don't have any group yet.
+          </div>
         </div>
         <img alt="" class="img-fluid" height="400" src="../assets/illustrations/userwithphone.png" width="400">
       </div>
@@ -27,25 +29,25 @@
           <li class="nav-item" role="presentation">
             <button id="expense-tab" aria-controls="expense-tab-pane" aria-selected="true" class="nav-link active"
                     data-bs-target="#expense-tab-pane" data-bs-toggle="tab" role="tab" type="button"
-                    @click="setActiveTab('expense-tab-pane')">Dépenses
+                    @click="setActiveTab('expense-tab-pane')">Expenses
             </button>
           </li>
           <li class="nav-item" role="presentation">
             <button id="refund-tab" aria-controls="refund-tab-pane" aria-selected="false" class="nav-link"
                     data-bs-target="#refund-tab-pane" data-bs-toggle="tab" role="tab" type="button"
-                    @click="setActiveTab('refund-tab-pane')">Remboursements
+                    @click="setActiveTab('refund-tab-pane')">Refunds
             </button>
           </li>
           <li class="nav-item" role="presentation">
             <button id="lasttransaction-tab" aria-controls="lasttransaction-tab-pane" aria-selected="false"
                     class="nav-link" data-bs-target="#lasttransaction-tab-pane" data-bs-toggle="tab"
-                    role="tab" type="button" @click="setActiveTab('lasttransaction-tab-pane')">Dernières transactions
+                    role="tab" type="button" @click="setActiveTab('lasttransaction-tab-pane')">Last transactions
             </button>
           </li>
           <li class="nav-item" role="presentation">
             <button id="groupedetail-tab" aria-controls="groupedetail-tab-pane" aria-selected="false" class="nav-link"
                     data-bs-target="#groupedetail-tab-pane" data-bs-toggle="tab" role="tab" type="button"
-                    @click="setActiveTab('groupedetail-tab-pane')">Détails du groupe
+                    @click="setActiveTab('groupedetail-tab-pane')">Group details
             </button>
           </li>
 
@@ -78,9 +80,9 @@
     </div>
     <div v-else class="text-center pt-4">
       <div class="alert alert-info">
-        Vous n'avez pas de groupe. Créez-en un pour commencer.
+        You don't have any group yet. Create one now.
       </div>
-      <button class="btn btn-primary mt-3" @click="$router.push('/account')">Créer un groupe</button>
+      <button class="btn btn-primary mt-3" @click="$router.push('/account')">Create a group</button>
     </div>
 
   </div>
@@ -113,16 +115,16 @@ export default {
     setActiveTab(tab) {
 
       if (tab === 'expense-tab-pane') {
-        this.activeTab = 'Créer une dépense';
+        this.activeTab = 'Create an expense';
       }
       if (tab === 'refund-tab-pane') {
-        this.activeTab = 'Gérer ou créer un remboursement';
+        this.activeTab = 'Create a refund';
       }
       if (tab === 'lasttransaction-tab-pane') {
-        this.activeTab = 'Voir les dernières transactions';
+        this.activeTab = 'See last transactions';
       }
       if (tab === 'groupedetail-tab-pane') {
-        this.activeTab = 'Voir les détails du groupe';
+        this.activeTab = 'See group details';
       }
     },
     async fetchCurrentUserGroups() {

@@ -9,7 +9,7 @@
     </div>
     <div class="container justify-content-evenly d-flex">
       <div class="col-md-5 text-md-center">
-        <h3 class="text-center mb-4">Aperçu des soldes</h3>
+        <h3 class="text-center mb-4">Balance Overview</h3>
         <div class="mt-2 mx-2 bg-light rounded">
           <BarChart :activeGroupID="activeGroup.id"/>
         </div>
@@ -17,36 +17,37 @@
       <hr class="d-md-none">
       <div class="col-md-5">
         <div v-if="paymentsToBeReceived.length" class="mb-2">
-          <h3 class="text-center mb-4">Ils vous doivent <span
-              class="badge bg-success rounded-pill">{{ paymentsToBeReceived.length }}</span></h3>
+          <h3 class="text-center mb-4">They owe you
+            <span
+                class="badge bg-success rounded-pill">{{ paymentsToBeReceived.length }}</span></h3>
           <ul class="list-group">
             <li v-for="payment in paymentsToBeReceived" :key="payment.userName"
                 class="list-group-item d-flex justify-content-between align-items-center">
               <div>
                 <p class="mb-0"><strong>{{ payment.userName }}</strong></p>
-                <small>doit vous rembourser</small>
+                <small>owes you</small>
               </div>
               <span class="badge bg-success rounded-pill">{{ payment.amountToPay }}€</span>
             </li>
           </ul>
         </div>
         <div v-else>
-          <h3 class="text-center mb-4">Ils vous doivent <span class="badge bg-success rounded-pill">0</span></h3>
+          <h3 class="text-center mb-4">They owe you <span class="badge bg-success rounded-pill">0</span></h3>
           <div class="alert alert-info" role="alert">
-            Aucun paiement à recevoir pour le moment.
+            No payment to receive for now.
           </div>
         </div>
 
         <div v-if="paymentsToBePaid.length">
-          <h3 class="text-center mb-4 ">Vous devez <span class="badge bg-danger rounded-pill">{{
+          <h3 class="text-center mb-4 ">You owe <span class="badge bg-danger rounded-pill">{{
               paymentsToBePaid.length
             }}</span></h3>
           <div class="d-flex justify-content-evenly">
-            <button class="btn btn-sm btn-primary me-1" @click="paywithPaypal(activeGroup.id)">Payer au groupe avec
+            <button class="btn btn-sm btn-primary me-1" @click="paywithPaypal(activeGroup.id)">Pay to group with
               Paypal
             </button>
-            <button class="btn btn-sm btn-secondary ms-1" @click="payforGroup(activeGroup.id)">J'ai payé au groupe
-              d'un autre façon
+            <button class="btn btn-sm btn-secondary ms-1" @click="payforGroup(activeGroup.id)">I paid the group another
+              way
             </button>
           </div>
           <ul class="list-group">
@@ -54,12 +55,12 @@
                 class="list-group-item d-flex justify-content-between align-items-center">
               <div>
                 <p class="mb-0"><strong>{{ payment.userName }}</strong></p>
-                <small>vous devez rembourser</small>
+                <small>you owe</small>
               </div>
               <span class="badge bg-danger rounded-pill">{{ payment.amountToPay }}€</span>
               <button class="btn btn-sm btn-primary" @click="paywithPaypal(payment.id)">Paypal</button>
               <button v-if="waitingVirement === payment.id" class="btn btn-sm btn-secondary"
-                      @click="confirmRibpayment(payment.id)">Confirmer le virement
+                      @click="confirmRibpayment(payment.id)">Confirm payment
               </button>
               <button v-else class="btn btn-sm btn-secondary" @click="downloadRib(payment.id)">RIB</button>
 
@@ -67,9 +68,9 @@
           </ul>
         </div>
         <div v-else>
-          <h3 class="text-center mb-4">Vous devez <span class="badge bg-danger rounded-pill">0</span></h3>
+          <h3 class="text-center mb-4">You owe <span class="badge bg-danger rounded-pill">0</span></h3>
           <div class="alert alert-info" role="alert">
-            Aucun paiement à effectuer pour le moment.
+            No payment to make for now.
           </div>
         </div>
       </div>

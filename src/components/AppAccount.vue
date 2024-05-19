@@ -3,28 +3,29 @@
     <div class="row">
       <div class="col-md-6">
         <div>
-          <h4 class="card-title text-md-center">Mes groupes</h4>
+          <h4 class="card-title text-md-center">My groups</h4>
           <div class="d-flex justify-content-center mt-3 mb-3">
             <!-- Nouveau groupe -->
             <button aria-controls="newGroupForm" aria-expanded="false" class="btn btn-primary"
                     data-bs-target="#newGroupForm"
                     data-bs-toggle="collapse" type="button">
-              Nouveau groupe
+              New group
             </button>
           </div>
           <div id="newGroupForm" class="collapse mt-3 mb-3">
             <form @submit.prevent="createGroup">
               <div class="mb-3 form-floating">
-                <input id="nom" v-model="nomGroupe" class="form-control" placeholder="Nom" type="text"/>
-                <label for="nom">Nom</label>
+                <input id="nom" v-model="nomGroupe" class="form-control" placeholder="Name" type="text"/>
+                <label for="nom">Name</label>
               </div>
               <div class="mb-3 form-floating">
-                <label for="description">Description</label>
+
                 <input id="description" v-model="descriptionGroupe" class="form-control" placeholder="Description"
                        type="text"/>
+                <label for="description">Description</label>
               </div>
               <div class="text-center">
-                <button class="btn btn-primary" type="submit">Créer</button>
+                <button class="btn btn-primary" type="submit">Create</button>
               </div>
             </form>
           </div>
@@ -34,7 +35,7 @@
             <button aria-controls="inviteUserForm" aria-expanded="false" class="btn btn-primary"
                     data-bs-target="#inviteUserForm"
                     data-bs-toggle="collapse" type="button">
-              Inviter un utilisateur
+              Invite user
             </button>
           </div>
           <div id="inviteUserForm" class="collapse mt-3 mb-3">
@@ -43,7 +44,7 @@
                 <input id="pseudo" v-model="selectedUser.userName" class="form-control"
                        placeholder="Nom d'utilisateur" required
                        type="text" @input="suggestUsers"/>
-                <label for="pseudo">Nom d'utilisateur</label>
+                <label for="pseudo">Username</label>
                 <ul class="list-group list-unstyled">
                   <li v-for="user in suggestedUsers" :key="user.id">
                     <button class="list-group-item list-group-item-action"

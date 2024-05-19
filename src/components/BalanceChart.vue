@@ -3,7 +3,7 @@
        id="balance-chart"
        :data="chartData"
        :options="chartOptions"
-       aria-label="Solde des dépenses du groupe"
+       aria-label="Balance of group expenses"
   />
 </template>
 

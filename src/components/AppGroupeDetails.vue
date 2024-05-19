@@ -3,10 +3,10 @@
     <p>{{ group.description }}</p>
   </div>
   <div class="mb-3 d-flex align-items-center">
-    <label class="form-label me-2" for="formFile">Changer la photo de profil :</label>
+    <label class="form-label me-2" for="formFile">Change group picture</label>
     <input id="formFile" accept="image/png, image/jpeg" class="form-control form-control-sm" type="file"
            @change="pictureToUpload = $event.target.files[0]">
-    <button v-if="pictureToUpload" class="btn btn-info ms-2" @click="uploadPicture">Changer</button>
+    <button v-if="pictureToUpload" class="btn btn-info ms-2" @click="uploadPicture">Upload</button>
   </div>
 
   <div class="container">
@@ -21,11 +21,12 @@
           <div class="card-body text-center">
             <h5 class="card-title">{{ member.userName }}</h5>
             <p class="card-text">{{
-                member.lasttransaction ? 'Dernière transaction: ' + member.lasttransaction : 'Pas de transaction'
+                member.lasttransaction ? 'Last transaction: ' + member.lasttransaction : 'No transaction yet'
               }}</p>
-            <p class="card-text">Rejoint le {{ member.joinedAt.toLocaleDateString('fr-FR', dateOptions) }}</p>
-            <p class="card-text">Montant à payer au groupe: {{ member.amountToPay }}€</p>
-            <p class="card-text">Email: {{ member.email }}</p>
+            <p class="card-text">Joined on:{{ member.joinedAt.toLocaleDateString('fr-FR', dateOptions) }}</p>
+            <p class="card-text">Amount to pay: {{ member.amountToPay }} €</p>
+            <p class="card-text">Email: <a :href="'mailto:' + member.email" class="email-link">{{ member.email }}</a>
+            </p>
           </div>
         </div>
       </div>
@@ -168,5 +169,15 @@ export default {
 
 .card {
   background-color: var(--second-background-color);
+}
+
+.email-link {
+  color: var(--button-color);
+  text-decoration: underline;
+  transition: color 0.3s ease;
+}
+
+.email-link:hover {
+  color: var(--third-background-color);
 }
 </style>
