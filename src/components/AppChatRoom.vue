@@ -53,6 +53,7 @@
                     <div v-if="hasNoFriends">
                       <div class="flex-grow-1 ms-3 text-center">
                         <h3>No friends</h3>
+                        Search for friends to chat with
                       </div>
 
                     </div>
