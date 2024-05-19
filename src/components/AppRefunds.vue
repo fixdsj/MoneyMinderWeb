@@ -42,14 +42,6 @@
           <h3 class="text-center mb-4 ">You owe <span class="badge bg-danger rounded-pill">{{
               paymentsToBePaid.length
             }}</span></h3>
-          <div class="d-flex justify-content-evenly">
-            <button class="btn btn-sm btn-primary me-1" @click="paywithPaypal(activeGroup.id)">Pay to group with
-              Paypal
-            </button>
-            <button class="btn btn-sm btn-secondary ms-1" @click="payforGroup(activeGroup.id)">I paid the group another
-              way
-            </button>
-          </div>
           <ul class="list-group">
             <li v-for="payment in paymentsToBePaid" :key="payment.userName"
                 class="list-group-item d-flex justify-content-between align-items-center">
@@ -58,7 +50,7 @@
                 <small>you owe</small>
               </div>
               <span class="badge bg-danger rounded-pill">{{ payment.amountToPay }}€</span>
-              <button class="btn btn-sm btn-primary" @click="paywithPaypal(payment.id)">Paypal</button>
+              <button class="btn btn-sm btn-primary" @click="paywithPaypal()">Paypal</button>
               <button v-if="waitingVirement === payment.id" class="btn btn-sm btn-secondary"
                       @click="confirmRibpayment(payment.id)">Confirm payment
               </button>
@@ -103,8 +95,28 @@ export default {
     };
   },
   methods: {
-    paywithPaypal(id) {
-      console.log('Payer avec Paypal à l user id:', id);
+    async paywithPaypal() {
+      console.log('Payer avec Paypal');
+      try {
+        const axios = require('axios');
+        const response = await axios.post(process.env.VUE_APP_API_URL, {
+          query: `mutation{payDuesToGroup(groupId: "${this.activeGroup.id}")}`
+        }, {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json',
+            "Accept": "application/json",
+          },
+        });
+        const responseData = response.data;
+        if (responseData.data && responseData.data.payDuesToGroup) {
+          const paypalUrl = responseData.data.payDuesToGroup;
+          window.open(paypalUrl, '_blank');
+          await this.fetchPaymentToBePaid();
+        }
+      } catch (error) {
+        console.error('Erreur lors du paiement', error);
+      }
     },
     async downloadRib(id) {
       console.log('Payer avec RIB à l user id:', id);
@@ -187,22 +199,6 @@ export default {
       });
     },
 
-    payforGroup(id) {
-      console.log('Payer pour le groupe id:', id);
-    },
-    async paidDue() {
-      console.log('Payer une dette');
-    },
-    formatDate(isoDate) {
-      const date = new Date(isoDate);
-      return date.toLocaleString('fr-FR', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-      });
-    },
     async fetchPaymentToBeReceived() {
       try {
         const axios = require('axios');
@@ -274,7 +270,7 @@ export default {
           const userGroups = responseData.data.groupById.userGroups;
           this.paymentsToBePaid = [];
           userGroups.map(userGroup => {
-            if (userGroup.user.userName === this.currentUsername && userGroup.payTo.PayToUser) {
+            if (userGroup.user.userName === this.currentUsername && userGroup.payTo.payToUser) {
               this.paymentsToBePaid.push({
                 amountToPay: userGroup.payTo.amountToPay,
                 id: userGroup.payTo.payToUser.id,

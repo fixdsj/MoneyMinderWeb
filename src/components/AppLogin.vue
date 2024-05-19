@@ -73,7 +73,6 @@ export default {
   methods: {
     async signIn(event) {
       event.preventDefault();
-      console.log('Données saisies :', this.username, this.password);
       this.errors = [];
 
 
@@ -101,10 +100,8 @@ export default {
         });
 
         const responseData = response.data;
-        console.log('Réponse:', responseData);
         if (responseData.data) {
           if (responseData.data.signIn.succeeded) {
-            console.log('Connexion réussie');
             isLogged.value = true;
             currentUsername.value = this.username;
             this.$router.push('/account');
