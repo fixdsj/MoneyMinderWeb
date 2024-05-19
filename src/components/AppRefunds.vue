@@ -42,6 +42,8 @@
           <h3 class="text-center mb-4 ">You owe <span class="badge bg-danger rounded-pill">{{
               paymentsToBePaid.length
             }}</span></h3>
+          <p class="text-center text-secondary">Payments are optimized so that you only have to make one payment in the
+            group.</p>
           <ul class="list-group">
             <li v-for="payment in paymentsToBePaid" :key="payment.userName"
                 class="list-group-item d-flex justify-content-between align-items-center">
@@ -52,7 +54,7 @@
               <span class="badge bg-danger rounded-pill">{{ payment.amountToPay }}€</span>
               <button class="btn btn-sm btn-primary" @click="paywithPaypal()">Paypal</button>
               <button v-if="waitingVirement === payment.id" class="btn btn-sm btn-secondary"
-                      @click="confirmRibpayment(payment.id)">Confirm payment
+                      @click="confirmRibpayment(payment.idCurrentuser)">Confirm payment
               </button>
               <button v-else class="btn btn-sm btn-secondary" @click="downloadRib(payment.id)">RIB</button>
 
@@ -177,7 +179,7 @@ export default {
       });
     },
     confirmRibpayment(id) {
-      console.log('Confirmer le paiement avec RIB à l user id:', id);
+      console.log('Request to send: mutation{manuallyValidatePayment(groupId: "${this.activeGroup.id}",payerId: "${id}")}', this.activeGroup.id, id);
       const axios = require('axios');
       axios.post(process.env.VUE_APP_API_URL, {
         query: `mutation{manuallyValidatePayment(groupId: "${this.activeGroup.id}",payerId: "${id}")}`
@@ -273,6 +275,7 @@ export default {
             if (userGroup.user.userName === this.currentUsername && userGroup.payTo.payToUser) {
               this.paymentsToBePaid.push({
                 amountToPay: userGroup.payTo.amountToPay,
+                idCurrentuser: userGroup.user.id,
                 id: userGroup.payTo.payToUser.id,
                 userName: userGroup.payTo.payToUser.userName,
               });
