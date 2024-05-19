@@ -64,26 +64,23 @@ export default {
       errors: [],
       success: false,
 
-      showPassword: true,
+      showPassword: false,
     };
   },
 
   methods: {
 
-    async register() {
+    async register(event) {
       event.preventDefault();
       if (this.password !== this.confirmPassword) {
-        this.errors = ['Les mots de passe ne correspondent pas'];
+        this.errors = ['Passwords do not match'];
         return;
       }
+      console.log('Informations saisies :', this.pseudo, this.email, this.password);
       try {
-        const response = await fetch('${process.env.VUE_APP_API_URL}', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            query: `mutation CreateUser {
+        const axios = require('axios');
+        const response = await axios.post('${process.env.VUE_APP_API_URL}', {
+          query: `mutation CreateUser {
     createUser(
         appUserInsertDto: {
             userName: "${this.pseudo}"
@@ -92,17 +89,22 @@ export default {
             role: "User"
         }
     ) {
-        balance
         id
         userName
         email
     }
 }
 `
-          })
-
+        }, {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
         });
-        const responseData = await response.json();
+
+        const responseData = response.data;
+        console.log('Réponse:', responseData);
         if (responseData.errors) {
           this.errors = ['Erreur : ' + responseData.errors[0].message];
 
@@ -110,14 +112,11 @@ export default {
         if (responseData.data.createUser !== null) {
           this.success = true;
 
-          /* // Rediriger vers la page de connexion après 2 secondes
-           await new Promise(resolve => setTimeout(resolve, 2000));*/
-
           this.$router.push('/login');
         }
       } catch (e) {
         console.error(e);
-        this.errors = ['Une erreur est survenue lors de l\'inscription'];
+        this.errors = ['An error occurred, please try again'];
       }
     },
     toggleShowPassword() {

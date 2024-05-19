@@ -101,7 +101,7 @@
                 class="list-group-item d-flex justify-content-between align-items-center">
               {{ invitation.group.name }}
               <button class="btn btn-primary" @click="acceptInvitation(invitation.group.id)">Accepter</button>
-              <button class="btn btn-danger">Refuser</button>
+              <button class="btn btn-danger" @click="refuseInvitation(invitation.group.id)">Refuser</button>
             </li>
             <li v-if="invitations.length === 0" class="list-group">
               <a class="btn fst-italic" role="button">Aucune invitation</a>
@@ -151,7 +151,7 @@
             </div>
             <div class="mb-3">
               <label class="form-label" for="email">Email :</label>
-              <input id="email" v-model="utilisateur.email" class="form-control" readonly type="email"/>
+              <input id="email" v-model="utilisateur.email" class="form-control" type="email"/>
             </div>
             <div class="d-flex justify-content-center mt-3">
               <button class="btn btn-primary" type="submit"
@@ -429,7 +429,7 @@ export default {
       });
       const responseData = response.data;
       if (responseData.data) {
-        this.alertMessage = `Groupe "${this.nomGroupe}" créé avec succès !`;
+        this.alertMessage = `Group "${this.nomGroupe}" created successfully`;
         toastLive.classList.add('show')
         await this.fetchCurrentUserDetails();
         this.nomGroupe = '';
@@ -544,7 +544,7 @@ export default {
         const responseData = response.data;
         if (responseData.data.joinGroup) {
           var toastLive = document.getElementById('liveToast')
-          this.alertMessage = `Invitation acceptée`;
+          this.alertMessage = `Invitation accepted`;
           toastLive.classList.add('show')
           await this.fetchCurrentUserDetails();
         }
@@ -554,6 +554,33 @@ export default {
       }
 
     },
+
+    async refuseInvitation(groupId) {
+      try {
+        const axios = require('axios');
+        const response = await axios.post(process.env.VUE_APP_API_URL, {
+          query: `mutation {refuseInvitation(groupId: "${groupId}")}`
+        }, {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json',
+            "Accept": "application/json",
+          },
+        });
+        const responseData = response.data;
+        if (responseData.data.refuseInvitation) {
+          var toastLive = document.getElementById('liveToast')
+          this.alertMessage = `Invitation refusée`;
+          toastLive.classList.add('show')
+          await this.fetchCurrentUserDetails();
+        }
+        console.log('Réponse pour le refus de l invitation:', responseData);
+      } catch (error) {
+        console.error('Erreur:', error);
+
+      }
+    },
+
     async updateUser() {
       const axios = require('axios');
       const response = await axios.post(process.env.VUE_APP_API_URL, {
