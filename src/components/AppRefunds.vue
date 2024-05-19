@@ -1,8 +1,7 @@
 <template>
   <div>
     <div v-if="hasNoRib" class="alert alert-info alert-dismissible fade show" role="alert">
-      <strong>L'utilisateur n'a pas de RIB enregistré.</strong> Il doit enregistrer un RIB pour pouvoir recevoir des
-      remboursements.
+      <strong>Users without RIB</strong> You can't pay this user because he doesn't have a RIB.
       <div class="my-auto">
         <button aria-label="Close" class="btn-close" data-bs-dismiss="alert" type="button"></button>
       </div>
