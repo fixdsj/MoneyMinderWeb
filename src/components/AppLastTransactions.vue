@@ -2,23 +2,22 @@
 
   <template v-if="transactions.length === 0">
     <div class="text-center">
-      <p class="text-center">Aucune transaction</p>
+      <p class="text-center">No transactions yet</p>
       <i class="bi bi-check-circle" style="font-size: 60px; color:green"></i>
     </div>
   </template>
-  <div class="d-flex justify-content-between">
+  <div v-else class="d-flex justify-content-between">
     <div class="form-floating mb-3">
       <select id="sortSelect" class="form-select" @change="handleSort">
-        <option value="dateDesc" @click="sortByDateDesc">Date Descendante</option>
-        <option value="dateAsc" @click="sortByDateAsc">Date Ascendante</option>
-        <option value="amountAsc" @click="sortByAmountAsc">Montant Ascendant</option>
-        <option value="amountDesc" @click="sortByAmountDesc">Montant Descendant</option>
-
+        <option value="dateDesc" @click="sortByDateDesc">Descending Date</option>
+        <option value="dateAsc" @click="sortByDateAsc">Ascending Date</option>
+        <option value="amountAsc" @click="sortByAmountAsc">Ascending Amount</option>
+        <option value="amountDesc" @click="sortByAmountDesc">Descending Amount</option>
       </select>
-      <label for="sortSelect">Trier par</label>
+      <label for="sortSelect">Sort by</label>
     </div>
     <div class="my-auto pe-2">
-      <button class="btn btn-secondary" @click="downloadSumup">Télécharger le récapitulatif</button>
+      <button class="btn btn-secondary" @click="downloadSumup">Download sum up</button>
     </div>
   </div>
 
@@ -42,20 +41,20 @@
         <div class="accordion-body container">
           <div class="d-flex justify-content-between">
             <p v-if="transaction.description !=='' "><strong>Description:</strong> {{ transaction.description }}</p>
-            <p v-else class="text-danger">Pas de description</p>
+            <p v-else class="text-danger">No description</p>
             <div v-if="transaction.justificationExtension" class="text-end d-flex">
-              <p class="text-end "><strong>Télécharger le justificatif:</strong></p>
+              <p class="text-end "><strong>Download proof: </strong></p>
               <i class="bi bi-file-earmark-arrow-down" type="button" @click="downloadProof(transaction)"></i>
             </div>
             <div v-else class="text-end">
-              <p class="text-end text-danger">Pas de justificatif</p>
+              <p class="text-end text-danger">No proof</p>
             </div>
 
           </div>
           <hr>
           <div class="d-flex justify-content-between">
             <p>
-              <strong>Membres concernés: </strong>
+              <strong>Concerned members: </strong>
               <span
                   :class="transaction.membresconcernes.every(member => member.paidAt) ? 'text-success' : 'text-danger'">{{
                   transaction.membresconcernes.map(member => member.userName).join(', ')
@@ -64,17 +63,17 @@
 
 
             <div>
-              <p class="text-end"><strong>Catégorie:</strong> {{ transaction.categorie }}</p>
+              <p class="text-end"><strong>Category: </strong> {{ transaction.categorie }}</p>
             </div>
           </div>
           <hr>
           <div class="mb-3 d-flex align-items-center">
-            <label class="form-label" for="formFile"><strong>Changer le justificatif:</strong></label>
+            <label class="form-label" for="formFile"><strong>Change proof:</strong></label>
             <input id="formFile" accept="image/png, image/jpeg, image/jpg,application/pdf"
                    class="form-control form-control-sm"
                    type="file"
                    @change="justificatif = $event.target.files[0]">
-            <button v-if="justificatif" class="btn btn-info ms-2" @click="uploadProof(transaction.id)">Changer</button>
+            <button v-if="justificatif" class="btn btn-info ms-2" @click="uploadProof(transaction.id)">Upload</button>
           </div>
         </div>
       </div>

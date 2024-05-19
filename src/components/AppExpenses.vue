@@ -1,12 +1,12 @@
 <template>
   <div class="col-md-10 mx-auto col-lg-5 app-depenses">
-    <h3 class="text-center mb-4">Créer une dépense</h3>
+    <h3 class="text-center mb-4">Create an expense</h3>
     <div v-if="justicatifUploadedSuccess" class="alert alert-success alert-dismissible fade show" role="alert">
-      <strong>Justificatif envoyé!</strong> Vous pouvez maintenant ajouter une autre dépense.
+      <strong>Proof sent!</strong>You can now add another one.
       <button aria-label="Close" class="btn-close" data-bs-dismiss="alert" type="button"></button>
     </div>
     <div v-if="expenseUploadedSuccess" class="alert alert-success alert-dismissible fade show" role="alert">
-      <strong>Dépense envoyée!</strong> Vous pouvez maintenant ajouter un justificatif.
+      <strong>Expense created!</strong> You can now add a proof.
       <button aria-label="Close" class="btn-close" data-bs-dismiss="alert" type="button"></button>
     </div>
     <!--    Première étape-->
@@ -15,45 +15,45 @@
         <div class="stepwizard-row setup-panel">
           <div class="stepwizard-step">
             <a class="btn btn-primary btn-circle" type="button">1</a>
-            <p>Étape 1</p>
+            <p>Step 1</p>
           </div>
           <div class="stepwizard-step">
             <a class="btn btn-default btn-circle" disabled="disabled" type="button">2</a>
-            <p>Étape 2</p>
+            <p>Step 2</p>
           </div>
         </div>
       </div>
 
       <div class="form-floating mb-3">
         <input id="description" v-model="depense.description" class="form-control form-styling"
-               placeholder="Titre de la dépense"
+               placeholder="Title of the expense"
                required
                type="text"/>
-        <label for="description">Titre</label>
+        <label for="description">Title of the expense</label>
       </div>
 
       <div class="input-group mb-3">
         <div class="form-floating">
-          <input id="montant" v-model="depense.montant" class="form-control" placeholder="Montant" required step="5"
+          <input id="amount" v-model="depense.montant" class="form-control" placeholder="Amount"
+                 required step="5"
                  type="number" v-bind:min="0" @input="previewRefunds()">
-          <label for="montant">Montant</label>
+          <label for="amount">Amount</label>
         </div>
         <span class="input-group-text">€</span>
       </div>
 
       <div class="mb-3">
         <div class="d-flex justify-content-between ">
-          <label class="form-label text-white my-auto">Utilisateurs concernés</label>
+          <label class="form-label text-white my-auto">Concerned members:</label>
           <button v-if="selectedsUsers.length === 0" class="btn btn-link" style="color: white !important;" type="button"
-                  @click="selectAllUsers">Tout
-            sélectionner
+                  @click="selectAllUsers">Select all
           </button>
-          <button v-else class="btn btn-link" style="color: white !important;" type="button" @click="unselectUsers">Tout
-            supprimer
+          <button v-else class="btn btn-link" style="color: white !important;" type="button" @click="unselectUsers">
+            Unselect all
           </button>
         </div>
 
-        <input id="weightedinput" v-model="texttosuggest" class="form-control" placeholder="Ajouter un utilisateur..."
+        <input id="weightedinput" v-model="texttosuggest" class="form-control" placeholder="Add a user..."
                type="text" @input="suggestUsers">
 
         <ul class="list-group">
@@ -64,7 +64,7 @@
           </li>
           <li v-if="suggestedUsers.length === 0 && texttosuggest.length > 1"
               class="list-group-item d-flex justify-content-between align-items-center">
-            Aucun utilisateur trouvé
+            No user found
           </li>
         </ul>
 
@@ -84,22 +84,22 @@
       </div>
       <div class="form-floating mb-3">
         <select id="category" v-model="depense.category" class="form-select">
-          <option value='FOOD'>Alimentation</option>
-          <option value='RENT'>Logement</option>
+          <option value='FOOD'>Food</option>
+          <option value='RENT'>Rent</option>
           <option value='TRANSPORT'>Transport</option>
-          <option value='OTHER'>Autres</option>
+          <option value='OTHER'>Other</option>
         </select>
-        <label for="category">Catégorie:</label>
+        <label for="category">Category</label>
       </div>
 
       <div v-if="!isExpenseLoading"
            class="mb-3 text-center">
-        <button class="btn btn-primary" type="button" @click="submitDepense">Créer la dépense</button>
+        <button class="btn btn-primary" type="button" @click="submitDepense">Create the expense</button>
       </div>
       <div v-if="isExpenseLoading" class="mb-3 text-center">
         <button class="btn btn-primary" disabled type="button">
           <span aria-hidden="true" class="spinner-border spinner-border-sm" role="status"></span>
-          Chargement...
+          Loading...
         </button>
       </div>
     </form>
@@ -119,18 +119,18 @@
       </div>
       <!-- Deuxième étape -->
       <div class="mb-3">
-        <label class="form-label" for="proof">Justificatif (facultatif):</label>
+        <label class="form-label" for="proof">Proof of the expense(optional)</label>
         <input id="proof" accept="image/png, image/jpeg, image/jpg, application/pdf"
                class="form-control" type="file"
                @change="handleFileChange"/>
       </div>
       <div v-if="!isJustificatifLoading" class="mb-3 text-center">
-        <button class="btn btn-primary" type="submit">Envoyer le justificatif</button>
+        <button class="btn btn-primary" type="submit">Send the proof</button>
       </div>
       <div v-if="isJustificatifLoading" class="mb-3 text-center">
         <button class="btn btn-primary" disabled type="button">
           <span aria-hidden="true" class="spinner-border spinner-border-sm" role="status"></span>
-          Chargement...
+          Loading...
         </button>
       </div>
 

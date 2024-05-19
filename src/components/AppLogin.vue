@@ -3,23 +3,23 @@
     <div class="row align-items-center">
       <div class="col-md-6">
         <form class="p-4 p-md-5" @submit="signIn">
-          <h3 class="text-center mb-4">Connexion</h3>
+          <h3 class="text-center mb-4">Sign in</h3>
           <p v-if="errors.length" class="text-danger">
             <b>Erreur(s): </b>
             <b v-for="error in errors" :key="error">{{ error }}</b>
           </p>
           <div class="form-floating mb-3">
-            <input id="username" v-model="username" class="form-control form-styling" placeholder="Votre pseudo"
+            <input id="username" v-model="username" class="form-control form-styling" placeholder="Your username"
                    required
                    type="text">
-            <label for="username">Nom d'utilisateur</label>
+            <label for="username">Username</label>
           </div>
 
           <div class="form-floating mb-3 position-relative">
             <input id="password" v-model="password" :type="showPassword ? 'text' : 'password'"
                    class="form-control pr-5 form-styling"
                    placeholder="Password" required>
-            <label for="password">Mot de passe</label>
+            <label for="password">Password</label>
             <button class="btn position-absolute end-0 translate-middle-y" style="top: 50%;" type="button"
                     @click="toggleShowPassword">
               <i :class="showPassword ?  'bi-eye-slash-fill':'bi-eye-fill'"></i>

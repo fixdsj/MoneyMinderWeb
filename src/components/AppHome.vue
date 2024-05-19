@@ -2,12 +2,11 @@
   <div class="landingpage">
     <div class="p-3 p-md-5 mb-0 text-center">
       <div class="col-md-5 p-lg-5 mx-auto my-5">
-        <h1 class="display-5 fw-bold">Simplifiez vos dépenses</h1>
-        <p class="lead fw-normal">Simplifiez la gestion de vos dépenses et partagez facilement les frais avec vos
-          proches grâce à Money Minder. Notre application intuitive vous permet de contrôler vos finances en toute
-          simplicité.</p>
-        <a v-if="!isLogged" class="btn btn-primary btn-lg px-4 gap-3" href="/register" type="button">Rejoignez-nous</a>
-        <a v-if="isLogged" class="btn btn-primary btn-lg px-4 gap-3" href="/groups" type="button">Voir mes groupes</a>
+        <h1 class="display-5 fw-bold">Money Minder</h1>
+        <p class="lead fw-normal">Simplify the management of your expenses and easily share expenses with your loved
+          ones with Money Minder. Our intuitive app lets you take control of your finances with ease.</p>
+        <a v-if="!isLogged" class="btn btn-primary btn-lg px-4 gap-3" href="/register" type="button">Get started</a>
+        <a v-if="isLogged" class="btn btn-primary btn-lg px-4 gap-3" href="/groups" type="button">Go to groups</a>
       </div>
     </div>
     <div class="container-fluid">
@@ -19,22 +18,22 @@
               <!-- Slide avec les témoignages -->
               <div class="carousel-item active" data-bs-interval="3000">
                 <div class="testimonial-card">
-                  <p class="testimonial-text">J'utilise Money Minder avec ma famille depuis des années. Cela me fait un
-                    gain de temps (et d'argent) considérables.</p>
+                  <p class="testimonial-text">I have used Money Minder with my family for years. This saves me
+                    considerable time (and money).</p>
                   <p class="testimonial-author">Antoine Dupont - Twitter</p>
                 </div>
               </div>
               <div class="carousel-item" data-bs-interval="3000">
                 <div class="testimonial-card">
-                  <p class="testimonial-text">Money Minder m'aide à gérer mes dépenses avec mes amis. C'est simple et
-                    efficace.</p>
-                  <p class="testimonial-author">Jean Martin - Instagram</p>
+                  <p class="testimonial-text">Money Minder helps me manage my spending with my friends. It is simple and
+                    efficient.</p>
+                  <p class="testimonial-author">Elizabeth Nelson - Twitter</p>
                 </div>
               </div>
               <div class="carousel-item" data-bs-interval="3000">
                 <div class="testimonial-card">
-                  <p class="testimonial-text">Je recommande Money Minder à tous ceux qui veulent gérer leurs dépenses en
-                    groupe.</p>
+                  <p class="testimonial-text">I recommend Money Minder to anyone who wants to manage their spending as a
+                    group.</p>
                   <p class="testimonial-author">Pierre Durand - Facebook</p>
                 </div>
               </div>
@@ -57,14 +56,14 @@
     <!-- Liens de téléchargement -->
     <div class="row justify-content-center mt-5 pb-2">
       <div class="col-md-8 text-center">
-        <h2>Convaincu ?</h2>
-        <p>Essaye notre site web ou télécharge l'application mobile</p>
+        <h2>Convinced?</h2>
+        <p>Try our website or download the mobile app</p>
         <div class="mt-4">
           <a class="btn btn-primary me-3" href="/register">
-            <i class="bi bi-laptop"></i> Application Web
+            <i class="bi bi-laptop"></i> Web app
           </a>
           <a class="btn btn-primary" href="#">
-            <i class="bi bi-phone"></i> Application Mobile
+            <i class="bi bi-phone"></i> Mobile app
           </a>
         </div>
       </div>

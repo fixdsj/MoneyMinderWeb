@@ -11,19 +11,19 @@
             <li>
               <a class="nav-link text-white" href="/">
                 <i class="bi bi-house d-block text-center" style="font-size: 24px"></i>
-                Accueil
+                Home
               </a>
             </li>
             <li>
               <a class="nav-link text-white" href="/groups">
                 <i class="bi bi-people-fill d-block text-center" style="font-size: 24px"></i>
-                Groupes
+                Groups
               </a>
             </li>
             <li>
               <a class="nav-link text-white" href="/messages">
                 <i class="bi bi-chat-left-text-fill d-block text-center" style="font-size: 24px"></i>
-                Messages
+                Messaging
               </a>
             </li>
             <li>
@@ -35,7 +35,7 @@
             <li>
               <a class="nav-link text-white" href="/login" @click="logout">
                 <i class="bi bi-box-arrow-right d-block text-center" style="font-size: 24px"></i>
-                Déconnexion
+                Logout
               </a>
             </li>
           </ul>
@@ -43,13 +43,13 @@
             <li>
               <a class="nav-link text-white" href="/login">
                 <i class="bi bi-box-arrow-in-right d-block text-center" style="font-size: 24px"></i>
-                Se connecter
+                Login
               </a>
             </li>
             <li>
               <a class="nav-link text-white" href="/register">
                 <i class="bi bi-person-plus d-block text-center" style="font-size: 24px"></i>
-                S'inscrire
+                Register
               </a>
             </li>
           </ul>
@@ -73,25 +73,31 @@ export default {
   },
   methods: {
     async logout() {
-      const axios = require('axios');
-      const response = await axios.post('${process.env.VUE_APP_API_URL}', {
-        query: `mutation{signOut}`
-      }, {
-        withCredentials: true,
-        headers: {
-          'Content-Type': 'application/json',
-          "Accept": "application/json",
-        },
-      });
-      const responseData = response.data;
-      console.log('Réponse:', responseData);
-      if (responseData.data) {
-        this.isLogged = false;
-        this.currentUsername = 'Guest';
-        this.$router.push('/');
-      }
-      if (responseData.errors) {
-        console.log("erreur" + responseData.errors.message);
+      try {
+
+
+        const axios = require('axios');
+        const response = await axios.post('${process.env.VUE_APP_API_URL}', {
+          query: `mutation{signOut}`
+        }, {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json',
+            "Accept": "application/json",
+          },
+        });
+        const responseData = response.data;
+        console.log('déconnexion', responseData);
+        if (responseData.data) {
+          this.isLogged = false;
+          this.currentUsername = 'Guest';
+          this.$router.push('/');
+        }
+        if (responseData.errors) {
+          console.log("erreur" + responseData.errors.message);
+        }
+      } catch (error) {
+        console.error('Erreur:', error);
       }
 
     }

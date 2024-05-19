@@ -1,7 +1,7 @@
 <template>
   <div class="col-md-10 mx-auto col-lg-5">
-    <form class="p-4 p-md-5 border rounded-3 bg-body-tertiary" @submit="register">
-      <h3 class="text-center mb-4">Inscription</h3>
+    <form class="p-4 p-md-5 border rounded-3" @submit="register">
+      <h3 class="text-center mb-4">Register</h3>
       <p v-if="errors.length" class="text-danger">
         <b>Please correct the following error(s):</b>
         <ul class="mb-0 list-unstyled">
@@ -14,33 +14,42 @@
       </div>
       <div class="form-floating mb-3">
         <input id="email" v-model="email" class="form-control form-styling" placeholder="name@example.com" type="email">
-        <label for="email">Adresse mail</label>
+        <label for="email">Email adress</label>
       </div>
-      <div class="form-floating mb-3">
-        <input id="password" v-model="password" class="form-control form-styling" placeholder="Password"
-               type="password">
-        <label for="password">Mot de passe</label>
-        <small class="text-warning">Le mot de passe doit contenir au moins 8 caractères, un chiffre, une
-          majuscule et une minuscule.</small>
+      <small class="text-white">The password must contain at least 8 characters, a number, an uppercase letter and a
+        lowercase letter.</small>
+      <div class="form-floating mb-3 position-relative">
+        <input id="password" v-model="password" :type="showPassword ? 'text' : 'password'"
+               class="form-control pr-5 form-styling" placeholder="Password">
+        <label for="password">Password</label>
+        <button class="btn position-absolute end-0 translate-middle-y" style="top: 50%;" type="button"
+                @click="toggleShowPassword">
+          <i :class="showPassword ? 'bi-eye-slash-fill' : 'bi-eye-fill'"></i>
+        </button>
+
       </div>
-      <div class="form-floating mb-3">
-        <input id="confirmPassword" v-model="confirmPassword" class="form-control form-styling" placeholder="Password"
-               type="password">
-        <label for="confirmPassword">Confirmer le mot de passe</label>
+      <div class="form-floating mb-3 position-relative">
+        <input id="confirmPassword" v-model="confirmPassword" :type="showPassword ? 'text' : 'password'"
+               class="form-control pr-5 form-styling" placeholder="Password">
+        <label for="confirmPassword">Confirm password</label>
+        <button class="btn position-absolute end-0 translate-middle-y" style="top: 50%;" type="button"
+                @click="toggleShowPassword">
+          <i :class="showPassword ? 'bi-eye-slash-fill' : 'bi-eye-fill'"></i>
+        </button>
       </div>
-      <small class="text-body-secondary">En cliquant sur S'inscrire, vous acceptez les conditions d'utilisation.</small>
-      <button class="w-100 btn btn-lg btn-primary" type="submit">S'inscrire</button>
-      <h4 class="text-center my-4 text-uppercase">Ou</h4>
+      <small class="text-white">By clicking on Register, you agree to the terms of use.</small>
+      <button class="w-100 btn btn-lg btn-primary" type="submit">Register</button>
+      <h4 class="text-center my-4 text-uppercase">Or</h4>
       <div class="d-grid mb-2">
         <a class="btn btn-google btn-login text-uppercase fw-bold" type="submit">
-          <i class="bi bi-google me-2"></i> S'inscrire avec Google
+          <i class="bi bi-google me-2"></i> Register with Google
         </a>
         <i class="fab fa-google me-2"></i>
       </div>
     </form>
-
   </div>
 </template>
+
 
 <script>
 
@@ -54,6 +63,8 @@ export default {
       confirmPassword: '',
       errors: [],
       success: false,
+
+      showPassword: true,
     };
   },
 
@@ -108,7 +119,10 @@ export default {
         console.error(e);
         this.errors = ['Une erreur est survenue lors de l\'inscription'];
       }
-    }
+    },
+    toggleShowPassword() {
+      this.showPassword = !this.showPassword;
+    },
   },
 };
 

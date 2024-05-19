@@ -6,7 +6,7 @@
         <div class="modal-content">
           <div class="chat-header">
             <div class="input-group">
-              <input v-model="texttosuggest" aria-label="search" class="form-control" placeholder="Rechercher..."
+              <input v-model="texttosuggest" aria-label="search" class="form-control" placeholder="Search..."
                      type="text"
                      @input="suggestUsers">
               <button class="btn btn-outline-secondary" type="button"><i class="bi bi-search"></i></button>
@@ -21,7 +21,7 @@
               </li>
               <li v-if="suggestedUsers.length === 0 && texttosuggest.length > 1"
                   class="list-group-item d-flex justify-content-between align-items-center">
-                Aucun utilisateur trouvé
+                No users found
               </li>
             </ul>
 
@@ -29,13 +29,13 @@
               <li class="nav-item" role="presentation">
                 <button id="Open-tab" aria-controls="Open" aria-selected="true" class="nav-link active"
                         data-bs-target="#Open" data-bs-toggle="tab" role="tab" type="button"
-                        @click="fetchCurrentUserFriends">Amis
+                        @click="fetchCurrentUserFriends">Friends
                 </button>
               </li>
               <li class="nav-item" role="presentation">
                 <button id="Closed-tab" aria-controls="Closed" aria-selected="false" class="nav-link"
                         data-bs-target="#Closed" data-bs-toggle="tab" role="tab" type="button"
-                        @click="fetchCurrentUserGroups">Groupes
+                        @click="fetchCurrentUserGroups">Groups
                 </button>
               </li>
             </ul>
@@ -52,7 +52,7 @@
                   <div class="chat-list">
                     <div v-if="hasNoFriends">
                       <div class="flex-grow-1 ms-3 text-center">
-                        <h3>Aucun ami</h3>
+                        <h3>No friends</h3>
                       </div>
 
                     </div>
@@ -98,7 +98,7 @@
                     </a>
                     <a v-if="groups.length === 0" class="d-flex align-items-center" href="/account">
                       <div class="flex-grow-1 ms-3">
-                        <h3>Aucun groupe</h3>
+                        <h3>No group yet</h3>
                       </div>
                     </a>
                   </div>
@@ -120,7 +120,7 @@
              class="modal-content">
           <div class="modal-body">
             <div class="msg-body">
-              <h6 class="text-center">Aucun message</h6>
+              <h6 class="text-center text-white text-bg-primary">No messages yet</h6>
             </div>
           </div>
         </div>
@@ -162,9 +162,9 @@
           <div class="send-box">
             <form @submit.prevent="sendMessage">
               <input v-model="messageToSend" aria-label="message" class="form-control"
-                     placeholder="Ecrire un message…"
+                     placeholder="Type a message..."
                      type="text">
-              <button aria-hidden="true" class="btn btn-primary w-25 mx-1" type="button" @click="sendMessage">Envoyer
+              <button aria-hidden="true" class="btn btn-primary w-25 mx-1" type="button" @click="sendMessage">Send
               </button>
             </form>
 
